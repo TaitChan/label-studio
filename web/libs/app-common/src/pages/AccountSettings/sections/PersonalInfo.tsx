@@ -12,6 +12,8 @@ import { useAtomValue } from "jotai";
  * each one of these eventually has to be migrated to core or ui
  */
 import { Input } from "apps/labelstudio/src/components/Form/Elements";
+import { useTranslation } from 'react-i18next'
+
 
 const updateUserAvatarAtom = atomWithMutation(() => ({
   mutationKey: ["update-user"],
@@ -40,6 +42,7 @@ const updateUserAvatarAtom = atomWithMutation(() => ({
 }));
 
 export const PersonalInfo = () => {
+  const { t } = useTranslation("app-common")
   const toast = useToast();
   const { user, refetch: refetchUser, isLoading: userInProgress, update: updateUser } = useAuth();
   const updateUserAvatar = useAtomValue(updateUserAvatarAtom);
@@ -61,7 +64,7 @@ export const PersonalInfo = () => {
       });
 
       if (!response.$meta.ok) {
-        toast?.show({ message: response?.response?.detail ?? "Error updating avatar", type: ToastType.error });
+        toast?.show({ message: response?.response?.detail ?? t('appCommon.pages.AccountSettings.sections.PersonalInfo.errorUpdatingAvatar', { defaultValue: "Error updating avatar" }), type: ToastType.error });
       } else {
         refetchUser();
       }
@@ -86,7 +89,7 @@ export const PersonalInfo = () => {
 
       refetchUser();
       if (!response?.$meta.ok) {
-        toast?.show({ message: response?.response?.detail ?? "Error updating user", type: ToastType.error });
+        toast?.show({ message: response?.response?.detail ?? t('appCommon.pages.AccountSettings.sections.PersonalInfo.errorUpdatingUser', { defaultValue: "Error updating user" }), type: ToastType.error });
       }
     },
     [user?.id],
@@ -117,7 +120,7 @@ export const PersonalInfo = () => {
           </form>
           {user?.avatar && (
             <Button type="submit" variant="negative" look="outlined" size="medium" onClick={deleteUserAvatar}>
-              Delete
+              {t('appCommon.pages.AccountSettings.sections.PersonalInfo.delete', { defaultValue: "Delete" })}
             </Button>
           )}
         </div>
@@ -125,7 +128,7 @@ export const PersonalInfo = () => {
           <div className={styles.flexRow}>
             <div className={styles.flex1}>
               <Input
-                label="First Name"
+                label={t('appCommon.pages.AccountSettings.sections.PersonalInfo.firstName', { defaultValue: "First Name" })}
                 value={fname}
                 onChange={(e: React.KeyboardEvent<HTMLInputElement>) => setFname(e.currentTarget.value)}
                 name="first_name"
@@ -133,7 +136,7 @@ export const PersonalInfo = () => {
             </div>
             <div className={styles.flex1}>
               <Input
-                label="Last Name"
+                label={t('appCommon.pages.AccountSettings.sections.PersonalInfo.lastName', { defaultValue: "Last Name" })}
                 value={lname}
                 onChange={(e: React.KeyboardEvent<HTMLInputElement>) => setLname(e.currentTarget.value)}
                 name="last_name"
@@ -142,11 +145,11 @@ export const PersonalInfo = () => {
           </div>
           <div className={styles.flexRow}>
             <div className={styles.flex1}>
-              <Input label="E-mail" type="email" readOnly={true} value={user?.email ?? ""} />
+              <Input label={t('appCommon.pages.AccountSettings.sections.PersonalInfo.email', { defaultValue: "E-mail" })} type="email" readOnly={true} value={user?.email ?? ""} />
             </div>
             <div className={styles.flex1}>
               <Input
-                label="Phone"
+                label={t('appCommon.pages.AccountSettings.sections.PersonalInfo.phone', { defaultValue: "Phone" })}
                 type="phone"
                 onChange={(e: React.KeyboardEvent<HTMLInputElement>) => setPhone(e.currentTarget.value)}
                 value={phone}
@@ -156,7 +159,7 @@ export const PersonalInfo = () => {
           </div>
           <div className={clsx(styles.flexRow, styles.flexEnd)}>
             <Button style={{ width: 125 }} waiting={isInProgress}>
-              Save
+              {t('appCommon.pages.AccountSettings.sections.PersonalInfo.save', { defaultValue: "Save" })}
             </Button>
           </div>
         </form>

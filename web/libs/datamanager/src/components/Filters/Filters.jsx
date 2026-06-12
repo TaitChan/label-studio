@@ -6,6 +6,8 @@ import { FilterLine } from "./FilterLine/FilterLine";
 import { IconChevronRight, IconPlus, IconCopyOutline, IconClipboardCheck, IconUndo } from "@humansignal/icons";
 import { useRecentFilters } from "../../hooks/useRecentFilters";
 import "./Filters.prefix.css";
+import i18next from 'i18next'
+
 
 const injector = inject(({ store }) => ({
   store,
@@ -48,7 +50,11 @@ export const Filters = injector(({ store, views, currentView, filters, projectId
     try {
       text = await navigator.clipboard.readText();
     } catch {
-      showToast("Cannot read clipboard. Please allow clipboard access and try again.");
+      showToast(
+        i18next.t("datamanager.components.Filters.Filters.cannotReadClipboard", {
+          ns: "datamanager", defaultValue: "Cannot read clipboard. Please allow clipboard access and try again.",
+        }),
+      );
       return;
     }
 
@@ -56,12 +62,20 @@ export const Filters = injector(({ store, views, currentView, filters, projectId
     try {
       snapshot = JSON.parse(text);
     } catch {
-      showToast("Clipboard does not contain valid JSON.");
+      showToast(
+        i18next.t("datamanager.components.Filters.Filters.clipboardInvalidJson", {
+          ns: "datamanager", defaultValue: "Clipboard does not contain valid JSON.",
+        }),
+      );
       return;
     }
 
     if (!snapshot || typeof snapshot !== "object" || !Array.isArray(snapshot.items)) {
-      showToast('Invalid filter format. Expected { "conjunction": "and"|"or", "items": [...] }');
+      showToast(
+        i18next.t("datamanager.components.Filters.Filters.invalidFilterFormat", {
+          ns: "datamanager", defaultValue: 'Invalid filter format. Expected { "conjunction": "and"|"or", "items": [...] }',
+        }),
+      );
       return;
     }
 
@@ -69,7 +83,11 @@ export const Filters = injector(({ store, views, currentView, filters, projectId
 
     const result = currentView.importFilters(snapshot);
     if (result === false) {
-      showToast("No matching filter columns found in this project. Filters may be from a different project.");
+      showToast(
+        i18next.t("datamanager.components.Filters.Filters.noMatchingFilterColumns", {
+          ns: "datamanager", defaultValue: "No matching filter columns found in this project. Filters may be from a different project.",
+        }),
+      );
       return;
     }
 
@@ -105,7 +123,7 @@ export const Filters = injector(({ store, views, currentView, filters, projectId
             />
           ))
         ) : (
-          <div className={cn("filters").elem("empty").toClassName()}>No filters applied</div>
+          <div className={cn("filters").elem("empty").toClassName()}>{i18next.t('datamanager.components.Filters.Filters.noFiltersApplied', { ns: "datamanager", defaultValue: "No filters applied" })}</div>
         )}
       </div>
       <div className={cn("filters").elem("actions").toClassName()}>
@@ -115,7 +133,11 @@ export const Filters = injector(({ store, views, currentView, filters, projectId
           onClick={() => currentView.createFilter()}
           leading={<IconPlus className="!h-3 !w-3" />}
         >
-          Add {filters.length ? "Another Filter" : "Filter"}
+          {filters.length
+            ? i18next.t("datamanager.components.Filters.Filters.addAnotherFilter", {
+                ns: "datamanager", defaultValue: "Add Another Filter",
+              })
+            : i18next.t("datamanager.components.Filters.Filters.addFilter", { ns: "datamanager", defaultValue: "Add Filter" })}
         </Button>
 
         <div className={cn("filters").elem("actions-right").toClassName()}>
@@ -123,9 +145,16 @@ export const Filters = injector(({ store, views, currentView, filters, projectId
             <Button
               size="small"
               look="string"
-              tooltip={copyFeedback ? "Copied!" : "Copy filters to clipboard; Tip: Use it in Label Studio SDK"}
+              tooltip={
+                copyFeedback
+                  ? i18next.t("datamanager.components.Filters.Filters.copied", { ns: "datamanager", defaultValue: "Copied!" })
+                  : i18next.t(
+                      "datamanager.components.Filters.Filters.copyFiltersToClipboardTipUseItInLabelStudioSdk",
+                      { ns: "datamanager", defaultValue: "Copy filters to clipboard; Tip: Use it in Label Studio SDK" },
+                    )
+              }
               onClick={handleCopyFilters}
-              aria-label="Copy filters"
+              aria-label={i18next.t('datamanager.components.Filters.Filters.copyFilters', { ns: "datamanager", defaultValue: "Copy filters" })}
             >
               <IconCopyOutline className="!w-4 !h-4" />
             </Button>
@@ -134,9 +163,15 @@ export const Filters = injector(({ store, views, currentView, filters, projectId
           <Button
             size="small"
             look="string"
-            tooltip={pasteFeedback ? "Pasted!" : "Paste filters from clipboard"}
+            tooltip={
+              pasteFeedback
+                ? i18next.t("datamanager.components.Filters.Filters.pasted", { ns: "datamanager", defaultValue: "Pasted!" })
+                : i18next.t("datamanager.components.Filters.Filters.pasteFiltersFromClipboard", {
+                    ns: "datamanager", defaultValue: "Paste filters from clipboard",
+                  })
+            }
             onClick={handlePasteFilters}
-            aria-label="Paste filters"
+            aria-label={i18next.t('datamanager.components.Filters.Filters.pasteFilters', { ns: "datamanager", defaultValue: "Paste filters" })}
           >
             <IconClipboardCheck className="!w-4 !h-4" />
           </Button>
@@ -145,9 +180,11 @@ export const Filters = injector(({ store, views, currentView, filters, projectId
             <Button
               size="small"
               look="string"
-              tooltip="Undo paste — restore previous filters"
+              tooltip={i18next.t("datamanager.components.Filters.Filters.undoPasteTooltip", {
+                ns: "datamanager", defaultValue: "Undo paste — restore previous filters",
+              })}
               onClick={handleUndoPaste}
-              aria-label="Undo paste"
+              aria-label={i18next.t('datamanager.components.Filters.Filters.undoPaste', { ns: "datamanager", defaultValue: "Undo paste" })}
             >
               <IconUndo className="!w-4 !h-4" />
             </Button>
@@ -158,9 +195,9 @@ export const Filters = injector(({ store, views, currentView, filters, projectId
               look="string"
               type="link"
               size="small"
-              tooltip="Pin to sidebar"
+              tooltip={i18next.t("datamanager.components.Filters.Filters.pinToSidebar", { ns: "datamanager", defaultValue: "Pin to sidebar" })}
               onClick={() => views.expandFilters()}
-              aria-label="Pin filters to sidebar"
+              aria-label={i18next.t('datamanager.components.Filters.Filters.pinFiltersToSidebar', { ns: "datamanager", defaultValue: "Pin filters to sidebar" })}
             >
               <IconChevronRight className="!w-4 !h-4" />
             </Button>

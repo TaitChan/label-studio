@@ -19,6 +19,8 @@ import { FieldsButton } from "../FieldsButton";
 import { FF_LOPS_E_3, isFF } from "../../../utils/feature-flags";
 import { DensityToggle } from "../../DataManager/Toolbar/DensityToggle";
 import { TaskSourceViewer, getTaskSourceViewerStorageKey } from "../TaskSourceViewer";
+import i18next from 'i18next'
+
 
 const Decorator = (decoration) => {
   return {
@@ -88,7 +90,17 @@ export const Table = observer(
           indeterminate={selectedItems.isIndeterminate}
           onChange={() => props.onSelectAll()}
           className="select-all"
-          ariaLabel={`${selectedItems.isAllSelected ? "Unselect" : "Select"} all rows`}
+          ariaLabel={
+            selectedItems.isAllSelected
+              ? i18next.t("datamanager.components.Common.Table.Table.unselectAllRows", {
+                  ns: "datamanager",
+                  defaultValue: "Unselect all rows",
+                })
+              : i18next.t("datamanager.components.Common.Table.Table.selectAllRows", {
+                  ns: "datamanager",
+                  defaultValue: "Select all rows",
+                })
+          }
         />
       );
     }, [props.onSelectAll, selectedItems]);
@@ -122,7 +134,19 @@ export const Table = observer(
               // Always remember last clicked for shift-click range
               lastClickedId.current = rowData.id;
             }}
-            ariaLabel={`${isChecked ? "Unselect" : "Select"} Task ${rowData.id}`}
+            ariaLabel={
+              isChecked
+                ? i18next.t("datamanager.components.Common.Table.Table.unselectTask", {
+                    ns: "datamanager",
+                    defaultValue: "Unselect Task {{id}}",
+                    id: rowData.id,
+                  })
+                : i18next.t("datamanager.components.Common.Table.Table.selectTask", {
+                    ns: "datamanager",
+                    defaultValue: "Select Task {{id}}",
+                    id: rowData.id,
+                  })
+            }
           />
         );
       },

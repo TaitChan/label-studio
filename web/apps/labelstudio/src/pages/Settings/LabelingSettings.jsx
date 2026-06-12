@@ -5,15 +5,19 @@ import { useProject } from "../../providers/ProjectProvider";
 import { FF_UNSAVED_CHANGES, isFF } from "../../utils/feature-flags";
 import { isEmptyString } from "../../utils/helpers";
 import { ConfigPage } from "../CreateProject/Config/Config";
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
+
 
 export const LabelingSettings = () => {
+  const { t } = useTranslation("labelstudio")
   const { project, fetchProject, updateProject } = useProject();
   const [config, setConfig] = useState("");
   const [essentialDataChanged, setEssentialDataChanged] = useState(false);
   const hasChanges = isFF(FF_UNSAVED_CHANGES) && config !== project.label_config;
   const api = useAPI();
 
-  useUpdatePageTitle(createTitleFromSegments([project?.title, "Labeling Interface Settings"]));
+  useUpdatePageTitle(createTitleFromSegments([project?.title, t('pages.Settings.LabelingSettings.labelingInterfaceSettings', { defaultValue: "Labeling Interface Settings" })]));
 
   const saveConfig = useCallback(
     isFF(FF_UNSAVED_CHANGES)
@@ -91,5 +95,5 @@ export const LabelingSettings = () => {
   );
 };
 
-LabelingSettings.title = "Labeling Interface";
+LabelingSettings.title = i18next.t("pages.Settings.LabelingSettings.labelingInterface", { defaultValue: "Labeling Interface" });
 LabelingSettings.path = "/labeling";

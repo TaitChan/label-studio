@@ -6,8 +6,11 @@ import { Oneof } from "../../../components/Oneof/Oneof";
 import { ApiContext } from "../../../providers/ApiProvider";
 import { cn } from "../../../utils/bem";
 import { isDefined } from "../../../utils/helpers";
+import { useTranslation } from 'react-i18next'
+
 
 export const StorageForm = forwardRef(({ onSubmit, target, project, rootClass, storage, storageTypes }, ref) => {
+  const { t } = useTranslation("labelstudio")
   /**@type {import('react').RefObject<Form>} */
   const api = useContext(ApiContext);
   const formRef = ref ?? useRef();
@@ -34,7 +37,7 @@ export const StorageForm = forwardRef(({ onSubmit, target, project, rootClass, s
         skip: true,
         type: "select",
         name: "storage_type",
-        label: "Storage Type",
+        label: t('pages.Settings.StorageSettings.StorageForm.storageType', { defaultValue: "Storage Type" }),
         disabled: !!storage,
         options: storageTypes.map(({ name, title }) => ({
           value: name,
@@ -100,10 +103,10 @@ export const StorageForm = forwardRef(({ onSubmit, target, project, rootClass, s
             <div className={cn("form-indicator").toClassName()}>
               <Oneof value={connectionValid}>
                 <span className={cn("form-indicator").elem("item").mod({ type: "success" }).toClassName()} case={true}>
-                  Successfully connected!
+                  {t('pages.Settings.StorageSettings.StorageForm.successfullyConnected', { defaultValue: "Successfully connected!" })}
                 </span>
                 <span className={cn("form-indicator").elem("item").mod({ type: "fail" }).toClassName()} case={false}>
-                  Connection failed
+                  {t('pages.Settings.StorageSettings.StorageForm.connectionFailed', { defaultValue: "Connection failed" })}
                 </span>
               </Oneof>
             </div>
@@ -117,12 +120,12 @@ export const StorageForm = forwardRef(({ onSubmit, target, project, rootClass, s
             look="outlined"
             waiting={checking}
             onClick={validateStorageConnection}
-            aria-label="Test storage connection"
+            aria-label={t('pages.Settings.StorageSettings.StorageForm.testStorageConnection', { defaultValue: "Test storage connection" })}
           >
-            Check Connection
+            {t('pages.Settings.StorageSettings.StorageForm.checkConnection', { defaultValue: "Check Connection" })}
           </Button>
-          <Button type="submit" aria-label={storage ? "Save storage settings" : "Add storage"}>
-            {storage ? "Save" : "Add Storage"}
+          <Button type="submit" aria-label={storage ? t('pages.Settings.StorageSettings.StorageForm.saveStorageSettings', { defaultValue: "Save storage settings" }) : t('pages.Settings.StorageSettings.StorageForm.addStorage', { defaultValue: "Add storage" })}>
+            {storage ? t("pages.Settings.StorageSettings.StorageForm.save", { defaultValue: "Save" }) : t("pages.Settings.StorageSettings.StorageForm.addStorage2", { defaultValue: "Add Storage" })}
           </Button>
         </div>
       </Form.Actions>

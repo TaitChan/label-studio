@@ -7,6 +7,8 @@ import { FilterDropdown } from "../FilterDropdown";
 import * as FilterInputs from "../types";
 import { allowedFilterOperations } from "../types/Utility";
 import { Common } from "../types/Common";
+import i18next from 'i18next'
+
 
 /** @typedef {{
  * type: keyof typeof FilterInputs,
@@ -67,11 +69,11 @@ export const FilterOperation = observer(({ filter, field, operator, value, disab
   const operators = operatorList.map(({ key, label }) => {
     if (filter.filter.field.isAnnotationResultsFilterColumn) {
       if (filter.schema?.multiple ?? false) {
-        if (key === "contains") label = "includes all";
-        if (key === "not_contains") label = "does not include all";
+        if (key === "contains") label = i18next.t("datamanager.components.Filters.FilterLine.FilterOperation.includesAll", { ns: "datamanager", defaultValue: "includes all" });
+        if (key === "not_contains") label = i18next.t('datamanager.components.Filters.FilterLine.FilterOperation.doesNotIncludeAll', { ns: "datamanager", defaultValue: "does not include all" });
       } else {
-        if (key === "contains") label = "is";
-        if (key === "not_contains") label = "is not";
+        if (key === "contains") label = i18next.t("datamanager.components.Filters.FilterLine.FilterOperation.is", { ns: "datamanager", defaultValue: "is" });
+        if (key === "not_contains") label = i18next.t("datamanager.components.Filters.FilterLine.FilterOperation.isNot", { ns: "datamanager", defaultValue: "is not" });
       }
     }
     return { value: key, label };
@@ -82,7 +84,9 @@ export const FilterOperation = observer(({ filter, field, operator, value, disab
     <>
       <div className={columnClass.mix("operation").toClassName()}>
         <FilterDropdown
-          placeholder="Condition"
+          placeholder={i18next.t("datamanager.components.Filters.FilterLine.FilterOperation.condition", {
+            ns: "datamanager", defaultValue: "Condition",
+          })}
           value={filter.operator}
           disabled={types.length === 1 || disabled}
           items={availableOperators ? operators.filter((op) => availableOperators.includes(op.value)) : operators}

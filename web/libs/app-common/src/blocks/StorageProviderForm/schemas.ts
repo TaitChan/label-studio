@@ -2,6 +2,8 @@ import { z } from "zod";
 import type { FieldDefinition } from "./types/common";
 import { getProviderConfig } from "./providers";
 import { assembleSchema } from "./types/provider";
+import i18next from 'i18next'
+
 
 // Step validation schemas
 export const step1Schema = z.object({
@@ -20,9 +22,14 @@ export const getProviderSchema = (provider: string, isEditMode = false, target?:
     {
       name: "title",
       type: "text",
-      label: "Storage Title",
+      label: i18next.t('appCommon.blocks.StorageProviderForm.schemas.storageTitle', { ns: "app-common", defaultValue: "Storage Title" }),
       required: true,
-      schema: z.string().min(1, "Storage title is required"),
+      schema: z.string().min(
+        1,
+        i18next.t("appCommon.blocks.StorageProviderForm.schemas.storageTitleIsRequired", {
+          ns: "app-common", defaultValue: "Storage title is required",
+        }),
+      ),
     },
   ];
 
@@ -33,8 +40,8 @@ export const getProviderSchema = (provider: string, isEditMode = false, target?:
           {
             name: "can_delete_objects",
             type: "toggle",
-            label: "Can delete objects from storage",
-            description: "If unchecked, annotations will not be deleted from storage",
+            label: i18next.t('appCommon.blocks.StorageProviderForm.schemas.canDeleteObjectsFromStorage', { ns: "app-common", defaultValue: "Can delete objects from storage" }),
+            description: i18next.t('appCommon.blocks.StorageProviderForm.schemas.ifUncheckedAnnotationsWillNotBeDeletedFromStorage', { ns: "app-common", defaultValue: "If unchecked, annotations will not be deleted from storage" }),
             schema: z.boolean().default(false),
           },
         ]

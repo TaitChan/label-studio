@@ -24,6 +24,7 @@ export type HeidiTipsProps = {
 };
 
 export type HeidiTipProps = {
+  collection: TipCollectionKey;
   tip: Tip;
   onDismiss: () => void;
   onLinkClick: () => void;

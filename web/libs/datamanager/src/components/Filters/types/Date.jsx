@@ -2,6 +2,7 @@ import { isValid } from "date-fns";
 import { observer } from "mobx-react";
 import React from "react";
 import { DatePicker } from "../../Common/DatePicker/DatePicker";
+import i18next from "i18next";
 
 export const DateTimeInput = observer(({ value, range, time, onChange }) => {
   const onValueChange = React.useCallback(
@@ -42,33 +43,31 @@ export const DateTimeInput = observer(({ value, range, time, onChange }) => {
   );
 });
 
-export const DateFields = (extraProps) => {
-  return [
-    {
-      key: "less",
-      label: "is before",
-      valueType: "single",
-      input: (props) => <DateTimeInput {...props} {...(extraProps ?? {})} />,
-    },
-    {
-      key: "greater",
-      label: "is after",
-      valueType: "single",
-      input: (props) => <DateTimeInput {...props} {...(extraProps ?? {})} />,
-    },
-    {
-      key: "in",
-      label: "is between",
-      valueType: "range",
-      input: (props) => <DateTimeInput range {...props} {...(extraProps ?? {})} />,
-    },
-    {
-      key: "not_in",
-      label: "not between",
-      valueType: "range",
-      input: (props) => <DateTimeInput range {...props} {...(extraProps ?? {})} />,
-    },
-  ];
-};
+export const DateFields = (extraProps) => [
+  {
+    key: "less",
+    label: i18next.t("datamanager.components.Filters.types.Date.isBefore", { ns: "datamanager", defaultValue: "is before" }),
+    valueType: "single",
+    input: (props) => <DateTimeInput {...props} {...(extraProps ?? {})} />,
+  },
+  {
+    key: "greater",
+    label: i18next.t("datamanager.components.Filters.types.Date.isAfter", { ns: "datamanager", defaultValue: "is after" }),
+    valueType: "single",
+    input: (props) => <DateTimeInput {...props} {...(extraProps ?? {})} />,
+  },
+  {
+    key: "in",
+    label: i18next.t("datamanager.components.Filters.types.Date.isBetween", { ns: "datamanager", defaultValue: "is between" }),
+    valueType: "range",
+    input: (props) => <DateTimeInput range {...props} {...(extraProps ?? {})} />,
+  },
+  {
+    key: "not_in",
+    label: i18next.t("datamanager.components.Filters.types.Date.notBetween", { ns: "datamanager", defaultValue: "not between" }),
+    valueType: "range",
+    input: (props) => <DateTimeInput range {...props} {...(extraProps ?? {})} />,
+  },
+];
 
 export const DateFilter = [...DateFields()];

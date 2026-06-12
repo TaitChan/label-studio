@@ -10,6 +10,8 @@ import { ApiContext } from "../../../providers/ApiProvider";
 import { cn } from "../../../utils/bem";
 
 import "./PredictionsList.prefix.css";
+import { useTranslation } from 'react-i18next'
+
 
 export const PredictionsList = ({ project, versions, fetchVersions }) => {
   const api = useContext(ApiContext);
@@ -39,13 +41,14 @@ export const PredictionsList = ({ project, versions, fetchVersions }) => {
 };
 
 const VersionCard = ({ version, selected, onSelect, editable, onDelete }) => {
+  const { t } = useTranslation("labelstudio")
   const rootClass = cn("prediction-card");
 
   const confirmDelete = useCallback(
     (version) => {
       confirm({
-        title: "Delete Predictions",
-        body: "This action cannot be undone. Are you sure?",
+        title: t('pages.Settings.PredictionsSettings.PredictionsList.deletePredictions', { defaultValue: "Delete Predictions" }),
+        body: t('pages.Settings.PredictionsSettings.PredictionsList.thisActionCannotBeUndoneAreYouSure', { defaultValue: "This action cannot be undone. Are you sure?" }),
         buttonLook: "destructive",
         onOk() {
           onDelete?.(version);
@@ -61,7 +64,7 @@ const VersionCard = ({ version, selected, onSelect, editable, onDelete }) => {
         <div className={rootClass.elem("title").toClassName()}>
           {version.model_version}
           {version.model_version === "undefined" && (
-            <Tooltip title="Model version is undefined. Likely means that model_version field was missing when predictions were imported.">
+            <Tooltip title={t('pages.Settings.PredictionsSettings.PredictionsList.modelVersionIsUndefinedLikelyMeansThatModel_versionFieldWasMissingWhenPredictionsWereImported', { defaultValue: "Model version is undefined. Likely means that model_version field was missing when predictions were imported." })}>
               <IconInfoOutline className={cn("help-icon").toClassName()} width="14" height="14" />
             </Tooltip>
           )}
@@ -69,10 +72,10 @@ const VersionCard = ({ version, selected, onSelect, editable, onDelete }) => {
         <div className={rootClass.elem("meta").toClassName()}>
           <div className={rootClass.elem("group").toClassName()}>
             <IconPredictions />
-            &nbsp;{version.count}
+            {t('pages.Settings.PredictionsSettings.PredictionsList.nbsp', { defaultValue: "&nbsp;" })}{version.count}
           </div>
           <div className={rootClass.elem("group").toClassName()}>
-            Last prediction created&nbsp;
+            {t('pages.Settings.PredictionsSettings.PredictionsList.lastPredictionCreatednbsp', { defaultValue: "Last prediction created&nbsp;" })}
             <Tooltip title={format(parseISO(version.latest), "yyyy-MM-dd HH:mm:ss")}>
               <span>
                 {formatDistanceToNow(parseISO(version.latest), {
@@ -89,7 +92,7 @@ const VersionCard = ({ version, selected, onSelect, editable, onDelete }) => {
           content={
             <Menu size="medium" contextual>
               <Menu.Item onClick={() => confirmDelete(version)} isDangerous>
-                Delete
+                {t('pages.Settings.PredictionsSettings.PredictionsList.delete', { defaultValue: "Delete" })}
               </Menu.Item>
             </Menu>
           }

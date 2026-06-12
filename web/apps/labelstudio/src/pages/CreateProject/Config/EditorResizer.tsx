@@ -2,6 +2,8 @@ import type React from "react";
 import { useCallback, useState } from "react";
 import clsx from "clsx";
 import styles from "./EditorResizer.module.css";
+import { useTranslation } from "react-i18next";
+
 
 interface EditorResizerProps {
   containerRef: React.RefObject<HTMLDivElement>;
@@ -39,6 +41,7 @@ export const EditorResizer: React.FC<EditorResizerProps> = ({
   constraints,
   disabled = false,
 }) => {
+  const { t } = useTranslation("labelstudio")
   const [isResizing, setIsResizing] = useState(false);
 
   const handleDoubleClick = useCallback(() => {
@@ -107,7 +110,7 @@ export const EditorResizer: React.FC<EditorResizerProps> = ({
       onPointerDown={handlePointerDown}
       onDoubleClick={handleDoubleClick}
       aria-disabled={disabled}
-      title={disabled ? undefined : "Drag to resize. Double-click to collapse or expand."}
+      title={disabled ? undefined : t('pages.CreateProject.Config.EditorResizer.dragToResizeDoubleclickToCollapseOrExpand', { defaultValue: "Drag to resize. Double-click to collapse or expand." })}
     />
   );
 };

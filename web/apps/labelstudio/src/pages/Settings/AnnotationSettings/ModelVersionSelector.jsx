@@ -2,6 +2,8 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { useAPI } from "../../../providers/ApiProvider";
 import { Select } from "../../../components/Form";
 import { ProjectContext } from "../../../providers/ProjectProvider";
+import { useTranslation } from 'react-i18next'
+
 
 export const ModelVersionSelector = ({
   name = "model_version",
@@ -9,6 +11,7 @@ export const ModelVersionSelector = ({
   apiName = "projectModelVersions",
   ...props
 }) => {
+  const { t } = useTranslation("labelstudio")
   const api = useAPI();
   const { project } = useContext(ProjectContext);
   const [loading, setLoading] = useState(true);
@@ -36,7 +39,7 @@ export const ModelVersionSelector = ({
 
     if (modelVersions?.live?.length > 0) {
       const liveModels = modelVersions.live.map((item) => {
-        const label = `${item.title} (${item.readable_state})`;
+        const label = t('pages.Settings.AnnotationSettings.ModelVersionSelector.titleReadable_state', { defaultValue: "{{title}} ({{readable_state}})", title: item.title, readable_state: item.readable_state });
 
         return {
           group: "Models",
@@ -50,7 +53,7 @@ export const ModelVersionSelector = ({
 
     if (modelVersions?.static?.length > 0) {
       const staticModels = modelVersions.static.map((item) => {
-        const label = `${item.model_version} (${item.count} predictions)`;
+        const label = t('pages.Settings.AnnotationSettings.ModelVersionSelector.model_versionCountPredictions', { defaultValue: "{{model_version}} ({{count}} predictions)", model_version: item.model_version, count: item.count });
 
         return {
           group: "Predictions",
@@ -75,7 +78,7 @@ export const ModelVersionSelector = ({
 
   return (
     <div>
-      <label>Select which predictions or which model you want to use:</label>
+      <label>{t('pages.Settings.AnnotationSettings.ModelVersionSelector.selectWhichPredictionsOrWhichModelYouWantToUse', { defaultValue: "Select which predictions or which model you want to use:" })}</label>
       <div style={{ display: "flex", alignItems: "center", width: 400 }}>
         <div style={{ flex: 1, paddingRight: 16 }}>
           <Select
@@ -84,7 +87,7 @@ export const ModelVersionSelector = ({
             value={version}
             onChange={setVersion}
             options={[...models, ...versions]}
-            placeholder={placeholder || "Please select model or predictions"}
+            placeholder={placeholder || t('pages.Settings.AnnotationSettings.ModelVersionSelector.pleaseSelectModelOrPredictions', { defaultValue: "Please select model or predictions" })}
             isInProgress={loading}
             {...props}
           />

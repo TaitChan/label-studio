@@ -12,6 +12,8 @@ import {
   type ImportData,
   type SaveResult,
 } from "../sections/Hotkeys/utils";
+import i18next from 'i18next'
+
 
 // Type the imported defaults and convert numeric ids to strings
 const typedDefaultHotkeys: Hotkey[] = getTypedDefaultHotkeys();
@@ -138,7 +140,7 @@ export const useHotkeys = () => {
       // Show non-blocking error notification
       if (toast) {
         toast.show({
-          message: "Could not load custom hotkeys from server, using cached settings",
+          message: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.couldNotLoadCustomHotkeysFromServerUsingCachedSettings', { ns: "app-common", defaultValue: "Could not load custom hotkeys from server, using cached settings" }),
           type: ToastType.error,
         });
       }
@@ -197,20 +199,20 @@ export const useHotkeys = () => {
         console.error(`Error ${operation} hotkeys:`, error);
 
         // Provide more specific error messages
-        let errorMessage = `Failed to ${isReset ? "reset" : "save"} hotkeys`;
+        let errorMessage = i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.failedToValHotkeys', { ns: "app-common", defaultValue: "Failed to {{val}} hotkeys", val: isReset ? "reset" : "save" });
         if (error && typeof error === "object" && "response" in error) {
           const err = error as any;
           // Server responded with error status
           if (err.response?.status === 400) {
-            errorMessage = err.response.data?.error || `Invalid ${isReset ? "reset request" : "hotkeys configuration"}`;
+            errorMessage = err.response.data?.error || i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.invalidVal', { ns: "app-common", defaultValue: "Invalid {{val}}", val: isReset ? "reset request" : "hotkeys configuration" });
           } else if (err.response?.status === 401) {
-            errorMessage = "Authentication required";
+            errorMessage = i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.authenticationRequired', { ns: "app-common", defaultValue: "Authentication required" });
           } else if (err.response?.status >= 500) {
-            errorMessage = "Server error - please try again later";
+            errorMessage = i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.serverErrorPleaseTryAgainLater', { ns: "app-common", defaultValue: "Server error - please try again later" });
           }
         } else if (error && typeof error === "object" && "request" in error) {
           // Network error
-          errorMessage = "Network error - please check your connection";
+          errorMessage = i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.networkErrorPleaseCheckYourConnection', { ns: "app-common", defaultValue: "Network error - please check your connection" });
         }
 
         return {
@@ -225,9 +227,9 @@ export const useHotkeys = () => {
   // Handle resetting all hotkeys to defaults
   const handleResetToDefaults = useCallback(() => {
     confirm({
-      title: "Reset Hotkeys to Defaults?",
-      body: "Are you sure you want to reset all hotkeys and settings to their default values? This action cannot be undone.",
-      okText: "Reset to Defaults",
+      title: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.resetHotkeysToDefaults', { ns: "app-common", defaultValue: "Reset Hotkeys to Defaults?" }),
+      body: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.areYouSureYouWantToResetAllHotkeysAndSettingsToTheirDefaultValuesThisActionCannotBeUndone', { ns: "app-common", defaultValue: "Are you sure you want to reset all hotkeys and settings to their default values? This action cannot be undone." }),
+      okText: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.resetToDefaults', { ns: "app-common", defaultValue: "Reset to Defaults" }),
       buttonLook: "negative",
       style: { width: 500 },
       onOk: async () => {
@@ -240,7 +242,7 @@ export const useHotkeys = () => {
           if (result.ok) {
             if (toast) {
               toast.show({
-                message: "All hotkeys and settings have been reset to defaults and saved",
+                message: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.allHotkeysAndSettingsHaveBeenResetToDefaultsAndSaved', { ns: "app-common", defaultValue: "All hotkeys and settings have been reset to defaults and saved" }),
                 type: ToastType.info,
               });
             }
@@ -249,16 +251,16 @@ export const useHotkeys = () => {
           } else {
             if (toast) {
               toast.show({
-                message: `Failed to save reset hotkeys: ${result.error || "Unknown error"}`,
+                message: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.failedToSaveResetHotkeysVal', { ns: "app-common", defaultValue: "Failed to save reset hotkeys: {{val}}", val: result.error || "Unknown error" }),
                 type: ToastType.error,
               });
             }
           }
         } catch (error: unknown) {
           if (toast) {
-            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+            const errorMessage = error instanceof Error ? error.message : i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.unknownError', { ns: "app-common", defaultValue: "Unknown error" });
             toast.show({
-              message: `Error resetting hotkeys: ${errorMessage}`,
+              message: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.errorResettingHotkeysErrormessage', { ns: "app-common", defaultValue: "Error resetting hotkeys: {{errorMessage}}", errorMessage }),
               type: ToastType.error,
             });
           }
@@ -299,7 +301,7 @@ export const useHotkeys = () => {
 
     if (toast) {
       toast.show({
-        message: "Hotkeys exported successfully",
+        message: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.hotkeysExportedSuccessfully', { ns: "app-common", defaultValue: "Hotkeys exported successfully" }),
         type: ToastType.info,
       });
     }
@@ -327,7 +329,7 @@ export const useHotkeys = () => {
 
         if (toast) {
           toast.show({
-            message: "Hotkeys imported successfully",
+            message: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.hotkeysImportedSuccessfully', { ns: "app-common", defaultValue: "Hotkeys imported successfully" }),
             type: ToastType.info,
           });
         }
@@ -336,9 +338,9 @@ export const useHotkeys = () => {
         await loadHotkeysFromAPI();
       } catch (error: unknown) {
         if (toast) {
-          const errorMessage = error instanceof Error ? error.message : "Unknown error";
+          const errorMessage = error instanceof Error ? error.message : i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.unknownError', { ns: "app-common", defaultValue: "Unknown error" });
           toast.show({
-            message: `Error importing hotkeys: ${errorMessage}`,
+            message: i18next.t('appCommon.pages.AccountSettings.hooks.useHotkeys.errorImportingHotkeysErrormessage', { ns: "app-common", defaultValue: "Error importing hotkeys: {{errorMessage}}", errorMessage }),
             type: ToastType.error,
           });
         }

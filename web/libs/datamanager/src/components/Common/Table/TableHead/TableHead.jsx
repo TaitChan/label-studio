@@ -22,6 +22,8 @@ import {
   FF_UTC_428_CONSENSUS_CONTROL_TAG_AGREEMENT,
 } from "@humansignal/core/lib/utils/feature-flags";
 import { isStarterCloudPlan } from "@humansignal/core";
+import i18next from "i18next";
+import { translateColumnTitle } from "../../../../utils/dm-column-i18n";
 
 const tableHeadCN = cn("table-head");
 
@@ -40,7 +42,7 @@ const DropdownWrapper = observer(({ column, cellViews, children, onChange }) => 
   return (
     <Dropdown.Trigger
       content={
-        <Menu title="Display as" size="compact" selectedKeys={[column.currentType]}>
+        <Menu title={i18next.t('datamanager.components.Common.Table.TableHead.TableHead.displayAs', { ns: "datamanager", defaultValue: "Display as" })} size="compact" selectedKeys={[column.currentType]}>
           {types.map((type) => {
             return (
               <Menu.Item key={type} onClick={() => onChange?.(column, type)}>
@@ -162,7 +164,9 @@ const ColumnRenderer = observer(
     const canOrder = sortingEnabled && column.original?.canOrder;
     const Decoration = decoration?.get?.(column);
     const extra = !isDE && columnHeaderExtra ? columnHeaderExtra(column, Decoration) : null;
-    const content = Decoration?.content ? Decoration.content(column) : column.title;
+    const content = Decoration?.content
+      ? Decoration.content(column)
+      : translateColumnTitle(column.original ?? column);
     const style = getStyle(cellViews, column, Decoration);
 
     const isAgreementColumn =

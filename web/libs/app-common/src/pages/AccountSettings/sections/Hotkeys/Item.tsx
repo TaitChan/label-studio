@@ -6,6 +6,8 @@ import { Button, Tooltip } from "@humansignal/ui";
 import { Toggle as UiToggle } from "@humansignal/ui";
 import { KeyboardKey } from "./Key";
 import { IconClose } from "@humansignal/ui";
+import { useTranslation } from 'react-i18next'
+
 
 // Type definitions
 interface Hotkey {
@@ -36,6 +38,7 @@ interface HotkeyItemProps {
  * @returns {React.ReactElement} The HotkeyItem component
  */
 export const HotkeyItem = ({ hotkey, onEdit, isEditing, onSave, onCancel, onToggle }: HotkeyItemProps) => {
+  const { t } = useTranslation("app-common")
   const [editedKey, setEditedKey] = useState<string>(hotkey.key);
   const [keyRecordingMode, setKeyRecordingMode] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -140,25 +143,25 @@ export const HotkeyItem = ({ hotkey, onEdit, isEditing, onSave, onCancel, onTogg
             className={clsx(
               "flex-1 flex items-center justify-center min-h-[40px] px-base py-tight border rounded-md cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-primary-border-subtle focus:border-primary-border-bold focus:ring-offset-2",
               keyRecordingMode ? "border-neutral-border-bolder" : "border-input bg-neutral-surface",
-              error ? "border-destructive" : "",
+              error && "border-destructive",
             )}
             onClick={startRecordingKeys}
             onKeyDown={handleKeyPress}
-            aria-label="Click to record keyboard shortcut"
+            aria-label={t('appCommon.pages.AccountSettings.sections.Hotkeys.Item.clickToRecordKeyboardShortcut', { defaultValue: "Click to record keyboard shortcut" })}
           >
             {keyRecordingMode ? (
-              <span className="text-primary-content font-medium animate-pulse">Press keys now...</span>
+              <span className="text-primary-content font-medium animate-pulse">{t('appCommon.pages.AccountSettings.sections.Hotkeys.Item.pressKeysNow', { defaultValue: "Press keys now..." })}</span>
             ) : editedKey ? (
               <KeyboardKey>{editedKey}</KeyboardKey>
             ) : (
-              <span className="text-neutral-content-subtler">Click to set shortcut</span>
+              <span className="text-neutral-content-subtler">{t('appCommon.pages.AccountSettings.sections.Hotkeys.Item.clickToSetShortcut', { defaultValue: "Click to set shortcut" })}</span>
             )}
           </Button>
 
           {/* Action buttons */}
           <div className="flex flex-row gap-2">
             <Button variant="primary" onClick={handleSave} disabled={!editedKey || !!error}>
-              Apply
+              {t('appCommon.pages.AccountSettings.sections.Hotkeys.Item.apply', { defaultValue: "Apply" })}
             </Button>
             <Button variant="neutral" icon={<IconClose />} onClick={handleCancel} />
           </div>
@@ -178,7 +181,13 @@ export const HotkeyItem = ({ hotkey, onEdit, isEditing, onSave, onCancel, onTogg
         <UiToggle
           checked={hotkey.active}
           onChange={handleToggle}
-          aria-label={`${hotkey.active ? "Disable" : "Enable"} ${hotkey.label}`}
+          aria-label={t("appCommon.pages.AccountSettings.sections.Hotkeys.Item.toggleHotkeyLabel", {
+            defaultValue: "{{action}} {{label}}",
+            action: hotkey.active
+              ? t("appCommon.pages.AccountSettings.sections.Hotkeys.Item.disable", { defaultValue: "Disable" })
+              : t("appCommon.pages.AccountSettings.sections.Hotkeys.Item.enable", { defaultValue: "Enable" }),
+            label: hotkey.label,
+          })}
         />
       </div>
 
@@ -189,7 +198,7 @@ export const HotkeyItem = ({ hotkey, onEdit, isEditing, onSave, onCancel, onTogg
       </div>
 
       {/* Current hotkey display (clickable to edit) */}
-      <Tooltip title="Click to edit hotkey">
+      <Tooltip title={t('appCommon.pages.AccountSettings.sections.Hotkeys.Item.clickToEditHotkey', { defaultValue: "Click to edit hotkey" })}>
         <div
           className="flex items-center gap-2 cursor-pointer hover:opacity-80 hover:bg-primary-emphasis-subtle px-base py-base rounded-small"
           onClick={handleEdit}

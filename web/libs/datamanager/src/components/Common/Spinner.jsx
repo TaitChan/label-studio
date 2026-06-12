@@ -1,6 +1,8 @@
 import { inject } from "mobx-react";
 import React from "react";
 import Running from "../../assets/running";
+import i18next from 'i18next'
+
 
 const injector = inject(({ store }) => {
   return {
@@ -45,7 +47,7 @@ export const Spinner = injector(({ SDK, visible = true, ...props }) => {
           {ExternalSpinner ? (
             <ExternalSpinner size={size} />
           ) : (
-            <img src={imgSrc} srcSet={imgSrcSet} style={imgStyles} alt="opossum loader" />
+            <img src={imgSrc} srcSet={imgSrcSet} style={imgStyles} alt={i18next.t('datamanager.components.Common.Spinner.opossumLoader', { ns: "datamanager", defaultValue: "opossum loader" })} />
           )}
         </div>
       }

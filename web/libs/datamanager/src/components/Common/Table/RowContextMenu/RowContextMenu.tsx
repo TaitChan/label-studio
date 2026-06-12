@@ -7,6 +7,8 @@ import { modal } from "../../Modal/Modal";
 import { TaskSourceViewer, getTaskSourceViewerStorageKey } from "../../TaskSourceViewer";
 // @ts-expect-error - utils is JS module
 import { getProperty } from "../utils";
+import { translateColumnTitle } from "../../../../utils/dm-column-i18n";
+import { useTranslation } from 'react-i18next'
 
 export interface RowContextMenuProps {
   /** Task data object */
@@ -40,6 +42,7 @@ export const RowContextMenu: FC<RowContextMenuProps> = ({
   onClose,
   projectId,
 }) => {
+  const { t } = useTranslation("datamanager")
   // Columns that should not have copy cell content option
   const excludedColumns = [
     "select",
@@ -130,7 +133,7 @@ export const RowContextMenu: FC<RowContextMenuProps> = ({
       await navigator.clipboard.writeText(textToCopy);
 
       const taskId = row.id ?? row.task_id;
-      const columnName = column?.title || column?.alias || "content";
+      const columnName = translateColumnTitle(column) || column?.alias || "content";
       showToast(`Copied "${columnName}" for Task ${taskId} to clipboard`, "info");
     } catch {
       showToast("Failed to copy to clipboard", "error");
@@ -180,7 +183,7 @@ export const RowContextMenu: FC<RowContextMenuProps> = ({
     };
 
     const modalInstance = modal({
-      title: `Source for task ${taskId}`,
+      title: t('datamanager.components.Common.Table.RowContextMenu.RowContextMenu.sourceForTaskTaskid', { defaultValue: "Source for task {{taskId}}", taskId }),
       style: { width: 900 },
       header: null, // Will be set by renderToggle
       body: (
@@ -215,7 +218,14 @@ export const RowContextMenu: FC<RowContextMenuProps> = ({
   // Use annotators array which only contains actual annotators, not predictions
   const hasAnnotators = row.annotators && row.annotators.length > 0;
   const annotatorCount = row.annotators?.length ?? 0;
-  const annotatorLabel = annotatorCount === 1 ? "Annotator" : "Annotators";
+  const annotatorLabel =
+    annotatorCount === 1
+      ? t("datamanager.components.Common.Table.RowContextMenu.RowContextMenu.annotator", {
+          defaultValue: "Annotator",
+        })
+      : t("datamanager.components.Common.Table.RowContextMenu.RowContextMenu.annotators", {
+          defaultValue: "Annotators",
+        });
 
   // Create dropdown ref for context
   const dropdownRef = useRef(null);
@@ -247,31 +257,29 @@ export const RowContextMenu: FC<RowContextMenuProps> = ({
             data-testid="menu-item-compare-annotations"
             icon={<IconViewAll />}
           >
-            Compare All Annotations
+            {t('datamanager.components.Common.Table.RowContextMenu.RowContextMenu.compareAllAnnotations', { defaultValue: "Compare All Annotations" })}
           </Menu.Item>
 
           <Menu.Divider />
 
           {canCopyCellContent && (
             <Menu.Item onClick={handleCopyCellContent} data-testid="menu-item-copy-cell" icon={<IconCopyOutline />}>
-              Copy Cell Contents
+              {t('datamanager.components.Common.Table.RowContextMenu.RowContextMenu.copyCellContents', { defaultValue: "Copy Cell Contents" })}
             </Menu.Item>
           )}
 
           <Menu.Item onClick={handleCopyTaskId} data-testid="menu-item-copy-task-id" icon={<IconCopyOutline />}>
-            Copy Task ID
+            {t('datamanager.components.Common.Table.RowContextMenu.RowContextMenu.copyTaskId', { defaultValue: "Copy Task ID" })}
           </Menu.Item>
 
           <Menu.Item onClick={handleViewTaskSource} data-testid="menu-item-view-source" icon={<IconBraces />}>
-            View Task Source
+            {t('datamanager.components.Common.Table.RowContextMenu.RowContextMenu.viewTaskSource', { defaultValue: "View Task Source" })}
           </Menu.Item>
 
           {onViewAnalytics && hasAnnotators && (
             <>
               <Menu.Divider />
-              <Menu.Item onClick={handleViewAnalytics} data-testid="menu-item-view-analytics" icon={<IconUserStats />}>
-                View {annotatorLabel} Performance
-              </Menu.Item>
+              <Menu.Item onClick={handleViewAnalytics} data-testid="menu-item-view-analytics" icon={<IconUserStats />}>{t('datamanager.components.Common.Table.RowContextMenu.RowContextMenu.viewAnnotatorlabelPerformance', { defaultValue: "View {{annotatorLabel}} Performance", annotatorLabel })}</Menu.Item>
             </>
           )}
         </Menu>

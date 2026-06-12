@@ -1,6 +1,9 @@
 import { Badge, Select } from "@humansignal/ui";
 import { IconSpark } from "@humansignal/icons";
 import { useCallback, useMemo } from "react";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+import { translateColumnTitle } from "../../utils/dm-column-i18n";
 
 // ── Adapters ─────────────────────────────────────────────────────────────────
 
@@ -42,7 +45,7 @@ export function columnsToPickerGroups(columns, filterFn) {
       if (!filterFn || filterFn(col)) {
         const items = col.children.map(toTabColumnItem);
         if (items.length) {
-          groups.set(col.key, { key: col.key, title: col.title, items });
+          groups.set(col.key, { key: col.key, title: translateColumnTitle(col), items });
         }
       }
     } else if (col.parent) {
@@ -65,7 +68,7 @@ export function columnsToPickerGroups(columns, filterFn) {
     result.push({ key: "__root__", title: null, items: rootItems });
   }
   if (agreementItems.length) {
-    result.push({ key: "__agreement__", title: "Agreement", items: agreementItems });
+    result.push({ key: "__agreement__", title: i18next.t('datamanager.components.Common.ColumnPicker.agreement', { ns: "datamanager", defaultValue: "Agreement" }), items: agreementItems });
   }
   result.push(...groups.values());
   return result;
@@ -109,7 +112,7 @@ export function filtersToPickerGroups(availableFilters, recentEntries = []) {
     const field = filter.field;
     const item = {
       key: filter.id,
-      title: field.title,
+      title: translateColumnTitle(field),
       readableType: shouldShowBadge(field) ? (agreementBadgeLabel(field) ?? field.readableType) : undefined,
       icon: field.icon,
       enterpriseBadge: field.enterprise_badge,
@@ -122,7 +125,7 @@ export function filtersToPickerGroups(availableFilters, recentEntries = []) {
     } else if (field.parent) {
       const parentKey = field.parent.key;
       if (!groups.has(parentKey)) {
-        groups.set(parentKey, { key: parentKey, title: field.parent.title, items: [] });
+        groups.set(parentKey, { key: parentKey, title: translateColumnTitle(field.parent), items: [] });
       }
       groups.get(parentKey).items.push(item);
     } else {
@@ -142,7 +145,7 @@ export function filtersToPickerGroups(availableFilters, recentEntries = []) {
         const rawGroup = getFilterGroupTitle(field);
         return {
           key: RECENT_COLUMN_PREFIX + filter.id,
-          title: field.title,
+          title: translateColumnTitle(field),
           groupTitle: rawGroup.charAt(0).toUpperCase() + rawGroup.slice(1),
           readableType: shouldShowBadge(field) ? (agreementBadgeLabel(field) ?? field.readableType) : undefined,
           icon: field.icon,
@@ -154,16 +157,16 @@ export function filtersToPickerGroups(availableFilters, recentEntries = []) {
       .filter(Boolean);
 
     if (recentItems.length > 0) {
-      result.push({ key: "__recent__", title: "Recent", items: recentItems });
+      result.push({ key: "__recent__", title: i18next.t('datamanager.components.Common.ColumnPicker.recent', { ns: "datamanager", defaultValue: "Recent" }), items: recentItems });
     }
   }
 
   // Ungrouped root filters are labelled "Task" so they have a visible section heading.
   if (rootItems.length) {
-    result.push({ key: "__root__", title: "Task", items: rootItems });
+    result.push({ key: "__root__", title: i18next.t('datamanager.components.Common.ColumnPicker.task', { ns: "datamanager", defaultValue: "Task" }), items: rootItems });
   }
   if (agreementItems.length) {
-    result.push({ key: "__agreement__", title: "Agreement", items: agreementItems });
+    result.push({ key: "__agreement__", title: i18next.t('datamanager.components.Common.ColumnPicker.agreement', { ns: "datamanager", defaultValue: "Agreement" }), items: agreementItems });
   }
   result.push(...groups.values());
   return result;
@@ -191,7 +194,7 @@ function toTabColumnItem(col) {
   const enterpriseBadge = col.enterprise_badge ?? col.original?.enterprise_badge;
   return {
     key: col.key,
-    title: col.title,
+    title: translateColumnTitle(col),
     readableType: shouldShowBadge(col) ? (agreementBadgeLabel(col) ?? col.readableType) : undefined,
     icon: col.icon,
     enterpriseBadge,
@@ -261,6 +264,7 @@ export const searchFilterByLabel = (option, queryString) => {
  * Option content for ColumnPicker: title + icon/tag + EnterpriseBadge.
  */
 export const ColumnPickerOptionContent = ({ option }) => {
+  const { t } = useTranslation("datamanager")
   const { enterpriseBadge, icon, readableType, label, groupTitle } = option ?? {};
   const badge = icon ? (
     <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">{icon}</div>
@@ -275,7 +279,7 @@ export const ColumnPickerOptionContent = ({ option }) => {
         {groupTitle && (
           <>
             <span className="text-neutral-content-subtler">{groupTitle}</span>
-            <span className="text-neutral-content-subtlest">{" > "}</span>
+            <span className="text-neutral-content-subtlest">{t('datamanager.components.Common.ColumnPicker.groupSeparator', { defaultValue: " > " })}</span>
           </>
         )}
         <span className="text-neutral-content">{label}</span>
@@ -284,7 +288,7 @@ export const ColumnPickerOptionContent = ({ option }) => {
       <div className="flex items-center gap-tight flex-shrink-0 pointer-events-none">
         {enterpriseBadge && (
           <Badge variant="gradient" style="ghost" icon={<IconSpark />}>
-            Enterprise
+            {t('datamanager.components.Common.ColumnPicker.enterprise', { defaultValue: "Enterprise" })}
           </Badge>
         )}
         {badge}

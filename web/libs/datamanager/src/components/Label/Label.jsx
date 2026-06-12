@@ -10,9 +10,12 @@ import { Resizer } from "../Common/Resizer/Resizer";
 import { Space } from "../Common/Space/Space";
 import { DataView } from "../MainView";
 import "./Label.prefix.css";
+import { useTranslation } from 'react-i18next'
+
 
 // Todo: consider renaming this file to something like LabelingWrapper as it is not a Label component
 const LabelingHeader = ({ SDK, onClick, isExplorerMode }) => {
+  const { t } = useTranslation("datamanager")
   return (
     <div className={cn("label-view").elem("header").mod({ labelStream: !isExplorerMode }).toClassName()}>
       <Space size="large">
@@ -23,7 +26,7 @@ const LabelingHeader = ({ SDK, onClick, isExplorerMode }) => {
             onClick={onClick}
             style={{ fontSize: 18, padding: 0, color: "black" }}
           >
-            Back
+            {t('datamanager.components.Label.Label.back', { defaultValue: "Back" })}
           </Button>
         )}
 

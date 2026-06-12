@@ -5,6 +5,8 @@ import "./Config.prefix.css";
 import { EMPTY_CONFIG } from "./Template";
 import { API_CONFIG } from "../../../config/ApiConfig";
 import { useAPI } from "../../../providers/ApiProvider";
+import { useTranslation } from "react-i18next";
+
 
 const configClass = cn("configure");
 
@@ -19,6 +21,7 @@ const loadDependencies = async () => {
 };
 
 export const Preview = ({ config, data, error, loading, project }) => {
+  const { t } = useTranslation("labelstudio")
   // @see comment about dependencies above
   loadDependencies();
 
@@ -145,7 +148,7 @@ export const Preview = ({ config, data, error, loading, project }) => {
 
   return (
     <div className={configClass.elem("preview").toClassName()}>
-      <h3>Preview</h3>
+      <h3>{t('pages.CreateProject.Config.Preview.preview', { defaultValue: "Preview" })}</h3>
       {error && (
         <div className={configClass.elem("preview-error").toClassName()}>
           <h2>

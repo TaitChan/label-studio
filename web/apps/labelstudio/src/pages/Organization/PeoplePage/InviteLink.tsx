@@ -7,6 +7,8 @@ import { useAtomValue } from "jotai";
 import { atomWithQuery } from "jotai-tanstack-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "../../../components/Form";
+import { useTranslation } from 'react-i18next'
+
 
 const linkAtom = atomWithQuery(() => ({
   queryKey: ["invite-link"],
@@ -14,7 +16,7 @@ const linkAtom = atomWithQuery(() => ({
     // called only once when the component is rendered on page reload
     // will also be reset when called `refetch()` on the Reset button
     const result = await API.invoke("resetInviteLink");
-    return location.origin + result.invite_url;
+    return `${window.location.origin}${result.invite_url}`;
   },
 }));
 
@@ -27,6 +29,7 @@ export function InviteLink({
   onOpened?: () => void;
   onClosed?: () => void;
 }) {
+  const { t } = useTranslation("labelstudio")
   const modalRef = useRef<Modal>();
   useEffect(() => {
     if (modalRef.current && opened) {
@@ -39,7 +42,7 @@ export function InviteLink({
   return (
     <Modal
       ref={modalRef}
-      title="Invite members"
+      title={t('pages.Organization.PeoplePage.InviteLink.inviteMembers', { defaultValue: "Invite members" })}
       opened={opened}
       bareFooter={true}
       body={<InvitationModal />}
@@ -52,13 +55,16 @@ export function InviteLink({
 }
 
 const InvitationModal = () => {
+  const { t } = useTranslation("labelstudio")
   const { data: link } = useAtomValue(linkAtom);
   return (
     <div className={cn("invite").toClassName()}>
       <Input value={link} style={{ width: "100%" }} readOnly />
       <Typography size="small" className="text-neutral-content-subtler mt-base mb-wider">
-        Invite members to join your Label Studio instance. People that you invite have full access to all of your
-        projects.{" "}
+        {t("pages.Organization.PeoplePage.InviteLink.inviteMembersToJoinYourLabelStudioInstancePeopleThatYouInviteHaveFullAccessToAllOfYourProjects", {
+          defaultValue:
+            "Invite members to join your Label Studio instance. People that you invite have full access to all of your projects.",
+        })}{" "}
         <a
           href="https://labelstud.io/guide/signup.html"
           target="_blank"
@@ -70,7 +76,7 @@ const InvitationModal = () => {
             })
           }
         >
-          Learn more
+          {t("pages.Organization.PeoplePage.InviteLink.learnMore", { defaultValue: "Learn more" })}
         </a>
         .
       </Typography>
@@ -79,6 +85,7 @@ const InvitationModal = () => {
 };
 
 const InvitationFooter = () => {
+  const { t } = useTranslation("labelstudio")
   const { copyText, copied } = useTextCopy();
   const { refetch, data: link } = useAtomValue(linkAtom);
 
@@ -90,9 +97,9 @@ const InvitationFooter = () => {
           look="outlined"
           style={{ width: 170 }}
           onClick={() => refetch()}
-          aria-label="Refresh invite link"
+          aria-label={t('pages.Organization.PeoplePage.InviteLink.refreshInviteLink', { defaultValue: "Refresh invite link" })}
         >
-          Reset Link
+          {t("pages.Organization.PeoplePage.InviteLink.resetLink", { defaultValue: "Reset link" })}
         </Button>
       </Space>
       <Space>
@@ -100,9 +107,11 @@ const InvitationFooter = () => {
           variant={copied ? "positive" : "primary"}
           className="w-[170px]"
           onClick={() => copyText(link!)}
-          aria-label="Copy invite link"
+          aria-label={t('pages.Organization.PeoplePage.InviteLink.copyInviteLink', { defaultValue: "Copy invite link" })}
         >
-          {copied ? "Copied!" : "Copy link"}
+          {copied
+            ? t("pages.Organization.PeoplePage.InviteLink.copied", { defaultValue: "Copied!" })
+            : t("pages.Organization.PeoplePage.InviteLink.copyLink", { defaultValue: "Copy link" })}
         </Button>
       </Space>
     </Space>

@@ -12,15 +12,19 @@ import { CustomBackendForm } from "./Forms";
 import { TestRequest } from "./TestRequest";
 import { StartModelTraining } from "./StartModelTraining";
 import "./MachineLearningSettings.prefix.css";
+import i18next from "i18next";
+import { useTranslation, Trans } from 'react-i18next';
+
 
 export const MachineLearningSettings = () => {
+  const { t } = useTranslation("labelstudio")
   const api = useAPI();
   const { project, fetchProject } = useContext(ProjectContext);
   const [backends, setBackends] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  useUpdatePageTitle(createTitleFromSegments([project?.title, "Model Settings"]));
+  useUpdatePageTitle(createTitleFromSegments([project?.title, t("pages.Settings.MachineLearningSettings.MachineLearningSettings.modelSettings", { defaultValue: "Model Settings" })]));
 
   const fetchBackends = useCallback(async () => {
     setLoading(true);
@@ -39,7 +43,7 @@ export const MachineLearningSettings = () => {
   const startTrainingModal = useCallback(
     (backend) => {
       const modalProps = {
-        title: "Start Model Training",
+        title: t('pages.Settings.MachineLearningSettings.MachineLearningSettings.startModelTraining', { defaultValue: "Start Model Training" }),
         style: { width: 760 },
         closeOnClickOutside: true,
         body: <StartModelTraining backend={backend} />,
@@ -53,7 +57,7 @@ export const MachineLearningSettings = () => {
   const showRequestModal = useCallback(
     (backend) => {
       const modalProps = {
-        title: "Test Request",
+        title: t('pages.Settings.MachineLearningSettings.MachineLearningSettings.testRequest', { defaultValue: "Test Request" }),
         style: { width: 760 },
         closeOnClickOutside: true,
         body: <TestRequest backend={backend} />,
@@ -68,7 +72,7 @@ export const MachineLearningSettings = () => {
     (backend) => {
       const action = backend ? "updateMLBackend" : "addMLBackend";
       const modalProps = {
-        title: `${backend ? "Edit" : "Connect"} Model`,
+        title: t('pages.Settings.MachineLearningSettings.MachineLearningSettings.valModel', { defaultValue: "{{val}} Model", val: backend ? "Edit" : "Connect" }),
         style: { width: 760 },
         closeOnClickOutside: false,
         body: (
@@ -99,7 +103,7 @@ export const MachineLearningSettings = () => {
     <section>
       <div className="w-[42rem]">
         <Typography variant="headline" size="medium" className="mb-base">
-          Model
+          {t('pages.Settings.MachineLearningSettings.MachineLearningSettings.model', { defaultValue: "Model" })}
         </Typography>
         {loading && <Spinner size={32} />}
         {loaded && backends.length === 0 && (
@@ -108,16 +112,16 @@ export const MachineLearningSettings = () => {
               size="medium"
               variant="primary"
               icon={<IconModels />}
-              title="Let's connect your first model"
-              description="Connect a machine learning model to generate live predictions for your project. Compare predictions, accelerate labeling with automatic prelabeling, and direct your team to the most impactful tasks through active learning."
+              title={t('pages.Settings.MachineLearningSettings.MachineLearningSettings.letsConnectYourFirstModel', { defaultValue: "Let's connect your first model" })}
+              description={t('pages.Settings.MachineLearningSettings.MachineLearningSettings.connectAMachineLearningModelToGenerateLivePredictionsForYourProjectComparePredictionsAccelerateLabelingWithAutomaticPrelabelingAndDirectYourTeamToTheMostImpactfulTasksThroughActiveLearning', { defaultValue: "Connect a machine learning model to generate live predictions for your project. Compare predictions, accelerate labeling with automatic prelabeling, and direct your team to the most impactful tasks through active learning." })}
               actions={
                 <Button
                   variant="primary"
                   look="filled"
                   onClick={() => showMLFormModal()}
-                  aria-label="Add machine learning model"
+                  aria-label={t('pages.Settings.MachineLearningSettings.MachineLearningSettings.addMachineLearningModel', { defaultValue: "Add machine learning model" })}
                 >
-                  Connect Model
+                  {t('pages.Settings.MachineLearningSettings.MachineLearningSettings.connectModel', { defaultValue: "Connect Model" })}
                 </Button>
               }
               footer={
@@ -128,10 +132,10 @@ export const MachineLearningSettings = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-testid="ml-help-link"
-                      aria-label="Learn more about machine learning models (opens in new window)"
+                      aria-label={t('pages.Settings.MachineLearningSettings.MachineLearningSettings.learnMoreAboutMachineLearningModelsOpensInNewWindow', { defaultValue: "Learn more about machine learning models (opens in new window)" })}
                       className="inline-flex items-center gap-1 hover:underline"
                     >
-                      Learn more
+                      {t('pages.Settings.MachineLearningSettings.MachineLearningSettings.learnMore', { defaultValue: "Learn more" })}
                       <IconExternal width={16} height={16} />
                     </a>
                   </Typography>
@@ -151,22 +155,17 @@ export const MachineLearningSettings = () => {
         {backends.length > 0 && (
           <div className="my-wide">
             <Typography size="small" className="text-neutral-content-subtler">
-              A connected model has been detected! If you wish to fetch predictions from this model, please follow these
-              steps:
+              {t('pages.Settings.MachineLearningSettings.MachineLearningSettings.aConnectedModelHasBeenDetectedIfYouWishToFetchPredictionsFromThisModelPleaseFollowTheseSteps', { defaultValue: "A connected model has been detected! If you wish to fetch predictions from this model, please follow thesen              steps:" })}
             </Typography>
-            <Typography size="small" className="text-neutral-content-subtler mt-base">
-              1. Navigate to the <i>Data Manager</i>.
-            </Typography>
+            <Typography size="small" className="text-neutral-content-subtler mt-base">1. Navigate to the <i>Data Manager</i>.</Typography>
             <Typography size="small" className="text-neutral-content-subtler mt-tighter">
-              2. Select the desired tasks.
+              {t('pages.Settings.MachineLearningSettings.MachineLearningSettings.2SelectTheDesiredTasks', { defaultValue: "2. Select the desired tasks." })}
             </Typography>
-            <Typography size="small" className="text-neutral-content-subtler mt-tighter">
-              3. Click on <i>Batch predictions</i> from the <i>Actions</i> menu.
-            </Typography>
+            <Typography size="small" className="text-neutral-content-subtler mt-tighter">3. Click on <i>Batch predictions</i> from the <i>Actions</i> menu.</Typography>
             <Typography size="small" className="text-neutral-content-subtler mt-base">
-              If you want to use the model predictions for prelabeling, please configure this in the{" "}
+              {t('pages.Settings.MachineLearningSettings.MachineLearningSettings.ifYouWantToUseTheModelPredictionsForPrelabelingPleaseConfigureThisInThe', { defaultValue: "If you want to use the model predictions for prelabeling, please configure this in the" })}{" "}
               <NavLink to="annotation" className="hover:underline">
-                Annotation settings
+                {t('pages.Settings.MachineLearningSettings.MachineLearningSettings.annotationSettings2', { defaultValue: "Annotation settings" })}
               </NavLink>
               .
             </Typography>
@@ -182,12 +181,12 @@ export const MachineLearningSettings = () => {
           {backends.length > 0 && (
             <div className="p-wide border border-neutral-border rounded-md">
               <Form.Row columnCount={1}>
-                <Label text="Configuration" large />
+                <Label text={t("pages.Settings.MachineLearningSettings.MachineLearningSettings.configuration", { defaultValue: "Configuration" })} large />
 
                 <div>
                   <Toggle
-                    label="Start model training on annotation submission"
-                    description="This option will send a request to /train with information about annotations. You can use this to enable an Active Learning loop. You can also manually start training through model menu in its card."
+                    label={t('pages.Settings.MachineLearningSettings.MachineLearningSettings.startModelTrainingOnAnnotationSubmission', { defaultValue: "Start model training on annotation submission" })}
+                    description={t('pages.Settings.MachineLearningSettings.MachineLearningSettings.thisOptionWillSendARequestToTrainWithInformationAboutAnnotationsYouCanUseThisToEnableAnActiveLearningLoopYouCanAlsoManuallyStartTrainingThroughModelMenuInItsCard', { defaultValue: "This option will send a request to /train with information about annotations. You can use this to enable an Active Learning loop. You can also manually start training through model menu in its card." })}
                     name="start_training_on_annotation_update"
                   />
                 </div>
@@ -198,10 +197,10 @@ export const MachineLearningSettings = () => {
           {backends.length > 0 && (
             <Form.Actions>
               <Form.Indicator>
-                <span case="success">Saved!</span>
+                <span case="success">{t('pages.Settings.MachineLearningSettings.MachineLearningSettings.saved', { defaultValue: "Saved!" })}</span>
               </Form.Indicator>
-              <Button type="submit" look="primary" className="w-[120px]" aria-label="Save machine learning settings">
-                Save
+              <Button type="submit" look="primary" className="w-[120px]" aria-label={t('pages.Settings.MachineLearningSettings.MachineLearningSettings.saveMachineLearningSettings', { defaultValue: "Save machine learning settings" })}>
+                {t('pages.Settings.MachineLearningSettings.MachineLearningSettings.save', { defaultValue: "Save" })}
               </Button>
             </Form.Actions>
           )}
@@ -211,5 +210,5 @@ export const MachineLearningSettings = () => {
   );
 };
 
-MachineLearningSettings.title = "Model";
+MachineLearningSettings.title = i18next.t("pages.Settings.MachineLearningSettings.MachineLearningSettings.model", { defaultValue: "Model" });
 MachineLearningSettings.path = "/ml";

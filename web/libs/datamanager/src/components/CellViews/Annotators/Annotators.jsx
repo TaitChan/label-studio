@@ -12,10 +12,14 @@ import "./Annotators.prefix.css";
 import { isActive, FF_DM_FILTER_MEMBERS } from "@humansignal/core/lib/utils/feature-flags";
 import { VariantSelect } from "../../Filters/types/List";
 import { UserSelect } from "../../Common/UserSelect";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+
 
 const isFilterMembers = isActive(FF_DM_FILTER_MEMBERS);
 
 export const Annotators = (cell) => {
+  const { t } = useTranslation("datamanager")
   const { value, column, original: task } = cell;
   const sdk = useSDK();
   const maxUsersToDisplay = window.APP_SETTINGS.data_manager?.max_users_to_display ?? 0;
@@ -89,7 +93,7 @@ export const Annotators = (cell) => {
             sdk.invoke("userCellCounterClick", e, column.alias, task, userList);
           }}
         >
-          <Userpic addCount={`+${extraCount}`} />
+          <Userpic addCount={t('datamanager.components.CellViews.Annotators.Annotators.extracount', { defaultValue: "+{{extraCount}}", extraCount })} />
         </div>
       )}
     </div>
@@ -144,7 +148,7 @@ Annotators.customOperators = [
   },
   {
     key: "not_contains",
-    label: "not contains",
+    label: i18next.t('datamanager.components.CellViews.Annotators.Annotators.notContains', { ns: "datamanager", defaultValue: "not contains" }),
     valueType: "list",
     input: (props) => (isFilterMembers ? <UserSelect {...props} /> : <VariantSelect {...props} />),
   },

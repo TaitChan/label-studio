@@ -1,3 +1,4 @@
+import i18next from 'i18next'
 /**
  * Shared utilities for state chip components
  *
@@ -31,10 +32,42 @@ export function formatTimestamp(timestamp: string): string {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins} ${diffMins === 1 ? "minute" : "minutes"} ago`;
-  if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? "hour" : "hours"} ago`;
-  if (diffDays < 7) return `${diffDays} ${diffDays === 1 ? "day" : "days"} ago`;
+  if (diffMins < 1) {
+    return i18next.t("appCommon.components.state-chips.utils.justNow", { ns: "app-common", defaultValue: "Just now" });
+  }
+  if (diffMins < 60) {
+    const unit =
+      diffMins === 1
+        ? i18next.t("appCommon.components.state-chips.utils.minuteSingular", { ns: "app-common", defaultValue: "minute" })
+        : i18next.t("appCommon.components.state-chips.utils.minutePlural", { ns: "app-common", defaultValue: "minutes" });
+    return i18next.t("appCommon.components.state-chips.utils.diffminsValAgo", {
+      ns: "app-common", defaultValue: "{{diffMins}} {{unit}} ago",
+      diffMins,
+      unit,
+    });
+  }
+  if (diffHours < 24) {
+    const unit =
+      diffHours === 1
+        ? i18next.t("appCommon.components.state-chips.utils.hourSingular", { ns: "app-common", defaultValue: "hour" })
+        : i18next.t("appCommon.components.state-chips.utils.hourPlural", { ns: "app-common", defaultValue: "hours" });
+    return i18next.t("appCommon.components.state-chips.utils.diffhoursValAgo", {
+      ns: "app-common", defaultValue: "{{diffHours}} {{unit}} ago",
+      diffHours,
+      unit,
+    });
+  }
+  if (diffDays < 7) {
+    const unit =
+      diffDays === 1
+        ? i18next.t("appCommon.components.state-chips.utils.daySingular", { ns: "app-common", defaultValue: "day" })
+        : i18next.t("appCommon.components.state-chips.utils.dayPlural", { ns: "app-common", defaultValue: "days" });
+    return i18next.t("appCommon.components.state-chips.utils.diffdaysValAgo", {
+      ns: "app-common", defaultValue: "{{diffDays}} {{unit}} ago",
+      diffDays,
+      unit,
+    });
+  }
 
   return date.toLocaleDateString(undefined, {
     year: "numeric",
@@ -55,14 +88,16 @@ export function formatUserName(
     email?: string;
   } | null,
 ): string {
-  if (!triggeredBy) return "System";
+  if (!triggeredBy) {
+    return i18next.t("appCommon.components.state-chips.utils.system", { ns: "app-common", defaultValue: "System" });
+  }
 
   const { first_name, last_name, email } = triggeredBy;
 
-  if (first_name && last_name) return `${first_name} ${last_name}`;
+  if (first_name && last_name) return i18next.t('appCommon.components.state-chips.utils.first_nameLast_name', { ns: "app-common", defaultValue: "{{first_name}} {{last_name}}", first_name, last_name });
   if (first_name) return first_name;
   if (last_name) return last_name;
   if (email) return email;
 
-  return "System";
+  return i18next.t("appCommon.components.state-chips.utils.system", { ns: "app-common", defaultValue: "System" });
 }

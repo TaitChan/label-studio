@@ -3,12 +3,16 @@ import { Button } from "@humansignal/ui";
 import { LeaveBlocker, type LeaveBlockerCallbacks } from "../../../components/LeaveBlocker/LeaveBlocker";
 import { modal } from "../../../components/Modal/Modal";
 import { Space } from "../../../components/Space/Space";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
+
 
 type SaveAndLeaveButtonProps = {
   onSave: () => Promise<void>;
   text?: string;
 };
-const SaveAndLeaveButton = ({ onSave, text = "Save and Leave" }: SaveAndLeaveButtonProps) => {
+const SaveAndLeaveButton = ({ onSave, text = i18next.t('pages.CreateProject.Config.UnsavedChanges.saveAndLeave', { defaultValue: "Save and Leave" }) }: SaveAndLeaveButtonProps) => {
+  const { t } = useTranslation("labelstudio")
   const [saving, setSaving] = useState(false);
   const saveHandler = useCallback(async () => {
     setSaving(true);
@@ -16,7 +20,7 @@ const SaveAndLeaveButton = ({ onSave, text = "Save and Leave" }: SaveAndLeaveBut
     setSaving(false);
   }, [onSave]);
   return (
-    <Button size="small" onClick={saveHandler} waiting={saving} aria-label="Save changes">
+    <Button size="small" onClick={saveHandler} waiting={saving} aria-label={t('pages.CreateProject.Config.UnsavedChanges.saveChanges', { defaultValue: "Save changes" })}>
       {text}
     </Button>
   );
@@ -40,8 +44,8 @@ export const unsavedChangesModal = ({
   cancelText,
   discardText,
   okText,
-  title = "You have unsaved changes.",
-  body = "Would you like to save them before leaving?",
+  title = i18next.t('pages.CreateProject.Config.UnsavedChanges.youHaveUnsavedChanges', { defaultValue: "You have unsaved changes." }),
+  body = i18next.t('pages.CreateProject.Config.UnsavedChanges.wouldYouLikeToSaveThemBeforeLeaving', { defaultValue: "Would you like to save them before leaving?" }),
   ...props
 }: UnsavedChangesModalProps) => {
   let modalInstance: any;
@@ -65,7 +69,7 @@ export const unsavedChangesModal = ({
           }}
           autoFocus
         >
-          {cancelText ?? "Cancel"}
+          {cancelText ?? i18next.t("pages.CreateProject.Config.UnsavedChanges.cancel", { defaultValue: "Cancel" })}
         </Button>
 
         {onDiscard && (
@@ -78,7 +82,7 @@ export const unsavedChangesModal = ({
             }}
             size="small"
           >
-            {discardText ?? "Discard and leave"}
+            {discardText ?? i18next.t('pages.CreateProject.Config.UnsavedChanges.discardAndLeave', { defaultValue: "Discard and leave" })}
           </Button>
         )}
 

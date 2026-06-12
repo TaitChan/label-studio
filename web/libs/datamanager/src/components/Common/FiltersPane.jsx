@@ -4,6 +4,8 @@ import { IconChevronDown } from "@humansignal/icons";
 import { Filters } from "../Filters/Filters";
 import { Badge, Button, Dropdown } from "@humansignal/ui";
 import { Icon } from "./Icon/Icon";
+import i18next from 'i18next'
+
 
 const buttonInjector = inject(({ store }) => {
   const { viewsStore, currentView } = store;
@@ -28,10 +30,10 @@ export const FiltersButton = buttonInjector(
           look="outlined"
           onClick={() => sidebarEnabled && viewsStore.toggleSidebar()}
           trailing={<Icon icon={IconChevronDown} />}
-          aria-label="Filters"
+          aria-label={i18next.t("datamanager.components.Common.FiltersPane.filters", { ns: "datamanager", defaultValue: "Filters" })}
           {...rest}
         >
-          Filters{" "}
+          {i18next.t('datamanager.components.Common.FiltersPane.filters', { ns: "datamanager", defaultValue: "Filters" })}{" "}
           {hasFilters && (
             <Badge size="small" className="ml-tightest">
               {activeFiltersNumber}

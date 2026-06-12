@@ -4,6 +4,8 @@ import { inject, observer } from "mobx-react";
 import { ColumnPicker } from "../../Common/ColumnPicker";
 import { Space } from "../../Common/Space/Space";
 import "./OrderButton.prefix.css";
+import i18next from 'i18next'
+
 
 const orderableFilter = (col) => col.orderable ?? col.original?.orderable;
 
@@ -27,7 +29,7 @@ export const OrderButton = injector(
             columnFilter={orderableFilter}
             value={ordering?.field ?? null}
             onChange={(key) => view.setOrdering(key)}
-            placeholder="Order by"
+            placeholder={i18next.t('datamanager.components.DataManager.Toolbar.OrderButton.orderBy', { ns: "datamanager", defaultValue: "Order by" })}
             triggerProps={{
               style: {
                 padding: "var(--spacing-tight)",
@@ -41,7 +43,13 @@ export const OrderButton = injector(
             variant="neutral"
             disabled={!ordering}
             onClick={() => view.setOrdering(ordering?.field)}
-            aria-label={ordering?.desc ? "Sort ascending" : "Sort descending"}
+            aria-label={ordering?.desc
+              ? i18next.t("datamanager.components.DataManager.Toolbar.OrderButton.sortAscending", { ns: "datamanager",
+                  defaultValue: "Sort ascending",
+                })
+              : i18next.t("datamanager.components.DataManager.Toolbar.OrderButton.sortDescending", { ns: "datamanager",
+                  defaultValue: "Sort descending",
+                })}
           >
             {ordering?.desc ? <IconSortUp /> : <IconSortDown />}
           </Button>

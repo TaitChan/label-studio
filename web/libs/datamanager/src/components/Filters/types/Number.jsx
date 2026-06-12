@@ -1,6 +1,8 @@
 import { observer } from "mobx-react";
 import { isDefined } from "../../../utils/utils";
 import { FilterInput } from "../FilterInput";
+import i18next from 'i18next'
+
 
 const valueFilter = (value) => {
   if (isDefined(value)) {
@@ -39,9 +41,23 @@ const RangeInput = observer(({ schema, value, onChange }) => {
 
   return (
     <div className="flex w-full min-w-[100px]">
-      <NumberInput placeholder="Min" value={min} onChange={onChangeMin} schema={schema} style={{ flex: 1 }} />
-      <span style={{ padding: "0 10px" }}>and</span>
-      <NumberInput placeholder="Max" value={max} onChange={onChangeMax} schema={schema} style={{ flex: 1 }} />
+      <NumberInput
+        placeholder={i18next.t("datamanager.components.Filters.types.Number.min", { ns: "datamanager", defaultValue: "Min" })}
+        value={min}
+        onChange={onChangeMin}
+        schema={schema}
+        style={{ flex: 1 }}
+      />
+      <span style={{ padding: "0 10px" }}>
+        {i18next.t("datamanager.components.Filters.types.Number.and", { ns: "datamanager", defaultValue: "and" })}
+      </span>
+      <NumberInput
+        placeholder={i18next.t("datamanager.components.Filters.types.Number.max", { ns: "datamanager", defaultValue: "Max" })}
+        value={max}
+        onChange={onChangeMax}
+        schema={schema}
+        style={{ flex: 1 }}
+      />
     </div>
   );
 });
@@ -85,13 +101,13 @@ export const NumberFilter = [
   },
   {
     key: "in",
-    label: "is between",
+    label: i18next.t('datamanager.components.Filters.types.Number.isBetween', { ns: "datamanager", defaultValue: "is between" }),
     valueType: "range",
     input: (props) => <RangeInput {...props} />,
   },
   {
     key: "not_in",
-    label: "not between",
+    label: i18next.t('datamanager.components.Filters.types.Number.notBetween', { ns: "datamanager", defaultValue: "not between" }),
     valueType: "range",
     input: (props) => <RangeInput {...props} />,
   },

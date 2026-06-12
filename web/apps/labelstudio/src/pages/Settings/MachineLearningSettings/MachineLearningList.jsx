@@ -12,6 +12,8 @@ import { ApiContext } from "../../../providers/ApiProvider";
 import { cn } from "../../../utils/bem";
 
 import "./MachineLearningList.prefix.css";
+import { useTranslation } from 'react-i18next'
+
 
 export const MachineLearningList = ({ backends, fetchBackends, onEdit, onTestRequest, onStartTraining }) => {
   const api = useContext(ApiContext);
@@ -45,11 +47,12 @@ export const MachineLearningList = ({ backends, fetchBackends, onEdit, onTestReq
 };
 
 const BackendCard = ({ backend, onStartTrain, onEdit, onDelete, onTestRequest }) => {
+  const { t } = useTranslation("labelstudio")
   const confirmDelete = useCallback(
     (backend) => {
       confirm({
-        title: "Delete ML Backend",
-        body: "This action cannot be undone. Are you sure?",
+        title: t('pages.Settings.MachineLearningSettings.MachineLearningList.deleteMlBackend', { defaultValue: "Delete ML Backend" }),
+        body: t('pages.Settings.MachineLearningSettings.MachineLearningList.thisActionCannotBeUndoneAreYouSure', { defaultValue: "This action cannot be undone. Are you sure?" }),
         buttonLook: "destructive",
         onOk() {
           onDelete?.(backend);
@@ -76,15 +79,15 @@ const BackendCard = ({ backend, onStartTrain, onEdit, onDelete, onTestRequest })
               <Menu size="medium" contextual>
                 <Menu.Item onClick={() => onEdit(backend)}>Edit</Menu.Item>
                 <Menu.Item onClick={() => onTestRequest(backend)}>Send Test Request</Menu.Item>
-                <Menu.Item onClick={() => onStartTrain(backend)}>Start Training</Menu.Item>
+                <Menu.Item onClick={() => onStartTrain(backend)}>{t('pages.Settings.MachineLearningSettings.MachineLearningList.startTraining', { defaultValue: "Start Training" })}</Menu.Item>
                 <Menu.Divider />
                 <Menu.Item onClick={() => confirmDelete(backend)} isDangerous>
-                  Delete
+                  {t('pages.Settings.MachineLearningSettings.MachineLearningList.delete', { defaultValue: "Delete" })}
                 </Menu.Item>
               </Menu>
             }
           >
-            <Button look="string" size="small" className="!p-0" aria-label="Machine learning model options">
+            <Button look="string" size="small" className="!p-0" aria-label={t('pages.Settings.MachineLearningSettings.MachineLearningList.machineLearningModelOptions', { defaultValue: "Machine learning model options" })}>
               <IconEllipsis />
             </Button>
           </Dropdown.Trigger>
@@ -96,7 +99,7 @@ const BackendCard = ({ backend, onStartTrain, onEdit, onDelete, onTestRequest })
         <div className={rootClass.elem("group").toClassName()}>
           <Tooltip title={format(parseISO(backend.created_at), "yyyy-MM-dd HH:mm:ss")}>
             <span>
-              Created&nbsp;
+              {t('pages.Settings.MachineLearningSettings.MachineLearningList.creatednbsp', { defaultValue: "Created&nbsp;" })}
               {formatDistanceToNow(parseISO(backend.created_at), {
                 addSuffix: true,
               })}
@@ -109,17 +112,18 @@ const BackendCard = ({ backend, onStartTrain, onEdit, onDelete, onTestRequest })
 };
 
 const BackendState = ({ backend }) => {
+  const { t } = useTranslation("labelstudio")
   const { state } = backend;
 
   return (
     <div className={cn("ml").elem("status").toClassName()}>
       <span className={cn("ml").elem("indicator").mod({ state }).toClassName()} />
       <Oneof value={state} className={cn("ml").elem("status-label").toClassName()}>
-        <span case="DI">Disconnected</span>
-        <span case="CO">Connected</span>
-        <span case="ER">Error</span>
-        <span case="TR">Training</span>
-        <span case="PR">Predicting</span>
+        <span case="DI">{t('pages.Settings.MachineLearningSettings.MachineLearningList.disconnected', { defaultValue: "Disconnected" })}</span>
+        <span case="CO">{t('pages.Settings.MachineLearningSettings.MachineLearningList.connected', { defaultValue: "Connected" })}</span>
+        <span case="ER">{t('pages.Settings.MachineLearningSettings.MachineLearningList.error', { defaultValue: "Error" })}</span>
+        <span case="TR">{t('pages.Settings.MachineLearningSettings.MachineLearningList.training', { defaultValue: "Training" })}</span>
+        <span case="PR">{t('pages.Settings.MachineLearningSettings.MachineLearningList.predicting', { defaultValue: "Predicting" })}</span>
       </Oneof>
     </div>
   );

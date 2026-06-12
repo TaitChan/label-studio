@@ -13,6 +13,8 @@ import { SettingsPage } from "../Settings";
 import { EmptyProjectsList, ProjectsList } from "./ProjectsList";
 import { useAbortController, useUpdatePageTitle } from "@humansignal/core";
 import "./Projects.prefix.css";
+import i18next from "i18next";
+
 
 const getCurrentPage = () => {
   const pageNumberFromURL = new URLSearchParams(location.search).get("page");
@@ -29,7 +31,7 @@ export const ProjectsPage = () => {
   const [totalItems, setTotalItems] = useState(1);
   const setContextProps = useContextProps();
 
-  useUpdatePageTitle("Projects");
+  useUpdatePageTitle(i18next.t("pages.Projects.Projects.projects", { defaultValue: "Projects" }));
   const defaultPageSize = Number.parseInt(localStorage.getItem("pages:projects-list") ?? 30);
 
   const [modal, setModal] = React.useState(false);
@@ -141,7 +143,7 @@ export const ProjectsPage = () => {
   );
 };
 
-ProjectsPage.title = "Projects";
+ProjectsPage.title = i18next.t("pages.Projects.Projects.projects", { defaultValue: "Projects" });
 ProjectsPage.path = "/projects";
 ProjectsPage.exact = true;
 ProjectsPage.routes = ({ store }) => [
@@ -163,8 +165,12 @@ ProjectsPage.routes = ({ store }) => [
 ProjectsPage.context = ({ openModal, showButton }) => {
   if (!showButton) return null;
   return (
-    <Button onClick={openModal} size="small" aria-label="Create new project">
-      Create
+    <Button
+      onClick={openModal}
+      size="small"
+      aria-label={i18next.t("pages.Projects.Projects.createNewProject", { defaultValue: "Create new project" })}
+    >
+      {i18next.t("pages.Projects.Projects.create", { defaultValue: "Create" })}
     </Button>
   );
 };

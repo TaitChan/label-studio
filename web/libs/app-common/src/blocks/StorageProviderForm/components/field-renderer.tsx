@@ -4,6 +4,8 @@ import Counter from "apps/labelstudio/src/components/Form/Elements/Counter/Count
 import Input from "apps/labelstudio/src/components/Form/Elements/Input/Input";
 import type { FieldDefinition } from "../types/common";
 import { isFieldRequired } from "../types/provider";
+import { useTranslation } from 'react-i18next'
+
 
 interface FieldRendererProps {
   field: FieldDefinition;
@@ -24,6 +26,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
   isEditMode = false,
   formData = {},
 }) => {
+  const { t } = useTranslation("app-common")
   // Check if field should be disabled based on dependencies
   const isDisabledByDependency = () => {
     if (!field.dependsOn || !formData) {
@@ -208,6 +211,6 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
     }
 
     default:
-      return <div className="text-red-500">Unknown field type: {field.type}</div>;
+      return <div className="text-red-500">{t('appCommon.blocks.StorageProviderForm.components.field-renderer.unknownFieldTypeType', { defaultValue: "Unknown field type: {{type}}", type: field.type })}</div>;
   }
 };

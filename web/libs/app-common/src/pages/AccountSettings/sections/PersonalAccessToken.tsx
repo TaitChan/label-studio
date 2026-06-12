@@ -7,7 +7,11 @@ import { Button, IconFileCopy, IconLaunch, Label, Typography } from "@humansigna
 import { Input, TextArea } from "apps/labelstudio/src/components/Form";
 import { atom, useAtomValue } from "jotai";
 import { atomWithMutation, atomWithQuery } from "jotai-tanstack-query";
+import React from "react";
 import styles from "./PersonalAccessToken.module.css";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+
 
 const tokenAtom = atomWithQuery(() => ({
   queryKey: ["access-token"],
@@ -34,24 +38,36 @@ const currentTokenAtom = atom((get) => {
   return resetToken ?? initialToken;
 });
 
-const curlStringAtom = atom((get) => {
-  const currentToken = get(currentTokenAtom);
-  const curlString = `curl -X GET ${location.origin}/api/projects/ -H 'Authorization: Token ${currentToken}'`;
-  return curlString;
-});
-
 export const PersonalAccessToken = () => {
+  const { t } = useTranslation("app-common");
   const token = useAtomValue(currentTokenAtom);
   const reset = useAtomValue(resetTokenAtom);
-  const curl = useAtomValue(curlStringAtom);
-  const [copyToken, tokenCopied] = useCopyText({ defaultText: token });
+  const curl = React.useMemo(() => {
+    const siteOrigin = typeof window !== "undefined" ? window.location.origin : "";
+    return i18next.t(
+      "appCommon.pages.AccountSettings.sections.PersonalAccessToken.curlXGetOriginapiprojectsHAuthorizationTokenCurrenttoken",
+      {
+        ns: "app-common",
+        defaultValue:
+          "curl -X GET {{siteOrigin}}/api/projects/ -H 'Authorization: Token {{currentToken}}'",
+        siteOrigin,
+        currentToken: token ?? "",
+      },
+    );
+  }, [token]);
+  const [copyToken, tokenCopied] = useCopyText({ defaultText: token ?? "" });
   const [copyCurl, curlCopied] = useCopyText({ defaultText: curl });
 
   return (
     <div id="personal-access-token">
       <div className="flex flex-col gap-6">
         <div>
-          <Label text="Access Token" className={styles.label} />
+          <Label
+            text={t("appCommon.pages.AccountSettings.sections.PersonalAccessToken.accessToken", {
+              defaultValue: "Access Token",
+            })}
+            className={styles.label}
+          />
           <div className="flex gap-2 w-full justify-between">
             <Input name="token" className={styles.input} readOnly value={token ?? ""} />
             <Button
@@ -62,15 +78,22 @@ export const PersonalAccessToken = () => {
               look="outlined"
               className="w-[116px]"
             >
-              {tokenCopied ? "Copied!" : "Copy"}
+              {tokenCopied
+                ? t("appCommon.pages.AccountSettings.sections.PersonalAccessToken.copied", { defaultValue: "Copied!" })
+                : t("appCommon.pages.AccountSettings.sections.PersonalAccessToken.copy", { defaultValue: "Copy" })}
             </Button>
             <Button variant="negative" look="outlined" onClick={() => reset.mutate()}>
-              Reset
+              {t('appCommon.pages.AccountSettings.sections.PersonalAccessToken.reset', { defaultValue: "Reset" })}
             </Button>
           </div>
         </div>
         <div>
-          <Label text="Example CURL Request" className={styles.label} />
+          <Label
+            text={t("appCommon.pages.AccountSettings.sections.PersonalAccessToken.exampleCurlRequest", {
+              defaultValue: "Example CURL Request",
+            })}
+            className={styles.label}
+          />
           <div className="flex gap-2 w-full justify-between">
             <TextArea
               name="example-curl"
@@ -87,7 +110,9 @@ export const PersonalAccessToken = () => {
               look="outlined"
               className="w-[116px]"
             >
-              {curlCopied ? "Copied!" : "Copy"}
+              {curlCopied
+                ? t("appCommon.pages.AccountSettings.sections.PersonalAccessToken.copied", { defaultValue: "Copied!" })
+                : t("appCommon.pages.AccountSettings.sections.PersonalAccessToken.copy", { defaultValue: "Copy" })}
             </Button>
           </div>
         </div>
@@ -97,15 +122,16 @@ export const PersonalAccessToken = () => {
 };
 
 export function PersonalAccessTokenDescription() {
+  const { t } = useTranslation("app-common")
   return (
     <Typography>
-      Authenticate with our API using your personal access token.
+      {t('appCommon.pages.AccountSettings.sections.PersonalAccessToken.authenticateWithOurApiUsingYourPersonalAccessToken', { defaultValue: "Authenticate with our API using your personal access token." })}
       {!window.APP_SETTINGS?.whitelabel_is_active && (
         <>
           {" "}
-          See{" "}
+          {t('appCommon.pages.AccountSettings.sections.PersonalAccessToken.see', { defaultValue: "See" })}{" "}
           <a href="https://labelstud.io/guide/api.html" target="_blank" rel="noreferrer" className="inline-flex gap-1">
-            Docs{" "}
+            {t('appCommon.pages.AccountSettings.sections.PersonalAccessToken.docs', { defaultValue: "Docs" })}{" "}
             <span>
               <IconLaunch className="h-6 w-6" />
             </span>

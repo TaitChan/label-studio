@@ -1,3 +1,5 @@
+import i18next from "i18next";
+
 /**
  * State Registry System for Label Studio
  *
@@ -146,7 +148,10 @@ class StateRegistry {
 
     if (!metadata?.tooltips) {
       // No tooltips defined, return generic description
-      return `${this.getLabel(state)} state`;
+      return i18next.t("appCommon.components.state-chips.state-registry.valState", {
+        ns: "app-common", defaultValue: "{{val}} state",
+        val: this.getLabel(state),
+      });
     }
 
     // Look up entity-specific tooltip, fall back to first available tooltip
@@ -157,7 +162,13 @@ class StateRegistry {
 
     // Fall back to any available tooltip
     const firstTooltip = Object.values(metadata.tooltips)[0];
-    return firstTooltip ?? `${this.getLabel(state)} state`;
+    return (
+      firstTooltip ??
+      i18next.t("appCommon.components.state-chips.state-registry.valState", {
+        ns: "app-common", defaultValue: "{{val}} state",
+        val: this.getLabel(state),
+      })
+    );
   }
 
   /**
@@ -275,30 +286,46 @@ export const stateRegistry = new StateRegistry();
 stateRegistry.registerBatch({
   CREATED: {
     type: StateType.INITIAL,
-    label: "Initial",
+    label: i18next.t("appCommon.components.state-chips.state-registry.initial", { ns: "app-common", defaultValue: "Initial" }),
     tooltips: {
-      task: "Task has been created and is ready for annotation",
-      annotation: "Annotation has been created",
-      project: "Project has been created and is ready for configuration",
+      task: i18next.t("appCommon.components.state-chips.state-registry.taskHasBeenCreatedAndIsReadyForAnnotation", {
+        ns: "app-common", defaultValue: "Task has been created and is ready for annotation",
+      }),
+      annotation: i18next.t("appCommon.components.state-chips.state-registry.annotationHasBeenCreated", {
+        ns: "app-common", defaultValue: "Annotation has been created",
+      }),
+      project: i18next.t("appCommon.components.state-chips.state-registry.projectHasBeenCreatedAndIsReadyForConfiguration", {
+        ns: "app-common", defaultValue: "Project has been created and is ready for configuration",
+      }),
     },
   },
 
   ANNOTATION_IN_PROGRESS: {
     type: StateType.IN_PROGRESS,
-    label: "Annotating",
+    label: i18next.t("appCommon.components.state-chips.state-registry.annotating", { ns: "app-common", defaultValue: "Annotating" }),
     tooltips: {
-      task: "Task is currently being annotated",
-      project: "Annotation work is in progress on this project",
+      task: i18next.t("appCommon.components.state-chips.state-registry.taskIsCurrentlyBeingAnnotated", {
+        ns: "app-common", defaultValue: "Task is currently being annotated",
+      }),
+      project: i18next.t("appCommon.components.state-chips.state-registry.annotationWorkIsInProgressOnThisProject", {
+        ns: "app-common", defaultValue: "Annotation work is in progress on this project",
+      }),
     },
   },
 
   COMPLETED: {
     type: StateType.TERMINAL,
-    label: "Done",
+    label: i18next.t("appCommon.components.state-chips.state-registry.done", { ns: "app-common", defaultValue: "Done" }),
     tooltips: {
-      task: "Task is fully completed and no further work is needed",
-      annotation: "Annotation is completed and finalized",
-      project: "Project is completed - all tasks are done",
+      task: i18next.t("appCommon.components.state-chips.state-registry.taskIsFullyCompletedAndNoFurtherWorkIsNeeded", {
+        ns: "app-common", defaultValue: "Task is fully completed and no further work is needed",
+      }),
+      annotation: i18next.t("appCommon.components.state-chips.state-registry.annotationIsCompletedAndFinalized", {
+        ns: "app-common", defaultValue: "Annotation is completed and finalized",
+      }),
+      project: i18next.t("appCommon.components.state-chips.state-registry.projectIsCompletedAllTasksAreDone", {
+        ns: "app-common", defaultValue: "Project is completed - all tasks are done",
+      }),
     },
   },
 });

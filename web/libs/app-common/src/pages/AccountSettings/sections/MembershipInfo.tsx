@@ -5,12 +5,15 @@ import { getApiInstance } from "@humansignal/core";
 import { useMemo } from "react";
 import type { WrappedResponse } from "@humansignal/core/lib/api-proxy/types";
 import { useAuth } from "@humansignal/core/providers/AuthProvider";
+import { useTranslation } from 'react-i18next'
+
 
 function formatDate(date?: string) {
   return format(new Date(date ?? ""), "dd MMM yyyy, KK:mm a");
 }
 
 export const MembershipInfo = () => {
+  const { t } = useTranslation("app-common")
   const { user } = useAuth();
   const dateJoined = useMemo(() => {
     if (!user?.date_joined) return null;
@@ -101,22 +104,22 @@ export const MembershipInfo = () => {
   return (
     <div className={styles.membershipInfo} id="membership-info">
       <div className="flex gap-2 w-full justify-between">
-        <div>User ID</div>
+        <div>{t('appCommon.pages.AccountSettings.sections.MembershipInfo.userId', { defaultValue: "User ID" })}</div>
         <div>{user?.id}</div>
       </div>
 
       <div className="flex gap-2 w-full justify-between">
-        <div>Registration date</div>
+        <div>{t('appCommon.pages.AccountSettings.sections.MembershipInfo.registrationDate', { defaultValue: "Registration date" })}</div>
         <div>{dateJoined}</div>
       </div>
 
       <div className="flex gap-2 w-full justify-between">
-        <div>Annotations Submitted</div>
+        <div>{t('appCommon.pages.AccountSettings.sections.MembershipInfo.annotationsSubmitted', { defaultValue: "Annotations Submitted" })}</div>
         <div>{membership.data?.annotationCount}</div>
       </div>
 
       <div className="flex gap-2 w-full justify-between">
-        <div>Projects contributed to</div>
+        <div>{t('appCommon.pages.AccountSettings.sections.MembershipInfo.projectsContributedTo', { defaultValue: "Projects contributed to" })}</div>
         <div>{membership.data?.contributions}</div>
       </div>
 
@@ -124,33 +127,33 @@ export const MembershipInfo = () => {
 
       {user?.active_organization_meta && (
         <div className="flex gap-2 w-full justify-between">
-          <div>Organization</div>
+          <div>{t('appCommon.pages.AccountSettings.sections.MembershipInfo.organization', { defaultValue: "Organization" })}</div>
           <div>{user.active_organization_meta.title}</div>
         </div>
       )}
 
       {membership.data?.role && (
         <div className="flex gap-2 w-full justify-between">
-          <div>My role</div>
+          <div>{t('appCommon.pages.AccountSettings.sections.MembershipInfo.myRole', { defaultValue: "My role" })}</div>
           <div>{membership.data.role}</div>
         </div>
       )}
 
       <div className="flex gap-2 w-full justify-between">
-        <div>Organization ID</div>
+        <div>{t('appCommon.pages.AccountSettings.sections.MembershipInfo.organizationId', { defaultValue: "Organization ID" })}</div>
         <div>{user?.active_organization}</div>
       </div>
 
       {user?.active_organization_meta && (
         <div className="flex gap-2 w-full justify-between">
-          <div>Owner</div>
+          <div>{t('appCommon.pages.AccountSettings.sections.MembershipInfo.owner', { defaultValue: "Owner" })}</div>
           <div>{user.active_organization_meta.email}</div>
         </div>
       )}
 
       {organization.data?.createdAt && (
         <div className="flex gap-2 w-full justify-between">
-          <div>Created</div>
+          <div>{t('appCommon.pages.AccountSettings.sections.MembershipInfo.created', { defaultValue: "Created" })}</div>
           <div>{organization.data?.createdAt}</div>
         </div>
       )}

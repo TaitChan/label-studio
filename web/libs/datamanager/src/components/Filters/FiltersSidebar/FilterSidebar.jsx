@@ -4,6 +4,8 @@ import { cn } from "../../../utils/bem";
 import { Button } from "@humansignal/ui";
 import { Filters } from "../Filters";
 import "./FilterSidebar.prefix.css";
+import i18next from 'i18next'
+
 
 const sidebarInjector = inject(({ store }) => {
   const viewsStore = store.viewsStore;
@@ -23,12 +25,12 @@ export const FiltersSidebar = sidebarInjector(({ viewsStore, sidebarEnabled, sid
           <Button
             look="string"
             onClick={() => viewsStore.collapseFilters()}
-            tooltip="Unpin filters"
-            aria-label="Unpin filters"
+            tooltip={i18next.t("datamanager.components.Filters.FiltersSidebar.FilterSidebar.unpinFilters", { ns: "datamanager", defaultValue: "Unpin filters" })}
+            aria-label={i18next.t('datamanager.components.Filters.FiltersSidebar.FilterSidebar.unpinFilters', { ns: "datamanager", defaultValue: "Unpin filters" })}
           >
             <IconChevronLeft width={24} height={24} />
           </Button>
-          <div className={cn("filters-sidebar").elem("title").toClassName()}>Filters</div>
+          <div className={cn("filters-sidebar").elem("title").toClassName()}>{i18next.t('datamanager.components.Filters.FiltersSidebar.FilterSidebar.filters', { ns: "datamanager", defaultValue: "Filters" })}</div>
         </div>
       </div>
       <Filters sidebar={true} />

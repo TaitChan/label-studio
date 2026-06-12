@@ -17,6 +17,8 @@ import { Spinner } from "../Spinner";
 import "./MediaPlayer.prefix.css";
 import { MediaSeeker } from "./MediaSeeker";
 import { Duration } from "./Duration";
+import { useTranslation } from 'react-i18next'
+
 
 const mediaDefaultProps = { crossOrigin: "anonymous" };
 
@@ -34,6 +36,7 @@ const initialState = {
 const globalAudioRef = createRef();
 
 export const MediaPlayer = ({ src, video = false }) => {
+  const { t } = useTranslation("datamanager")
   /** @type {import("react").RefObject<HTMLAudioElement>} */
   const media = useRef();
   const wasPlaying = useRef(false);
@@ -151,7 +154,7 @@ export const MediaPlayer = ({ src, video = false }) => {
     <div className={cn("player").mod({ video }).toClassName()} onClick={(e) => e.stopPropagation()}>
       {video && <MediaSource type="video" onClick={togglePlay} {...mediaProps} />}
       {showError ? (
-        <div className={cn("player").elem("loading").toClassName()}>Unable to play</div>
+        <div className={cn("player").elem("loading").toClassName()}>{t('datamanager.components.Common.MediaPlayer.MediaPlayer.unableToPlay', { defaultValue: "Unable to play" })}</div>
       ) : state.loaded ? (
         <div className={cn("player").elem("playback").toClassName()}>
           <Space className={cn("player").elem("controls").toClassName()} spread>
@@ -163,7 +166,7 @@ export const MediaPlayer = ({ src, video = false }) => {
             </Space>
             <Space className={cn("player").elem("time").toClassName()} size="small">
               <Duration value={state.currentTime} format={format} />
-              {" / "}
+              {t('datamanager.components.Common.MediaPlayer.MediaPlayer.timeSeparator', { defaultValue: " / " })}
               <Duration value={state.duration} format={format} />
             </Space>
           </Space>
@@ -200,7 +203,7 @@ export const MediaPlayer = ({ src, video = false }) => {
           <div className={cn("player").elem("play").toClassName()}>
             <IconTimelinePlay />
           </div>
-          <div className={cn("player").elem("track").toClassName()}>Click to load</div>
+          <div className={cn("player").elem("track").toClassName()}>{t('datamanager.components.Common.MediaPlayer.MediaPlayer.clickToLoad', { defaultValue: "Click to load" })}</div>
         </Space>
         <Space className={cn("player").elem("time").toClassName()} size="small" />
       </Space>

@@ -2,6 +2,9 @@ import { z } from "zod";
 import type { ProviderConfig } from "@humansignal/app-common/blocks/StorageProviderForm/types/provider";
 import { IconFolderOpen } from "@humansignal/icons";
 import { Alert, AlertDescription, AlertTitle } from "@humansignal/shad/components/ui/alert";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+
 
 const localFilesDocumentRoot =
   typeof window === "undefined" ? undefined : window.APP_SETTINGS?.local_files_document_root;
@@ -19,28 +22,25 @@ const pathSchema = defaultPathExample
   : z.string().min(1, "Path is required");
 
 const LocalFilesServingWarning = () => {
+  const { t } = useTranslation("labelstudio")
   if (localFilesServingEnabled) return null;
   return (
     <>
       <Alert variant="destructive">
-        <AlertTitle>Local file serving is disabled</AlertTitle>
+        <AlertTitle>{t('pages.Settings.StorageSettings.providers.localFiles.localFileServingIsDisabled', { defaultValue: "Local file serving is disabled" })}</AlertTitle>
         <AlertDescription>
-          Set the "LOCAL_FILES_SERVING_ENABLED" environment variable to "true" and restart Label Studio to enable Local
-          Files storage. See the documentation for details:{" "}
+          {t('pages.Settings.StorageSettings.providers.localFiles.setTheLocal_files_serving_enabledEnvironmentVariableToTrueAndRestartLabelStudioToEnableLocalFilesStorageSeeTheDocumentationForDetails', { defaultValue: "Set the \"LOCAL_FILES_SERVING_ENABLED\" environment variable to \"true\" and restart Label Studio to enable Localn          Files storage. See the documentation for details:" })}{" "}
           <a href="https://labelstud.io/guide/storage.html#Local-storage" target="_blank" rel="noreferrer">
-            Local Storage documentation
+            {t('pages.Settings.StorageSettings.providers.localFiles.localStorageDocumentation', { defaultValue: "Local Storage documentation" })}
           </a>
           {isCommunityEdition && (
             <Alert variant="info">
               <AlertDescription>
                 <p>
-                  Tip: Create a "mydata" or "label-studio-data" directory next to the command you use to run Label
-                  Studio and local file serving will be enabled automatically.
+                  {t('pages.Settings.StorageSettings.providers.localFiles.tipCreateAMydataOrLabelstudiodataDirectoryNextToTheCommandYouUseToRunLabelStudioAndLocalFileServingWillBeEnabledAutomatically', { defaultValue: "Tip: Create a \"mydata\" or \"label-studio-data\" directory next to the command you use to run Labeln                  Studio and local file serving will be enabled automatically." })}
                 </p>
                 <p>
-                  If you run the Docker image, the app starts in "/label-studio", so you can bind-mount your host folder
-                  to "/label-studio/mydata" or "/label-studio/label-studio-data" inside the container to enable local
-                  file serving without extra configuration.
+                  {t('pages.Settings.StorageSettings.providers.localFiles.ifYouRunTheDockerImageTheAppStartsInLabelstudioSoYouCanBindmountYourHostFolderToLabelstudiomydataOrLabelstudiolabelstudiodataInsideTheContainerToEnableLocalFileServingWithoutExtraConfiguration', { defaultValue: "If you run the Docker image, the app starts in \"/label-studio\", so you can bind-mount your host foldern                  to \"/label-studio/mydata\" or \"/label-studio/label-studio-data\" inside the container to enable localn                  file serving without extra configuration." })}
                 </p>
               </AlertDescription>
             </Alert>
@@ -53,8 +53,8 @@ const LocalFilesServingWarning = () => {
 
 export const localFilesProvider: ProviderConfig = {
   name: "localfiles",
-  title: "Local Files",
-  description: "Configure your local file storage connection with all required Label Studio settings",
+  title: i18next.t('pages.Settings.StorageSettings.providers.localFiles.localFiles', { defaultValue: "Local Files" }),
+  description: i18next.t('pages.Settings.StorageSettings.providers.localFiles.configureYourLocalFileStorageConnectionWithAllRequiredLabelStudioSettings', { defaultValue: "Configure your local file storage connection with all required Label Studio settings" }),
   icon: () => (
     <IconFolderOpen
       width={40}
@@ -74,12 +74,12 @@ export const localFilesProvider: ProviderConfig = {
     {
       name: "path",
       type: "text",
-      label: "Absolute local path",
+      label: i18next.t('pages.Settings.StorageSettings.providers.localFiles.absoluteLocalPath', { defaultValue: "Absolute local path" }),
       required: true,
       placeholder: defaultPathExample || "/data/my-folder/subdirectory",
       schema: pathSchema,
       defaultValue: defaultPathExample,
-      description: `This path must be an absolute path on the host machine where Label Studio is running and start with \n"${localFilesDocumentRoot}" (LOCAL_FILES_DOCUMENT_ROOT).`,
+      description: i18next.t('pages.Settings.StorageSettings.providers.localFiles.thisPathMustBeAnAbsolutePathOnTheHostMachineWhereLabelStudioIsRunningAndStartWithLocalfilesdocumentrootLocal_files_document_root', { defaultValue: "This path must be an absolute path on the host machine where Label Studio is running and start with n\"{{localFilesDocumentRoot}}\" (LOCAL_FILES_DOCUMENT_ROOT).", localFilesDocumentRoot }),
     },
   ],
   layout: [{ fields: ["serving_warning"] }, { fields: ["path"] }],

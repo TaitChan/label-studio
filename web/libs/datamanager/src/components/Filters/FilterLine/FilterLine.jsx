@@ -15,6 +15,8 @@ import {
 } from "../../Common/ColumnPicker";
 import { filterFieldSearchHandler, findSelectedOption } from "../filter-helpers";
 import { RECENT_VALUE_PREFIX } from "../../../hooks/useRecentFilters";
+import i18next from "i18next";
+import { translateColumnTitle } from "../../../utils/dm-column-i18n";
 
 const RECENTS_AUTOSAVE_DELAY_MS = 500;
 
@@ -22,8 +24,8 @@ const Conjunction = observer(({ index, view }) => {
   return (
     <FilterDropdown
       items={[
-        { value: "and", label: "And" },
-        { value: "or", label: "Or" },
+        { value: "and", label: i18next.t('datamanager.components.Filters.FilterLine.FilterLine.and', { ns: "datamanager", defaultValue: "And" }) },
+        { value: "or", label: i18next.t('datamanager.components.Filters.FilterLine.FilterLine.or', { ns: "datamanager", defaultValue: "Or" }) },
       ]}
       disabled={index > 1}
       value={view.conjunction}
@@ -66,7 +68,7 @@ const FilterColumnPicker = observer(({ filter, pickerFilters, recentEntries, onS
       recentEntries={recentEntries}
       value={filter.filter.id ?? null}
       onChange={handleChange}
-      placeholder={filter.field?.title || "Column"}
+      placeholder={translateColumnTitle(filter.field) || i18next.t("datamanager.components.Filters.FilterLine.columnPlaceholder", { ns: "datamanager", defaultValue: "Column" })}
       size="small"
       disabled={filter.field.disabled}
       triggerProps={{
@@ -105,7 +107,7 @@ function filterFieldOptionRender({ item }) {
           color: "#8C8F9A",
         }}
       >
-        {original?.field?.title ?? original?.title ?? "Recent"}
+        {original?.field?.title ?? original?.title ?? i18next.t("datamanager.components.Common.ColumnPicker.recent", { ns: "datamanager", defaultValue: "Recent" })}
       </span>
     );
   }
@@ -208,7 +210,7 @@ export const FilterLine = observer(
           {/* Main filter row */}
           <div className={cn("filterLine").elem("column").mix("conjunction").toClassName()}>
             {index === 0 ? (
-              <span style={{ fontSize: 12, paddingRight: 5 }}>Where</span>
+              <span style={{ fontSize: 12, paddingRight: 5 }}>{i18next.t('datamanager.components.Filters.FilterLine.FilterLine.where', { ns: "datamanager", defaultValue: "Where" })}</span>
             ) : (
               <Conjunction index={index} view={view} />
             )}
@@ -216,7 +218,7 @@ export const FilterLine = observer(
 
           <div className={cn("filterLine").elem("column").mix("field").toClassName()}>
             <FilterDropdown
-              placeholder="Column"
+              placeholder={i18next.t("datamanager.components.Filters.FilterLine.columnPlaceholder", { ns: "datamanager", defaultValue: "Column" })}
               defaultValue={filter.filter.id}
               items={availableFilters}
               dropdownClassName={dropdownClassName}
@@ -307,7 +309,7 @@ export const FilterLine = observer(
       <div className={cn("filterLine").mod({ hasChild: !!childFilter }).toClassName()}>
         <div className={cn("filterLine").elem("column").mix("conjunction").toClassName()}>
           {index === 0 ? (
-            <span style={{ fontSize: 12, paddingRight: 5 }}>Where</span>
+            <span style={{ fontSize: 12, paddingRight: 5 }}>{i18next.t('datamanager.components.Filters.FilterLine.FilterLine.where', { ns: "datamanager", defaultValue: "Where" })}</span>
           ) : (
             <Conjunction index={index} view={view} />
           )}

@@ -10,8 +10,11 @@ import { cn } from "../../../utils/bem";
 import { useRefresh } from "../../../utils/hooks";
 import { ImportPage } from "./Import";
 import { useImportPage } from "./useImportPage";
+import { useTranslation } from "react-i18next";
+
 
 export const Inner = () => {
+  const { t } = useTranslation("labelstudio")
   const history = useHistory();
   const location = useFixedLocation();
   const modal = useRef();
@@ -63,7 +66,7 @@ export const Inner = () => {
 
   return (
     <Modal
-      title="Import data"
+      title={t('pages.CreateProject.Import.ImportModal.importData', { defaultValue: "Import data" })}
       ref={modal}
       onHide={() => backToDM()}
       closeOnClickOutside={false}
@@ -72,7 +75,9 @@ export const Inner = () => {
       bare
     >
       <Modal.Header divided>
-        <div className={cn("modal").elem("title").toClassName()}>Import Data</div>
+        <div className={cn("modal").elem("title").toClassName()}>
+          {t("pages.CreateProject.Import.ImportModal.importDataTitle", { defaultValue: "Import Data" })}
+        </div>
 
         <Space>
           <Button
@@ -81,18 +86,18 @@ export const Inner = () => {
             look="outlined"
             waiting={waiting}
             onClick={onCancel}
-            aria-label="Cancel import"
+            aria-label={t('pages.CreateProject.Import.ImportModal.cancelImport', { defaultValue: "Cancel import" })}
           >
-            Cancel
+            {t('pages.CreateProject.Import.ImportModal.cancel', { defaultValue: "Cancel" })}
           </Button>
           <Button
             size="small"
             onClick={onFinish}
             waiting={waiting || uploading}
             disabled={uploadDisabled}
-            aria-label="Finish import"
+            aria-label={t('pages.CreateProject.Import.ImportModal.finishImport', { defaultValue: "Finish import" })}
           >
-            Import
+            {t('pages.CreateProject.Import.ImportModal.import', { defaultValue: "Import" })}
           </Button>
         </Space>
       </Modal.Header>

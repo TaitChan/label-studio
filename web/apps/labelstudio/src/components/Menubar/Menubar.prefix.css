@@ -63,6 +63,32 @@
     }
   }
 
+  &__lang {
+    display: flex;
+    padding: 0 var(--spacing-base) 0 0;
+    align-items: center;
+  }
+
+  &__lang-trigger {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+
+    & button {
+      & svg {
+        width: 20px;
+        height: 20px;
+        color: var(--color-neutral-content-subtler);
+      }
+    }
+
+    &:hover {
+      & button svg {
+        color: var(--color-neutral-icon);
+      }
+    }
+  }
+
   &__trigger {
     display: flex;
     padding: 0 20px;

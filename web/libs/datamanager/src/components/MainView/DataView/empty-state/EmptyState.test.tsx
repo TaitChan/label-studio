@@ -4,6 +4,12 @@ import "@testing-library/jest-dom";
 import { EmptyState } from "./EmptyState";
 
 // Mock the external dependencies
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (_key: string, opts?: { defaultValue?: string }) => opts?.defaultValue ?? _key,
+  }),
+}));
+
 jest.mock("@humansignal/ui", () => ({
   Button: ({ children, onClick, disabled, "data-testid": testId, ...props }: any) => (
     <button onClick={onClick} disabled={disabled} data-testid={testId} {...props}>

@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { IconChevronDown } from "@humansignal/icons";
 import { Dropdown } from "@humansignal/ui";
 import { Menu } from "../../Common/Menu/Menu";
+import i18next from 'i18next'
+
 
 const injector = inject(({ store }) => {
   const { dataStore, currentView } = store;
@@ -94,18 +96,34 @@ export const LabelButton = injector(({ store, canLabel, size, target, selectedCo
             style={primaryStyle}
             onClick={onLabelAll}
           >
-            Label {selectedCount ? selectedCount : "All"} Task
-            {!selectedCount || selectedCount > 1 ? "s" : ""}
+            {selectedCount
+              ? i18next.t("datamanager.components.DataManager.Toolbar.LabelButton.labelCountTasks", {
+                  ns: "datamanager",
+                  count: selectedCount,
+                  defaultValue: "Label {{count}} Task",
+                  defaultValue_plural: "Label {{count}} Tasks",
+                })
+              : i18next.t("datamanager.components.DataManager.Toolbar.LabelButton.labelAllTasks", {
+                  ns: "datamanager",
+                  defaultValue: "Label All Tasks",
+                })}
           </Button>
           <Dropdown.Trigger
             alignment="bottom-right"
             content={
               <Menu size="compact">
-                <Menu.Item onClick={onLabelVisible}>Label Tasks As Displayed</Menu.Item>
+                <Menu.Item onClick={onLabelVisible}>{i18next.t('datamanager.components.DataManager.Toolbar.LabelButton.labelTasksAsDisplayed', { ns: "datamanager", defaultValue: "Label Tasks As Displayed" })}</Menu.Item>
               </Menu>
             }
           >
-            <Button size={size} look="outlined" variant="primary" aria-label={"Toggle open"}>
+            <Button
+              size={size}
+              look="outlined"
+              variant="primary"
+              aria-label={i18next.t("datamanager.components.DataManager.Toolbar.LabelButton.toggleOpen", { ns: "datamanager",
+                defaultValue: "Toggle open",
+              })}
+            >
               <IconChevronDown />
             </Button>
           </Dropdown.Trigger>

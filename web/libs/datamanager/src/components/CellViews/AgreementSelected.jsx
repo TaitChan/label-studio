@@ -3,6 +3,9 @@ import { isDefined } from "../../utils/utils";
 import { useState, useEffect } from "react";
 import { Tooltip } from "@humansignal/ui";
 import { IconInfoOutline } from "@humansignal/icons";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+
 
 const LOW_AGREEMENT_SCORE = 33;
 const MEDIUM_AGREEMENT_SCORE = 66;
@@ -25,13 +28,14 @@ const formatNumber = (num) => {
 };
 
 export const AgreementSelected = (cell) => {
+  const { t } = useTranslation("datamanager")
   const { value, original: task } = cell;
 
   const threshold = window.APP_SETTINGS?.agreement_selected_threshold;
   const overThreshold = Number(task?.total_annotations) > Number(threshold);
 
   const content = overThreshold ? (
-    <Tooltip title={`Agreement (Selected) is not computed for tasks with more than ${threshold} annotations`}>
+    <Tooltip title={t('datamanager.components.CellViews.AgreementSelected.agreementSelectedIsNotComputedForTasksWithMoreThanThresholdAnnotations', { defaultValue: "Agreement (Selected) is not computed for tasks with more than {{threshold}} annotations", threshold })}>
       <span className="inline-flex items-center text-neutral-content-subtler">
         <IconInfoOutline />
       </span>

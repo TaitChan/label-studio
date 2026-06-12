@@ -8,6 +8,9 @@ import { Dropdown } from "@humansignal/ui";
 import Input from "../Input/Input";
 import "./Tabs.prefix.css";
 import { TabsMenu } from "./TabsMenu";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+
 
 const TabsContext = createContext();
 export const tabsCN = cn("tabs-dm");
@@ -22,6 +25,7 @@ export const Tabs = ({
   allowedActions,
   addIcon,
 }) => {
+  const { t } = useTranslation("datamanager")
   const [selectedTab, setSelectedTab] = useState(activeTab);
 
   const switchTab = useCallback((tab) => {
@@ -61,14 +65,14 @@ export const Tabs = ({
             </Droppable>
           </DragDropContext>
           {allowedActions.add !== false && (
-            <Tooltip title="Open New Tab">
+            <Tooltip title={t('datamanager.components.Common.Tabs.Tabs.openNewTab', { defaultValue: "Open New Tab" })}>
               <Button
                 className={tabsCN.elem("add").toClassName()}
                 size="smaller"
                 look="outline"
                 variant="neutral"
                 onClick={onAdd}
-                aria-label="Open New Tab"
+                aria-label={t('datamanager.components.Common.Tabs.Tabs.openNewTab', { defaultValue: "Open New Tab" })}
                 data-leave
               >
                 <IconPlus width={12} height={12} aria-hidden="true" />
@@ -167,7 +171,7 @@ export const TabsItem = observer(
       [renameMode, switchTab, tab],
     );
 
-    const tabLabel = virtual ? `${currentTitle} (unsaved)` : currentTitle;
+    const tabLabel = virtual ? i18next.t('datamanager.components.Common.Tabs.Tabs.currenttitleUnsaved', { ns: "datamanager", defaultValue: "{{currentTitle}} (unsaved)", currentTitle }) : currentTitle;
 
     return (
       <div
@@ -199,7 +203,7 @@ export const TabsItem = observer(
               size="small"
               autoFocus={true}
               value={currentTitle}
-              aria-label="Tab name"
+              aria-label={i18next.t('datamanager.components.Common.Tabs.Tabs.tabName', { ns: "datamanager", defaultValue: "Tab name" })}
               onKeyDown={saveTabTitle}
               onBlur={saveTabTitle}
               onChange={(ev) => {
@@ -247,7 +251,7 @@ export const TabsItem = observer(
               }
             >
               <div className={tabsCN.elem("item-right-button").toClassName()}>
-                <Button look="outline" size="smaller" variant="neutral" aria-label="Tab options">
+                <Button look="outline" size="smaller" variant="neutral" aria-label={i18next.t('datamanager.components.Common.Tabs.Tabs.tabOptions', { ns: "datamanager", defaultValue: "Tab options" })}>
                   <IconEllipsisVertical className="w-4 h-4" aria-hidden="true" />
                 </Button>
               </div>

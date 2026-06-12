@@ -8,10 +8,13 @@ import { Menu, Pagination } from "../../components";
 import { cn } from "../../utils/bem";
 import { absoluteURL } from "../../utils/helpers";
 import { ProjectStateChip } from "@humansignal/app-common";
+import { useTranslation } from "react-i18next";
+
 
 const DEFAULT_CARD_COLORS = ["#FFFFFF", "#FDFDFC"];
 
 export const ProjectsList = ({ projects, currentPage, totalItems, loadNextPage, pageSize }) => {
+  const { t } = useTranslation("labelstudio");
   return (
     <>
       <div className={cn("projects-page").elem("list").toClassName()}>
@@ -22,7 +25,7 @@ export const ProjectsList = ({ projects, currentPage, totalItems, loadNextPage, 
       <div className={cn("projects-page").elem("pages").toClassName()}>
         <Pagination
           name="projects-list"
-          label="Projects"
+          label={t("pages.Projects.ProjectsList.projects", { defaultValue: "Projects" })}
           page={currentPage}
           totalItems={totalItems}
           urlParamName="page"
@@ -36,23 +39,25 @@ export const ProjectsList = ({ projects, currentPage, totalItems, loadNextPage, 
 };
 
 export const EmptyProjectsList = ({ openModal }) => {
+  const { t } = useTranslation("labelstudio");
   return (
     <div className={cn("empty-projects-page").toClassName()}>
       <img
-        alt="Heidi looking for projects"
+        alt={t('pages.Projects.ProjectsList.heidiLookingForProjects', { defaultValue: "Heidi looking for projects" })}
         className={cn("empty-projects-page").elem("heidi").toClassName()}
         src={absoluteURL("/static/images/opossum_looking.png")}
       />
-      <h1 className={cn("empty-projects-page").elem("header").toClassName()}>Heidi doesn't see any projects here!</h1>
-      <p>Create one and start labeling your data.</p>
-      <Button onClick={openModal} className="my-8" aria-label="Create new project">
-        Create Project
+      <h1 className={cn("empty-projects-page").elem("header").toClassName()}>{t('pages.Projects.ProjectsList.heidiDoesntSeeAnyProjectsHere', { defaultValue: "Heidi doesn't see any projects here!" })}</h1>
+      <p>{t('pages.Projects.ProjectsList.createOneAndStartLabelingYourData', { defaultValue: "Create one and start labeling your data." })}</p>
+      <Button onClick={openModal} className="my-8" aria-label={t('pages.Projects.ProjectsList.createNewProject', { defaultValue: "Create new project" })}>
+        {t('pages.Projects.ProjectsList.createProject', { defaultValue: "Create Project" })}
       </Button>
     </div>
   );
 };
 
 const ProjectCard = ({ project }) => {
+  const { t } = useTranslation("labelstudio");
   const color = useMemo(() => {
     return DEFAULT_CARD_COLORS.includes(project.color) ? null : project.color;
   }, [project]);
@@ -82,9 +87,15 @@ const ProjectCard = ({ project }) => {
         <div className={cn("project-card").elem("header").toClassName()}>
           <div className={cn("project-card").elem("title").toClassName()}>
             <div className={cn("project-card").elem("title-text-wrapper").toClassName()}>
-              <Tooltip title={project.title ?? "New project"}>
+              <Tooltip
+                title={
+                  project.title ??
+                  t("pages.Projects.ProjectsList.newProject", { defaultValue: "New project" })
+                }
+              >
                 <div className={cn("project-card").elem("title-text").toClassName()}>
-                  {project.title ?? "New project"}
+                  {project.title ??
+                    t("pages.Projects.ProjectsList.newProject", { defaultValue: "New project" })}
                 </div>
               </Tooltip>
             </div>
@@ -99,12 +110,12 @@ const ProjectCard = ({ project }) => {
               <Dropdown.Trigger
                 content={
                   <Menu contextual>
-                    <Menu.Item href={`/projects/${project.id}/settings`}>Settings</Menu.Item>
-                    <Menu.Item href={`/projects/${project.id}/data?labeling=1`}>Label</Menu.Item>
+                    <Menu.Item href={`/projects/${project.id}/settings`}>{t('pages.Projects.ProjectsList.settings', { defaultValue: "Settings" })}</Menu.Item>
+                    <Menu.Item href={`/projects/${project.id}/data?labeling=1`}>{t('pages.Projects.ProjectsList.label', { defaultValue: "Label" })}</Menu.Item>
                   </Menu>
                 }
               >
-                <Button size="smaller" look="string" aria-label="Project options">
+                <Button size="smaller" look="string" aria-label={t('pages.Projects.ProjectsList.projectOptions', { defaultValue: "Project options" })}>
                   <IconEllipsis />
                 </Button>
               </Dropdown.Trigger>
@@ -119,7 +130,11 @@ const ProjectCard = ({ project }) => {
           <div className={cn("project-card").elem("summary").toClassName()}>
             <div className={cn("project-card").elem("annotation").toClassName()}>
               <div className={cn("project-card").elem("total").toClassName()}>
-                {project.finished_task_number} / {project.task_number}
+                {t("pages.Projects.ProjectsList.taskCount", {
+                  defaultValue: "{{finished}} / {{total}}",
+                  finished: project.finished_task_number,
+                  total: project.task_number,
+                })}
               </div>
               <div className={cn("project-card").elem("detail").toClassName()}>
                 <div className={cn("project-card").elem("detail-item").mod({ type: "completed" }).toClassName()}>

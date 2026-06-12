@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { RadioGroup } from "../../Common/RadioGroup/RadioGroup";
 import { IconRows3, IconRows4 } from "@humansignal/icons";
 import { Tooltip } from "@humansignal/ui";
+import i18next from 'i18next'
+
 
 // Density constants - exported for use in other components
 export const DENSITY_STORAGE_KEY = "dm:table:density";
@@ -56,20 +58,20 @@ export const DensityToggle = densityInjector(
         style={{ "--button-padding": "0 var(--spacing-tighter)" } as React.CSSProperties}
         data-testid="density-toggle"
       >
-        <Tooltip title="Comfortable density">
+        <Tooltip title={i18next.t('datamanager.components.DataManager.Toolbar.DensityToggle.comfortableDensity', { ns: "datamanager", defaultValue: "Comfortable density" })}>
           <div>
             <RadioGroup.Button
               value={DENSITY_COMFORTABLE}
-              aria-label="Comfortable density"
+              aria-label={i18next.t('datamanager.components.DataManager.Toolbar.DensityToggle.comfortableDensity', { ns: "datamanager", defaultValue: "Comfortable density" })}
               data-testid="density-comfortable"
             >
               <IconRows3 />
             </RadioGroup.Button>
           </div>
         </Tooltip>
-        <Tooltip title="Compact density">
+        <Tooltip title={i18next.t('datamanager.components.DataManager.Toolbar.DensityToggle.compactDensity', { ns: "datamanager", defaultValue: "Compact density" })}>
           <div>
-            <RadioGroup.Button value={DENSITY_COMPACT} aria-label="Compact density" data-testid="density-compact">
+            <RadioGroup.Button value={DENSITY_COMPACT} aria-label={i18next.t('datamanager.components.DataManager.Toolbar.DensityToggle.compactDensity', { ns: "datamanager", defaultValue: "Compact density" })} data-testid="density-compact">
               <IconRows4 />
             </RadioGroup.Button>
           </div>

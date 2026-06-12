@@ -1,0 +1,91 @@
+{
+  "_comment": "Export 格式列表（与 label_studio_sdk Converter.all_formats / export.tavern.yml 同步）。seed-export-format-keys 写入 locales/*/labelstudio.json。",
+  "formats": {
+    "JSON": {
+      "title": "JSON",
+      "description": "List of items in raw JSON format stored in one JSON file. Use to export both the data and the annotations for a dataset. It's Label Studio Common Format"
+    },
+    "JSON_MIN": {
+      "title": "JSON-MIN",
+      "description": "List of items where only \"from_name\", \"to_name\" values from the raw JSON format are exported. Use to export only the annotations for a dataset."
+    },
+    "CSV": {
+      "title": "CSV",
+      "description": "Results are stored as comma-separated values with the column names specified by the values of the \"from_name\" and \"to_name\" fields."
+    },
+    "TSV": {
+      "title": "TSV",
+      "description": "Results are stored in tab-separated tabular file with column names specified by \"from_name\" \"to_name\" values"
+    },
+    "COCO": {
+      "title": "COCO",
+      "description": "Popular machine learning format used by the COCO dataset for object detection and image segmentation tasks with polygons and rectangles.",
+      "tags": ["image segmentation", "object detection", "keypoints"]
+    },
+    "COCO_WITH_IMAGES": {
+      "title": "COCO with Images",
+      "description": "COCO format with images downloaded.",
+      "tags": ["image segmentation", "object detection", "keypoints"]
+    },
+    "YOLO": {
+      "title": "YOLO",
+      "description": "Popular TXT format is created for each image file. Each txt file contains annotations for the corresponding image file, that is object class, object coordinates, height & width.",
+      "tags": ["image segmentation", "object detection", "keypoints"]
+    },
+    "YOLO_WITH_IMAGES": {
+      "title": "YOLO with Images",
+      "description": "YOLO format with images downloaded.",
+      "tags": ["image segmentation", "object detection", "keypoints"]
+    },
+    "YOLO_OBB": {
+      "title": "YOLOv8 OBB",
+      "description": "Popular TXT format is created for each image file. Each txt file contains annotations for the corresponding image file. The YOLO OBB format designates bounding boxes by their four corner points with coordinates normalized between 0 and 1, so it is possible to export rotated objects.",
+      "tags": ["image segmentation", "object detection"]
+    },
+    "YOLO_OBB_WITH_IMAGES": {
+      "title": "YOLOv8 OBB with Images",
+      "description": "YOLOv8 OBB format with images downloaded.",
+      "tags": ["image segmentation", "object detection"]
+    },
+    "CONLL2003": {
+      "title": "CONLL2003",
+      "description": "Popular format used for the CoNLL-2003 named entity recognition challenge.",
+      "tags": ["sequence labeling", "text tagging", "named entity recognition"]
+    },
+    "VOC": {
+      "title": "Pascal VOC XML",
+      "description": "Popular XML format used for object detection and polygon image segmentation tasks.",
+      "tags": ["image segmentation", "object detection"]
+    },
+    "BRUSH_TO_NUMPY": {
+      "title": "Brush labels to NumPy",
+      "description": "Export your brush labels as NumPy 2d arrays. Each label outputs as one image.",
+      "tags": ["image segmentation"]
+    },
+    "BRUSH_TO_PNG": {
+      "title": "Brush labels to PNG",
+      "description": "Export your brush labels as PNG images. Each label outputs as one image.",
+      "tags": ["image segmentation"]
+    },
+    "ASR_MANIFEST": {
+      "title": "ASR Manifest",
+      "description": "Export audio transcription labels for automatic speech recognition as the JSON manifest format expected by NVIDIA NeMo models.",
+      "tags": ["speech recognition"]
+    },
+    "BRUSH_TO_COCO": {
+      "title": "Brush labels to COCO",
+      "description": "Export your brush labels as COCO format for segmentation tasks. Converts RLE encoded masks to COCO polygons.",
+      "tags": ["image segmentation", "brush annotations"]
+    }
+  },
+  "tags": {
+    "image_segmentation": "image segmentation",
+    "object_detection": "object detection",
+    "keypoints": "keypoints",
+    "sequence_labeling": "sequence labeling",
+    "text_tagging": "text tagging",
+    "named_entity_recognition": "named entity recognition",
+    "speech_recognition": "speech recognition",
+    "brush_annotations": "brush annotations"
+  }
+}

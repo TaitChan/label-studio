@@ -1,6 +1,8 @@
 import { format, isValid } from "date-fns";
 import { dateTimeFormat } from "../CellViews/DateTimeCell";
 import clsx from "clsx";
+import i18next from 'i18next'
+
 
 export const valueToString = (value) => {
   if (typeof value === "string") return value;
@@ -12,7 +14,7 @@ export const valueToString = (value) => {
     /* JSON.stringify will handle JSON and non-strings, non-null, non-undefined */
     return JSON.stringify(value);
   } catch {
-    return "Error: Invalid JSON";
+    return i18next.t('datamanager.components.DataGroups.TextDataGroup.errorInvalidJson', { ns: "datamanager", defaultValue: "Error: Invalid JSON" });
   }
 };
 

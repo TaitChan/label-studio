@@ -1,4 +1,6 @@
 import { Button, cnm } from "@humansignal/ui";
+import { useTranslation } from "react-i18next";
+
 
 interface FormFooterProps {
   currentStep: number;
@@ -43,10 +45,30 @@ export const FormFooter = ({
   target,
   isProviderDisabled = false,
 }: FormFooterProps) => {
+  const { t } = useTranslation("app-common");
+  const showOutlinedLook = currentStep === totalSteps - 1 && target !== "export";
+  const nextButtonLabel =
+    currentStep < totalSteps - 1
+      ? t("appCommon.blocks.StorageProviderForm.components.form-footer.next", { defaultValue: "Next" })
+      : target === "export"
+        ? t("appCommon.blocks.StorageProviderForm.components.form-footer.save", { defaultValue: "Save" })
+        : t("appCommon.blocks.StorageProviderForm.components.form-footer.saveSync", { defaultValue: "Save & Sync" });
+  let nextButtonTooltip: string | undefined;
+  if (currentStep === 1 && !connectionChecked) {
+    nextButtonTooltip = t("appCommon.blocks.StorageProviderForm.components.form-footer.testConnectionBeforeContinuing", {
+      defaultValue: "Test connection before continuing",
+    });
+  } else if (currentStep === 0 && isProviderDisabled) {
+    nextButtonTooltip = t(
+      "appCommon.blocks.StorageProviderForm.components.form-footer.thisProviderIsNotAvailableInTheCurrentVersion",
+      { defaultValue: "This provider is not available in the current version" },
+    );
+  }
+
   return (
     <div className="flex items-center justify-between p-wide border-t border-neutral-border bg-neutral-background">
       <Button look="outlined" onClick={onPrevious} disabled={currentStep === 0}>
-        Previous
+        {t('appCommon.blocks.StorageProviderForm.components.form-footer.previous', { defaultValue: "Previous" })}
       </Button>
 
       <div className="flex gap-tight items-center">
@@ -62,14 +84,26 @@ export const FormFooter = ({
               })}
               style={connectionChecked ? { textShadow: "none" } : {}}
             >
-              {connectionChecked ? "Connection Verified" : "Test Connection"}
+              {connectionChecked
+                ? t("appCommon.blocks.StorageProviderForm.components.form-footer.connectionVerified", {
+                    defaultValue: "Connection Verified",
+                  })
+                : t("appCommon.blocks.StorageProviderForm.components.form-footer.testConnection", {
+                    defaultValue: "Test Connection",
+                  })}
             </Button>
           </>
         )}
 
         {(isEditMode ? currentStep === 1 : currentStep === 2) && (
           <Button waiting={loadPreview.isLoading} onClick={loadPreview.mutate} disabled={filesPreview !== null}>
-            {filesPreview !== null ? "✓ Preview Loaded" : "Load Preview"}
+            {filesPreview !== null
+              ? t("appCommon.blocks.StorageProviderForm.components.form-footer.previewLoaded", {
+                  defaultValue: "✓ Preview Loaded",
+                })
+              : t("appCommon.blocks.StorageProviderForm.components.form-footer.loadPreview", {
+                  defaultValue: "Load Preview",
+                })}
           </Button>
         )}
 
@@ -79,21 +113,15 @@ export const FormFooter = ({
           disabled={
             (!isEditMode && currentStep === 1 && !connectionChecked) || (currentStep === 0 && isProviderDisabled)
           }
-          look={currentStep === totalSteps - 1 && target !== "export" ? "outlined" : undefined}
-          tooltip={
-            currentStep === 1 && !connectionChecked
-              ? "Test connection before continuing"
-              : currentStep === 0 && isProviderDisabled
-                ? "This provider is not available in the current version"
-                : undefined
-          }
+          {...(showOutlinedLook ? { look: "outlined" as const } : {})}
+          {...(nextButtonTooltip ? { tooltip: nextButtonTooltip } : {})}
         >
-          {currentStep < totalSteps - 1 ? "Next" : target === "export" ? "Save" : "Save & Sync"}
+          {nextButtonLabel}
         </Button>
 
         {currentStep === totalSteps - 1 && target !== "export" && onSave && (
           <Button onClick={onSave} waiting={saveStorage?.isLoading}>
-            Save
+            {t('appCommon.blocks.StorageProviderForm.components.form-footer.save', { defaultValue: "Save" })}
           </Button>
         )}
       </div>

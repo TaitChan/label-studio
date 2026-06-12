@@ -1,7 +1,10 @@
 import { useSDK } from "../../providers/SDKProvider";
 import { Button } from "@humansignal/ui";
+import { useTranslation } from 'react-i18next'
+
 
 const SDKButton = ({ eventName, testId, ...props }) => {
+  const { t } = useTranslation("datamanager")
   const sdk = useSDK();
 
   return sdk.hasHandler(eventName) ? (
@@ -10,7 +13,7 @@ const SDKButton = ({ eventName, testId, ...props }) => {
       size={props.size ?? "small"}
       look={props.look ?? "outlined"}
       variant={props.variant ?? "neutral"}
-      aria-label={`${eventName.replace("Clicked", "")} button`}
+      aria-label={t('datamanager.components.Common.SDKButtons.valButton', { defaultValue: "{{val}} button", val: eventName.replace("Clicked", "") })}
       data-testid={testId}
       onClick={() => {
         sdk.invoke(eventName);

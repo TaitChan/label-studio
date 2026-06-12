@@ -2,6 +2,8 @@ import { getProviderConfig } from "../providers";
 import { ProviderForm } from "../components/provider-form";
 import Input from "apps/labelstudio/src/components/Form/Elements/Input/Input";
 import { Toggle } from "@humansignal/ui";
+import { useTranslation } from 'react-i18next'
+
 
 interface ProviderDetailsStepProps {
   formData: any;
@@ -22,10 +24,11 @@ export const ProviderDetailsStep = ({
   isEditMode = false,
   target,
 }: ProviderDetailsStepProps) => {
+  const { t } = useTranslation("app-common")
   const providerConfig = getProviderConfig(provider);
 
   if (!provider || !providerConfig) {
-    return <div className="text-red-500">{!provider ? "No provider selected" : `Unknown provider: ${provider}`}</div>;
+    return <div className="text-red-500">{!provider ? t('appCommon.blocks.StorageProviderForm.Steps.provider-details-step.noProviderSelected', { defaultValue: "No provider selected" }) : t('appCommon.blocks.StorageProviderForm.Steps.provider-details-step.unknownProviderProvider', { defaultValue: "Unknown provider: {{provider}}", provider })}</div>;
   }
 
   return (
@@ -41,7 +44,7 @@ export const ProviderDetailsStep = ({
           name="title"
           value={formData.title ?? ""}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleProviderFieldChange("title", e.target.value)}
-          placeholder="Enter a descriptive name (e.g., 'Legal Documents', 'Training Data')"
+          placeholder={t('appCommon.blocks.StorageProviderForm.Steps.provider-details-step.enterADescriptiveNameEgLegalDocumentsTrainingData', { defaultValue: "Enter a descriptive name (e.g., 'Legal Documents', 'Training Data')" })}
           validate=""
           skip={false}
           labelProps={{}}
@@ -49,8 +52,8 @@ export const ProviderDetailsStep = ({
           tooltip=""
           tooltipIcon={null}
           required={true}
-          label="Storage Title"
-          description="This name will help you identify this connection in your project"
+          label={t('appCommon.blocks.StorageProviderForm.Steps.provider-details-step.storageTitle', { defaultValue: "Storage Title" })}
+          description={t('appCommon.blocks.StorageProviderForm.Steps.provider-details-step.thisNameWillHelpYouIdentifyThisConnectionInYourProject', { defaultValue: "This name will help you identify this connection in your project" })}
           footer={errors.title ? <span className="text-negative-content">{errors.title}</span> : ""}
           className={errors.title ? "border-negative-content" : ""}
         />
@@ -73,9 +76,9 @@ export const ProviderDetailsStep = ({
             <Toggle
               checked={formData.can_delete_objects ?? false}
               onChange={(e) => handleProviderFieldChange("can_delete_objects", e.target.checked)}
-              aria-label="Can delete objects from storage"
-              label="Can delete objects from storage"
-              description="If unchecked, annotations will not be deleted from storage"
+              aria-label={t('appCommon.blocks.StorageProviderForm.Steps.provider-details-step.canDeleteObjectsFromStorage', { defaultValue: "Can delete objects from storage" })}
+              label={t('appCommon.blocks.StorageProviderForm.Steps.provider-details-step.canDeleteObjectsFromStorage', { defaultValue: "Can delete objects from storage" })}
+              description={t('appCommon.blocks.StorageProviderForm.Steps.provider-details-step.ifUncheckedAnnotationsWillNotBeDeletedFromStorage', { defaultValue: "If unchecked, annotations will not be deleted from storage" })}
             />
           </div>
         </div>

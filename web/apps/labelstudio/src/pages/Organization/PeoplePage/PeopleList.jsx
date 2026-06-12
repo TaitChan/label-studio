@@ -1,4 +1,5 @@
 import { formatDistance } from "date-fns";
+import { enUS, zhCN, zhTW } from "date-fns/locale";
 import { useCallback, useEffect, useState } from "react";
 import { Userpic } from "@humansignal/ui";
 import { Pagination, Spinner } from "../../../components";
@@ -8,8 +9,12 @@ import { cn } from "../../../utils/bem";
 import { isDefined } from "../../../utils/helpers";
 import "./PeopleList.prefix.css";
 import { CopyableTooltip } from "../../../components/CopyableTooltip/CopyableTooltip";
+import { useTranslation } from "react-i18next";
+
+const DATE_FNS_LOCALES = { en: enUS, zh: zhCN, zh_tw: zhTW };
 
 export const PeopleList = ({ onSelect, selectedUser, defaultSelected }) => {
+  const { t, i18n } = useTranslation("labelstudio");
   const api = useAPI();
   const [usersList, setUsersList] = useState();
   const [currentPage] = usePage("page", 1);
@@ -63,9 +68,9 @@ export const PeopleList = ({ onSelect, selectedUser, defaultSelected }) => {
             <div className={cn("people-list").elem("users").toClassName()}>
               <div className={cn("people-list").elem("header").toClassName()}>
                 <div className={cn("people-list").elem("column").mix("avatar").toClassName()} />
-                <div className={cn("people-list").elem("column").mix("email").toClassName()}>Email</div>
-                <div className={cn("people-list").elem("column").mix("name").toClassName()}>Name</div>
-                <div className={cn("people-list").elem("column").mix("last-activity").toClassName()}>Last Activity</div>
+                <div className={cn("people-list").elem("column").mix("email").toClassName()}>{t('pages.Organization.PeoplePage.PeopleList.email', { defaultValue: "Email" })}</div>
+                <div className={cn("people-list").elem("column").mix("name").toClassName()}>{t("pages.Organization.PeoplePage.PeopleList.name", { defaultValue: "Name" })}</div>
+                <div className={cn("people-list").elem("column").mix("last-activity").toClassName()}>{t('pages.Organization.PeoplePage.PeopleList.lastActivity', { defaultValue: "Last Activity" })}</div>
               </div>
               <div className={cn("people-list").elem("body").toClassName()}>
                 {usersList.map(({ user }) => {
@@ -78,7 +83,7 @@ export const PeopleList = ({ onSelect, selectedUser, defaultSelected }) => {
                       onClick={() => selectUser(user)}
                     >
                       <div className={cn("people-list").elem("field").mix("avatar").toClassName()}>
-                        <CopyableTooltip title={`User ID: ${user.id}`} textForCopy={user.id}>
+                        <CopyableTooltip title={t('pages.Organization.PeoplePage.PeopleList.userIdId', { defaultValue: "User ID: {{id}}", id: user.id })} textForCopy={user.id}>
                           <Userpic user={user} style={{ width: 28, height: 28 }} />
                         </CopyableTooltip>
                       </div>
@@ -87,7 +92,10 @@ export const PeopleList = ({ onSelect, selectedUser, defaultSelected }) => {
                         {user.first_name} {user.last_name}
                       </div>
                       <div className={cn("people-list").elem("field").mix("last-activity").toClassName()}>
-                        {formatDistance(new Date(user.last_activity), new Date(), { addSuffix: true })}
+                        {formatDistance(new Date(user.last_activity), new Date(), {
+                          addSuffix: true,
+                          locale: DATE_FNS_LOCALES[i18n.language] ?? enUS,
+                        })}
                       </div>
                     </div>
                   );

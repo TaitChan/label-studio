@@ -6,6 +6,9 @@ import { KeyboardKey } from "./Key";
 import { HOTKEY_SECTIONS, URL_TO_SECTION_MAPPING } from "./defaults";
 import type { Hotkey, Section } from "./utils";
 import { getTypedDefaultHotkeys } from "./utils";
+import { useTranslation, Trans } from 'react-i18next'
+import i18next from 'i18next'
+
 
 // Type definitions for imported constants
 interface UrlMapping {
@@ -60,6 +63,7 @@ const useCurrentHotkeys = (): Hotkey[] => {
  * Renders shortcuts organized by sections and subgroups
  */
 const HotkeyHelpModal = ({ sectionsToShow }: HotkeyHelpModalProps) => {
+  const { t } = useTranslation("app-common")
   const hotkeys = useCurrentHotkeys();
 
   /**
@@ -155,17 +159,21 @@ const HotkeyHelpModal = ({ sectionsToShow }: HotkeyHelpModalProps) => {
       <div className="max-w-3xl max-h-[90vh] h-full overflow-hidden w-full mx-4 flex flex-col">
         <div className="px-wide py-base border-b border-neutral-border">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Keyboard Shortcuts</h2>
+            <h2 className="text-lg font-semibold">{t('appCommon.pages.AccountSettings.sections.Hotkeys.Help.keyboardShortcuts', { defaultValue: "Keyboard Shortcuts" })}</h2>
           </div>
           <p className="text-sm text-neutral-content-subtler mt-1">
-            View all available keyboard shortcuts.&nbsp;
-            <a
-              href="/user/account/hotkeys"
-              onClick={handleCustomizeClick}
-              className="text-primary-content hover:underline hover:text-primary-content-hover"
-            >
-              Customize
-            </a>
+            <Trans
+              i18nKey="appCommon.pages.AccountSettings.sections.Hotkeys.Help.viewAllAvailableKeyboardShortcuts"
+              ns="app-common"
+              defaults="View all available keyboard shortcuts.&nbsp;<0>Customize</0>"
+              components={[
+                <a
+                  href="/user/account/hotkeys"
+                  onClick={handleCustomizeClick}
+                  className="text-primary-content hover:underline hover:text-primary-content-hover"
+                />,
+              ]}
+            />
           </p>
         </div>
 
@@ -256,7 +264,7 @@ export const openHotkeyHelp = (sectionOrUrl?: string | string[]): ModalReturn =>
   const sectionsToShow = determineSectionsToShow(sectionOrUrl);
 
   const modalInstance = modal({
-    title: "Keyboard Shortcuts",
+    title: i18next.t('appCommon.pages.AccountSettings.sections.Hotkeys.Help.keyboardShortcuts', { ns: "app-common", defaultValue: "Keyboard Shortcuts" }),
     body: () => <HotkeyHelpModal sectionsToShow={sectionsToShow} />,
     bare: true,
     allowClose: true,

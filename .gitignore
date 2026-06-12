@@ -85,3 +85,6 @@ CLAUDE.local.md
 web/libs/editor/tests/coverage
 web/coverage-chunks
 .cache
+
+# Cursor Agent CLI local secrets
+.env.local

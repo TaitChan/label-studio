@@ -22,11 +22,14 @@ import type { Hotkey, Section, DirtyState, DuplicateConfirmDialog, ImportData } 
 import { HOTKEY_SECTIONS } from "./Hotkeys/defaults";
 import styles from "../AccountSettings.module.css";
 import { useHotkeys } from "../hooks/useHotkeys";
+import { useTranslation } from 'react-i18next'
+
 
 // Type the imported defaults
 const typedHotkeySections = HOTKEY_SECTIONS as Section[];
 
 export const HotkeysHeaderButtons = () => {
+  const { t } = useTranslation("app-common")
   const [importDialogOpen, setImportDialogOpen] = useState<boolean>(false);
   const { handleResetToDefaults, handleExportHotkeys, handleImportHotkeys } = useHotkeys();
 
@@ -34,13 +37,13 @@ export const HotkeysHeaderButtons = () => {
     <>
       <div className={`${styles.flexRow} justify-end gap-tight`}>
         <Button variant="neutral" look="outlined" onClick={() => setImportDialogOpen(true)}>
-          Import
+          {t('appCommon.pages.AccountSettings.sections.Hotkeys.import', { defaultValue: "Import" })}
         </Button>
         <Button variant="neutral" look="outlined" onClick={handleExportHotkeys}>
-          Export
+          {t('appCommon.pages.AccountSettings.sections.Hotkeys.export', { defaultValue: "Export" })}
         </Button>
         <Button variant="negative" look="outlined" onClick={handleResetToDefaults}>
-          Reset to Defaults
+          {t('appCommon.pages.AccountSettings.sections.Hotkeys.resetToDefaults', { defaultValue: "Reset to Defaults" })}
         </Button>
       </div>
 
@@ -51,6 +54,7 @@ export const HotkeysHeaderButtons = () => {
 };
 
 export const HotkeysManager = () => {
+  const { t } = useTranslation("app-common")
   const toast = useToast();
   const [editingHotkeyId, setEditingHotkeyId] = useState<string | null>(null);
   const [dirtyState, setDirtyState] = useState<DirtyState>({});
@@ -199,23 +203,23 @@ export const HotkeysManager = () => {
 
         if (toast) {
           toast.show({
-            message: `${sectionName} hotkeys saved successfully`,
+            message: t('appCommon.pages.AccountSettings.sections.Hotkeys.sectionnameHotkeysSavedSuccessfully', { defaultValue: "{{sectionName}} hotkeys saved successfully", sectionName }),
             type: ToastType.info,
           });
         }
       } else {
         if (toast) {
           toast.show({
-            message: `Failed to save: ${result.error || "Unknown error"}`,
+            message: t('appCommon.pages.AccountSettings.sections.Hotkeys.failedToSaveVal', { defaultValue: "Failed to save: {{val}}", val: result.error || "Unknown error" }),
             type: ToastType.error,
           });
         }
       }
     } catch (error: unknown) {
       if (toast) {
-        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        const errorMessage = error instanceof Error ? error.message : t('appCommon.pages.AccountSettings.sections.Hotkeys.unknownError', { defaultValue: "Unknown error" });
         toast.show({
-          message: `Error saving: ${errorMessage}`,
+          message: t('appCommon.pages.AccountSettings.sections.Hotkeys.errorSavingErrormessage', { defaultValue: "Error saving: {{errorMessage}}", errorMessage }),
           type: ToastType.error,
         });
       }
@@ -247,12 +251,12 @@ export const HotkeysManager = () => {
       setDirtyState({});
 
       if (toast) {
-        toast.show({ message: "Hotkeys imported successfully", type: ToastType.info });
+        toast.show({ message: t('appCommon.pages.AccountSettings.sections.Hotkeys.hotkeysImportedSuccessfully', { defaultValue: "Hotkeys imported successfully" }), type: ToastType.info });
       }
     } catch (error: unknown) {
       if (toast) {
-        const errorMessage = error instanceof Error ? error.message : "Unknown error";
-        toast.show({ message: `Error importing hotkeys: ${errorMessage}`, type: ToastType.error });
+        const errorMessage = error instanceof Error ? error.message : t('appCommon.pages.AccountSettings.sections.Hotkeys.unknownError', { defaultValue: "Unknown error" });
+        toast.show({ message: t('appCommon.pages.AccountSettings.sections.Hotkeys.errorImportingHotkeysErrormessage', { defaultValue: "Error importing hotkeys: {{errorMessage}}", errorMessage }), type: ToastType.error });
       }
     } finally {
       setIsLoading(false);
@@ -324,9 +328,12 @@ export const HotkeysManager = () => {
       <Dialog open={duplicateConfirmDialog.open} onOpenChange={handleCancelDuplicate}>
         <DialogContent className="bg-neutral-surface">
           <DialogHeader>
-            <DialogTitle>Warning: Duplicate Hotkey Detected</DialogTitle>
+            <DialogTitle>{t('appCommon.pages.AccountSettings.sections.Hotkeys.warningDuplicateHotkeyDetected', { defaultValue: "Warning: Duplicate Hotkey Detected" })}</DialogTitle>
             <DialogDescription>
-              The hotkey combination "<strong>{duplicateConfirmDialog.newKey}</strong>" is already being used by:
+              {t("appCommon.pages.AccountSettings.sections.Hotkeys.duplicateHotkeyCombinationInUse", {
+                defaultValue: 'The hotkey combination "{{key}}" is already being used by:',
+                key: duplicateConfirmDialog.newKey,
+              })}
             </DialogDescription>
           </DialogHeader>
 
@@ -358,15 +365,15 @@ export const HotkeysManager = () => {
               <IconWarning className="text-warning-icon" />
             </div>
             <div>
-              Having duplicate hotkeys may cause conflicts and unexpected behavior. Are you sure you want to proceed?
+              {t('appCommon.pages.AccountSettings.sections.Hotkeys.havingDuplicateHotkeysMayCauseConflictsAndUnexpectedBehaviorAreYouSureYouWantToProceed', { defaultValue: "Having duplicate hotkeys may cause conflicts and unexpected behavior. Are you sure you want to proceed?" })}
             </div>
           </DialogDescription>
 
           <DialogFooter>
             <Button variant="neutral" onClick={handleCancelDuplicate}>
-              Cancel
+              {t('appCommon.pages.AccountSettings.sections.Hotkeys.cancel', { defaultValue: "Cancel" })}
             </Button>
-            <Button onClick={handleConfirmDuplicate}>Allow Duplicate</Button>
+            <Button onClick={handleConfirmDuplicate}>{t('appCommon.pages.AccountSettings.sections.Hotkeys.allowDuplicate', { defaultValue: "Allow Duplicate" })}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

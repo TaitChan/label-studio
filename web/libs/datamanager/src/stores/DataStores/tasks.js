@@ -2,6 +2,7 @@ import { flow, getRoot, getSnapshot, types } from "mobx-state-tree";
 import { DataStore, DataStoreItem } from "../../mixins/DataStore";
 import { getAnnotationSnapshot } from "../../sdk/lsf-utils";
 import { isDefined } from "../../utils/utils";
+import { collectAssigneeUserIdsFromTasks } from "../../utils/collect-assignee-user-ids";
 import { Assignee } from "../Assignee";
 import { DynamicModel, registerModel } from "../DynamicModel";
 import { CustomJSON } from "../types";
@@ -253,6 +254,8 @@ export const create = (columns) => {
         let task;
 
         if (taskData && !taskData?.error) {
+          getRoot(self).ensureUsers(collectAssigneeUserIdsFromTasks([taskData]));
+
           const id = taskID ?? taskData.id;
           const snapshot = self.mergeSnapshot(id, taskData);
 

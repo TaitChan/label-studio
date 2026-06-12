@@ -5,17 +5,21 @@ import { cn } from "../../../utils/bem";
 import "./Config.prefix.css";
 import { IconInfo } from "@humansignal/icons";
 import { Button, EnterpriseBadge } from "@humansignal/ui";
+import { useTranslation, Trans } from "react-i18next";
+import i18next from "i18next";
+
 
 const listClass = cn("templates-list");
 
 const Arrow = () => (
   <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <title>Arrow Icon</title>
+    <title>{i18next.t('pages.CreateProject.Config.TemplatesList.arrowIcon', { defaultValue: "Arrow Icon" })}</title>
     <path opacity="0.9" d="M2 10L6 6L2 2" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
   </svg>
 );
 
 const TemplatesInGroup = ({ templates, group, onSelectRecipe, isEdition }) => {
+  const { t } = useTranslation("labelstudio")
   const picked = templates
     .filter((recipe) => recipe.group === group)
     // templates without `order` go to the end of the list
@@ -34,7 +38,7 @@ const TemplatesInGroup = ({ templates, group, onSelectRecipe, isEdition }) => {
             key={recipe.title}
             onClick={() => !isDisabled && onSelectRecipe(recipe)}
             className={listClass.elem("template").mod({ disabled: isDisabled }).toClassName()}
-            title={isDisabled ? "Enterprise feature - Available in Label Studio Enterprise" : ""}
+            title={isDisabled ? t('pages.CreateProject.Config.TemplatesList.enterpriseFeatureAvailableInLabelStudioEnterprise', { defaultValue: "Enterprise feature - Available in Label Studio Enterprise" }) : ""}
           >
             <img src={recipe.image} alt={""} />
             <div className="flex flex-col items-center w-full">
@@ -49,6 +53,7 @@ const TemplatesInGroup = ({ templates, group, onSelectRecipe, isEdition }) => {
 };
 
 export const TemplatesList = ({ selectedGroup, selectedRecipe, onCustomTemplate, onSelectGroup, onSelectRecipe }) => {
+  const { t } = useTranslation("labelstudio")
   const [groups, setGroups] = React.useState([]);
   const [templates, setTemplates] = React.useState();
   const api = useAPI();
@@ -97,9 +102,9 @@ export const TemplatesList = ({ selectedGroup, selectedRecipe, onCustomTemplate,
           size="small"
           onClick={onCustomTemplate}
           className="w-full"
-          aria-label="Create custom template"
+          aria-label={t('pages.CreateProject.Config.TemplatesList.createCustomTemplate', { defaultValue: "Create custom template" })}
         >
-          Custom template
+          {t('pages.CreateProject.Config.TemplatesList.customTemplate', { defaultValue: "Custom template" })}
         </Button>
       </aside>
       <main>
@@ -114,11 +119,12 @@ export const TemplatesList = ({ selectedGroup, selectedRecipe, onCustomTemplate,
       <footer className="flex items-center justify-center gap-1">
         <IconInfo className={listClass.elem("info-icon").toClassName()} width="20" height="20" />
         <span>
-          See the documentation to{" "}
-          <a href="https://labelstud.io/guide" target="_blank" rel="noreferrer">
-            contribute a template
-          </a>
-          .
+          <Trans
+            ns="labelstudio"
+            i18nKey="pages.CreateProject.Config.TemplatesList.contributeTemplate"
+            defaults="See the documentation to <0>contribute a template</0>."
+            components={[<a href="https://labelstud.io/guide" target="_blank" rel="noreferrer" key="guide" />]}
+          />
         </span>
       </footer>
     </div>

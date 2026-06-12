@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { IconTimelinePause, IconTimelinePlay } from "@humansignal/icons";
-import { Button } from "./Button/Button";
+import { Button } from "@humansignal/ui";
 import { Space } from "./Space/Space";
+import i18next from 'i18next'
+
 
 const Duration = ({ value, format }) => {
   const formatted = new Date(value * 1000).toISOString().substr(11, 8);
@@ -78,7 +80,7 @@ export class SharedAudio extends Component {
         </Button>
 
         {this.state.error ? (
-          <div>Unable to play</div>
+          <div>{i18next.t('datamanager.components.Common.SharedAudio.unableToPlay', { ns: "datamanager", defaultValue: "Unable to play" })}</div>
         ) : this.audio ? (
           <div style={{ display: "flex", flex: 1, alignItems: "center" }}>
             <PlaybackControl

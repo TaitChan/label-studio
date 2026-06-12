@@ -10,6 +10,8 @@ import { FiltersSidebar } from "../Filters/FiltersSidebar/FilterSidebar";
 import { DataView } from "../MainView";
 import "./DataManager.prefix.css";
 import { Toolbar } from "./Toolbar/Toolbar";
+import i18next from 'i18next'
+
 
 const tabContentCN = cn("tabs-dm-content");
 
@@ -47,18 +49,21 @@ const ProjectSummary = summaryInjector((props) => {
     <Space size="large" style={{ paddingRight: "1em", color: "var(--color-neutral-content-subtle)" }}>
       {props.cloudSync && (
         <Space size="small" style={{ fontSize: 12, fontWeight: 400, opacity: 0.8 }}>
-          Storage sync
+          {i18next.t('datamanager.components.DataManager.DataManager.storageSync', { ns: "datamanager", defaultValue: "Storage sync" })}
           <Spinner size="small" />
         </Space>
       )}
       <span style={{ display: "flex", alignItems: "center", fontSize: 12 }}>
         <Space size="compact">
           <span>
-            Tasks: <span title="Filtered tasks">{props.totalFoundTasks}</span> /{" "}
-            <span title="Total tasks in the project">{props.totalTasks}</span>
+            {i18next.t("datamanager.components.DataManager.DataManager.tasksCount", {
+              ns: "datamanager", defaultValue: "Tasks: {{filtered}} / {{total}}",
+              filtered: props.totalFoundTasks,
+              total: props.totalTasks,
+            })}
           </span>
-          <span>Submitted annotations: {props.totalAnnotations}</span>
-          <span>Predictions: {props.totalPredictions}</span>
+          <span>{i18next.t('datamanager.components.DataManager.DataManager.submittedAnnotationsTotalannotations', { ns: "datamanager", defaultValue: "Submitted annotations: {{totalAnnotations}}", totalAnnotations: props.totalAnnotations })}</span>
+          <span>{i18next.t('datamanager.components.DataManager.DataManager.predictionsTotalpredictions', { ns: "datamanager", defaultValue: "Predictions: {{totalPredictions}}", totalPredictions: props.totalPredictions })}</span>
         </Space>
       </span>
     </Space>

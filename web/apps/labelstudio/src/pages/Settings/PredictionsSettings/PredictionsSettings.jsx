@@ -7,15 +7,19 @@ import { useAPI } from "../../../providers/ApiProvider";
 import { ProjectContext } from "../../../providers/ProjectProvider";
 import { Spinner } from "../../../components/Spinner/Spinner";
 import { PredictionsList } from "./PredictionsList";
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
+
 
 export const PredictionsSettings = () => {
+  const { t } = useTranslation("labelstudio")
   const api = useAPI();
   const { project } = useContext(ProjectContext);
   const [versions, setVersions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  useUpdatePageTitle(createTitleFromSegments([project?.title, "Predictions Settings"]));
+  useUpdatePageTitle(createTitleFromSegments([project?.title, t("pages.Settings.PredictionsSettings.PredictionsSettings.predictionsSettings", { defaultValue: "Predictions Settings" })]));
 
   const fetchVersions = useCallback(async () => {
     setLoading(true);
@@ -40,7 +44,7 @@ export const PredictionsSettings = () => {
   return (
     <section className="max-w-[42rem]">
       <Typography variant="headline" size="medium" className="mb-tight">
-        Predictions
+        {t('pages.Settings.PredictionsSettings.PredictionsSettings.predictions', { defaultValue: "Predictions" })}
       </Typography>
       <div>
         {loading && <Spinner size={32} />}
@@ -48,16 +52,19 @@ export const PredictionsSettings = () => {
         {loaded && versions.length > 0 && (
           <>
             <Typography variant="title" size="medium">
-              Predictions List
+              {t('pages.Settings.PredictionsSettings.PredictionsSettings.predictionsList', { defaultValue: "Predictions List" })}
             </Typography>
             <Typography size="small" className="text-neutral-content-subtler mt-base mb-wider">
-              List of predictions available in the project. Each card is associated with a separate model version. To
-              learn about how to import predictions,{" "}
+              {t("pages.Settings.PredictionsSettings.PredictionsSettings.listOfPredictionsAvailableInTheProjectEachCardIsAssociatedWithASeparateModelVersionToLearnAboutHowToImportPredictions", {
+                defaultValue:
+                  "List of predictions available in the project. Each card is associated with a separate model version. To learn about how to import predictions,",
+              })}{" "}
               <a href="https://labelstud.io/guide/predictions.html" target="_blank" rel="noreferrer">
-                see&nbsp;the&nbsp;documentation
+                {t("pages.Settings.PredictionsSettings.PredictionsSettings.seeTheDocumentation", {
+                  defaultValue: "see the documentation",
+                })}
               </a>
-              .
-            </Typography>
+              .</Typography>
           </>
         )}
 
@@ -67,8 +74,8 @@ export const PredictionsSettings = () => {
               size="medium"
               variant="primary"
               icon={<IconPredictions />}
-              title="No predictions uploaded yet"
-              description="Upload predictions to automatically prelabel your data and speed up annotation. Import predictions from multiple model versions to compare their performance, or connect live models from the Model page to generate predictions on demand."
+              title={t('pages.Settings.PredictionsSettings.PredictionsSettings.noPredictionsUploadedYet', { defaultValue: "No predictions uploaded yet" })}
+              description={t('pages.Settings.PredictionsSettings.PredictionsSettings.uploadPredictionsToAutomaticallyPrelabelYourDataAndSpeedUpAnnotationImportPredictionsFromMultipleModelVersionsToCompareTheirPerformanceOrConnectLiveModelsFromTheModelPageToGeneratePredictionsOnDemand', { defaultValue: "Upload predictions to automatically prelabel your data and speed up annotation. Import predictions from multiple model versions to compare their performance, or connect live models from the Model page to generate predictions on demand." })}
               footer={
                 !window.APP_SETTINGS?.whitelabel_is_active && (
                   <Typography variant="label" size="small" className="text-primary-link">
@@ -77,10 +84,10 @@ export const PredictionsSettings = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-testid="predictions-help-link"
-                      aria-label="Learn more about predictions (opens in new window)"
+                      aria-label={t('pages.Settings.PredictionsSettings.PredictionsSettings.learnMoreAboutPredictionsOpensInNewWindow', { defaultValue: "Learn more about predictions (opens in new window)" })}
                       className="inline-flex items-center gap-1 hover:underline"
                     >
-                      Learn more
+                      {t('pages.Settings.PredictionsSettings.PredictionsSettings.learnMore', { defaultValue: "Learn more" })}
                       <IconExternal width={16} height={16} />
                     </a>
                   </Typography>
@@ -98,5 +105,5 @@ export const PredictionsSettings = () => {
   );
 };
 
-PredictionsSettings.title = "Predictions";
+PredictionsSettings.title = i18next.t("pages.Settings.PredictionsSettings.PredictionsSettings.predictions", { defaultValue: "Predictions" });
 PredictionsSettings.path = "/predictions";

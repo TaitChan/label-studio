@@ -14,6 +14,8 @@ import { useValueTracker } from "../Form/Utils";
 import "./Pagination.prefix.css";
 import { useUpdateEffect } from "../../../hooks/useUpdateEffect";
 import { Select } from "../Form/Elements";
+import { useTranslation } from 'react-i18next'
+
 
 interface PaginationProps {
   name?: string | (() => string);
@@ -81,6 +83,7 @@ export const Pagination: FC<PaginationProps> = forwardRef<any, PaginationProps>(
     },
     ref,
   ) => {
+    const { t } = useTranslation("datamanager")
     const [inputMode, setInputMode] = useState(false);
     const [currentPage, setCurrentPage] = useValueTracker(props.page);
     const [waiting, setWaiting] = useValueTracker(props.waiting);
@@ -219,9 +222,7 @@ export const Pagination: FC<PaginationProps> = forwardRef<any, PaginationProps>(
     return totalPages > 1 || alwaysVisible ? (
       <div className={cn("pagination-dm").mod({ disabled, size, waiting }).toClassName()} style={props.style}>
         {props.label && isDefined(pageSize) && showTitle && (
-          <div className={cn("pagination-dm").elem("label").toClassName()}>
-            {props.label}: {visibleItems.start}-{visibleItems.end}
-          </div>
+          <div className={cn("pagination-dm").elem("label").toClassName()}>{t('datamanager.components.Common.Pagination.Pagination.labelStartend', { defaultValue: "{{label}}: {{start}}-{{end}}", label: props.label, start: visibleItems.start, end: visibleItems.end })}</div>
         )}
         <div className={cn("pagination-dm").elem("navigation").toClassName()}>
           {allowRewind && (
@@ -267,7 +268,7 @@ export const Pagination: FC<PaginationProps> = forwardRef<any, PaginationProps>(
                   if (allowInput) setInputMode(true);
                 }}
               >
-                {currentPage} <span>of {totalPages}</span>
+                {currentPage} <span>{t('datamanager.components.Common.Pagination.Pagination.ofTotalpages', { defaultValue: "of {{totalPages}}", totalPages })}</span>
                 <div
                   onClick={() => {
                     /*  */
@@ -298,7 +299,7 @@ export const Pagination: FC<PaginationProps> = forwardRef<any, PaginationProps>(
             <Select
               size={size}
               value={pageSize}
-              options={pageSizeOptions.map((v) => ({ label: `${v} per page`, value: v }))}
+              options={pageSizeOptions.map((v) => ({ label: t('datamanager.components.Common.Pagination.Pagination.vPerPage', { defaultValue: "{{v}} per page", v }), value: v }))}
               onChange={(val: any) => {
                 const newPageSize = Number.parseInt(val);
 

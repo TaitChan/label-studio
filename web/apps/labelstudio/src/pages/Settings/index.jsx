@@ -8,6 +8,8 @@ import { MachineLearningSettings } from "./MachineLearningSettings/MachineLearni
 import { PredictionsSettings } from "./PredictionsSettings/PredictionsSettings";
 import { StorageSettings } from "./StorageSettings/StorageSettings";
 import "./settings.prefix.css";
+import i18next from 'i18next'
+
 
 export const MenuLayout = ({ children, ...routeProps }) => {
   return (
@@ -39,7 +41,7 @@ const pages = {
 };
 
 export const SettingsPage = {
-  title: "Settings",
+  title: i18next.t('pages.Settings.index.settings', { defaultValue: "Settings" }),
   path: "/settings",
   exact: true,
   layout: MenuLayout,

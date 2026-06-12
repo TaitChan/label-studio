@@ -1,6 +1,7 @@
 import { flow, getRoot, types } from "mobx-state-tree";
 import { guidGenerator } from "../../utils/random";
 import { isDefined } from "../../utils/utils";
+import { collectAssigneeUserIdsFromTasks } from "../../utils/collect-assignee-user-ids";
 import { DEFAULT_PAGE_SIZE, getStoredPageSize } from "../../components/Common/Pagination/Pagination";
 import { FF_LOPS_E_3, isFF } from "../../utils/feature-flags";
 
@@ -277,13 +278,18 @@ export const DataStore = (modelName, { listItemType, apiMethod, properties, asso
           associatedList = data[apiMethodSettings?.associatedType];
         }
 
-        if (list)
+        if (list) {
+          if (apiMethod === "tasks") {
+            root.ensureUsers(collectAssigneeUserIdsFromTasks(list));
+          }
+
           self.setList({
             total,
             list,
             reload: reload || isDefined(pageNumber),
             associatedList,
           });
+        }
 
         if (isDefined(highlightedID) && !listIncludes(self.list, highlightedID)) {
           self.highlighted = null;

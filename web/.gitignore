@@ -28,6 +28,7 @@ dist
 # misc
 /connect.lock
 /coverage
+.quality-reports
 /libpeerconnection.log
 npm-debug.log
 yarn-error.log

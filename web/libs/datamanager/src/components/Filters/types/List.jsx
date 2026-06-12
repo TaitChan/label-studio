@@ -1,6 +1,8 @@
 import { observer } from "mobx-react";
 import { FilterDropdown } from "../FilterDropdown";
 import { useMemo } from "react";
+import i18next from 'i18next'
+
 // import { Common } from "./Common";
 
 function defaultFilterItems(items) {
@@ -34,7 +36,7 @@ export const VariantSelect = observer(({ filter, schema, onChange, multiple, val
       }
       searchFilter={filter.cellView?.searchFilter}
       onChange={(value) => onChange(value)}
-      placeholder={placeholder ?? "Select value"}
+      placeholder={placeholder ?? i18next.t("datamanager.components.Filters.types.List.selectValue", { ns: "datamanager", defaultValue: "Select value" })}
       disabled={disabled}
     />
   );
@@ -43,13 +45,13 @@ export const VariantSelect = observer(({ filter, schema, onChange, multiple, val
 export const ListFilter = [
   {
     key: "contains",
-    label: "contains",
+    label: i18next.t("datamanager.components.Filters.types.List.contains", { ns: "datamanager", defaultValue: "contains" }),
     valueType: "single",
     input: (props) => <VariantSelect {...props} multiple={props.schema?.multiple} />,
   },
   {
     key: "not_contains",
-    label: "not contains",
+    label: i18next.t('datamanager.components.Filters.types.List.notContains', { ns: "datamanager", defaultValue: "not contains" }),
     valueType: "single",
     input: (props) => <VariantSelect {...props} multiple={props.schema?.multiple} />,
   },

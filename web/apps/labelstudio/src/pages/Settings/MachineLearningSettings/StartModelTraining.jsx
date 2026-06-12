@@ -2,8 +2,11 @@ import { useCallback, useState } from "react";
 import { Button } from "@humansignal/ui";
 import { useAPI } from "../../../providers/ApiProvider";
 import { Typography } from "@humansignal/ui";
+import { useTranslation } from 'react-i18next'
+
 
 export const StartModelTraining = ({ backend }) => {
+  const { t } = useTranslation("labelstudio")
   const api = useAPI();
   const [response, setResponse] = useState(null);
 
@@ -23,12 +26,10 @@ export const StartModelTraining = ({ backend }) => {
   return (
     <div className="max-w-[680px]">
       <Typography size="small" className="text-neutral-content-subtler">
-        You're about to manually trigger your model's training process. This action will start the learning phase based
-        on how train method is implemented in the ML Backend. Proceed to begin this process.
+        {t('pages.Settings.MachineLearningSettings.StartModelTraining.youreAboutToManuallyTriggerYourModelsTrainingProcessThisActionWillStartTheLearningPhaseBasedOnHowTrainMethodIsImplementedInTheMlBackendProceedToBeginThisProcess', { defaultValue: "You're about to manually trigger your model's training process. This action will start the learning phase basedn        on how train method is implemented in the ML Backend. Proceed to begin this process." })}
       </Typography>
       <Typography size="small" className="text-neutral-content-subtler mt-base mb-wide">
-        *Note: Currently, there is no built-in feedback loop within this interface for tracking the training progress.
-        You'll need to monitor the model's training steps directly through the model's own tools and environment.
+        {t('pages.Settings.MachineLearningSettings.StartModelTraining.noteCurrentlyThereIsNoBuiltinFeedbackLoopWithinThisInterfaceForTrackingTheTrainingProgressYoullNeedToMonitorTheModelsTrainingStepsDirectlyThroughTheModelsOwnToolsAndEnvironment', { defaultValue: "*Note: Currently, there is no built-in feedback loop within this interface for tracking the training progress.n        You'll need to monitor the model's training steps directly through the model's own tools and environment." })}
       </Typography>
 
       {!response && (
@@ -37,14 +38,14 @@ export const StartModelTraining = ({ backend }) => {
             onStartTraining(backend);
           }}
         >
-          Start Training
+          {t('pages.Settings.MachineLearningSettings.StartModelTraining.startTraining', { defaultValue: "Start Training" })}
         </Button>
       )}
 
       {!!response && (
         <>
-          <pre>Request Sent!</pre>
-          <pre>Response: {JSON.stringify(response, null, 2)}</pre>
+          <pre>{t('pages.Settings.MachineLearningSettings.StartModelTraining.requestSent', { defaultValue: "Request Sent!" })}</pre>
+          <pre>{t('pages.Settings.MachineLearningSettings.StartModelTraining.response2', { defaultValue: "Response:" })} {JSON.stringify(response, null, 2)}</pre>
         </>
       )}
     </div>

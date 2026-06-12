@@ -9,6 +9,8 @@ import { step1Schema, getProviderSchema } from "./schemas";
 import { addProvider } from "./providers";
 import type { ProviderConfig } from "./types/provider";
 import { InlineError } from "apps/labelstudio/src/components/Error/InlineError";
+import { useTranslation } from 'react-i18next'
+
 
 interface StorageProviderFormProps {
   onSubmit: () => void;
@@ -31,6 +33,7 @@ export const StorageProviderForm = forwardRef<unknown, StorageProviderFormProps>
     { onSubmit, target, project, storage, title, storageTypes, providers, defaultValues, onClose = () => {}, onHide },
     ref,
   ) => {
+    const { t } = useTranslation("app-common")
     const modal = useModalControls();
     const [type, setType] = useState<string | undefined>(storage?.type || storage?.provider || "s3");
     const [filesPreview, setFilesPreview] = useState<any[] | null>(null);
@@ -60,23 +63,23 @@ export const StorageProviderForm = forwardRef<unknown, StorageProviderFormProps>
     const steps = isEditMode
       ? [
           {
-            title: "Configure Connection",
+            title: t('appCommon.blocks.StorageProviderForm.index.configureConnection', { defaultValue: "Configure Connection" }),
             schema: getProviderSchema(type || "s3", isEditMode, effectiveTarget),
           },
           // Only include preview and review steps for import storages
           ...(effectiveTarget === "import"
-            ? [{ title: "Import Settings & Preview" }, { title: "Review & Confirm" }]
+            ? [{ title: t('appCommon.blocks.StorageProviderForm.index.importSettingsPreview', { defaultValue: "Import Settings & Preview" }) }, { title: t('appCommon.blocks.StorageProviderForm.index.reviewConfirm', { defaultValue: "Review & Confirm" }) }]
             : []),
         ]
       : [
-          { title: "Select Provider", schema: step1Schema },
+          { title: t('appCommon.blocks.StorageProviderForm.index.selectProvider', { defaultValue: "Select Provider" }), schema: step1Schema },
           {
-            title: "Configure Connection",
+            title: t('appCommon.blocks.StorageProviderForm.index.configureConnection', { defaultValue: "Configure Connection" }),
             schema: getProviderSchema(type || "s3", isEditMode, effectiveTarget),
           },
           // Only include preview and review steps for import storages
           ...(effectiveTarget === "import"
-            ? [{ title: "Import Settings & Preview" }, { title: "Review & Confirm" }]
+            ? [{ title: t('appCommon.blocks.StorageProviderForm.index.importSettingsPreview', { defaultValue: "Import Settings & Preview" }) }, { title: t('appCommon.blocks.StorageProviderForm.index.reviewConfirm', { defaultValue: "Review & Confirm" }) }]
             : []),
         ];
 
@@ -116,23 +119,23 @@ export const StorageProviderForm = forwardRef<unknown, StorageProviderFormProps>
       const newSteps = isEditMode
         ? [
             {
-              title: "Configure Connection",
+              title: t('appCommon.blocks.StorageProviderForm.index.configureConnection', { defaultValue: "Configure Connection" }),
               schema: getProviderSchema(formData.provider || type || "s3", isEditMode, effectiveTarget),
             },
             // Only include preview and review steps for import storages
             ...(effectiveTarget === "import"
-              ? [{ title: "Import Settings & Preview" }, { title: "Review & Confirm" }]
+              ? [{ title: t('appCommon.blocks.StorageProviderForm.index.importSettingsPreview', { defaultValue: "Import Settings & Preview" }) }, { title: t('appCommon.blocks.StorageProviderForm.index.reviewConfirm', { defaultValue: "Review & Confirm" }) }]
               : []),
           ]
         : [
-            { title: "Select Provider", schema: step1Schema },
+            { title: t('appCommon.blocks.StorageProviderForm.index.selectProvider', { defaultValue: "Select Provider" }), schema: step1Schema },
             {
-              title: "Configure Connection",
+              title: t('appCommon.blocks.StorageProviderForm.index.configureConnection', { defaultValue: "Configure Connection" }),
               schema: getProviderSchema(formData.provider || type || "s3", isEditMode, effectiveTarget),
             },
             // Only include preview and review steps for import storages
             ...(effectiveTarget === "import"
-              ? [{ title: "Import Settings & Preview" }, { title: "Review & Confirm" }]
+              ? [{ title: t('appCommon.blocks.StorageProviderForm.index.importSettingsPreview', { defaultValue: "Import Settings & Preview" }) }, { title: t('appCommon.blocks.StorageProviderForm.index.reviewConfirm', { defaultValue: "Review & Confirm" }) }]
               : []),
           ];
       setCurrentSteps(newSteps);
@@ -256,11 +259,24 @@ export const StorageProviderForm = forwardRef<unknown, StorageProviderFormProps>
 
     // Format file size helper
     const formatSize = (bytes: number) => {
-      if (bytes === 0) return "0 Bytes";
+      if (bytes === 0) {
+        return t("appCommon.blocks.StorageProviderForm.index.zeroBytes", { defaultValue: "0 Bytes" });
+      }
       const k = 1024;
-      const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB"];
+      const sizeUnits = [
+        t("appCommon.blocks.StorageProviderForm.index.bytes", { defaultValue: "Bytes" }),
+        t("appCommon.blocks.StorageProviderForm.index.kb", { defaultValue: "KB" }),
+        t("appCommon.blocks.StorageProviderForm.index.mb", { defaultValue: "MB" }),
+        t("appCommon.blocks.StorageProviderForm.index.gb", { defaultValue: "GB" }),
+        t("appCommon.blocks.StorageProviderForm.index.tb", { defaultValue: "TB" }),
+        t("appCommon.blocks.StorageProviderForm.index.pb", { defaultValue: "PB" }),
+      ];
       const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
+      return t("appCommon.blocks.StorageProviderForm.index.valVal2", {
+        defaultValue: "{{val}} {{val2}}",
+        val: Number.parseFloat((bytes / k ** i).toFixed(2)),
+        val2: sizeUnits[i],
+      });
     };
 
     return (

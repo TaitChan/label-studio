@@ -9,6 +9,8 @@ import {
   DialogTitle,
 } from "@humansignal/shad/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@humansignal/shad/components/ui/alert";
+import { useTranslation } from 'react-i18next'
+
 
 // Type definitions
 interface Hotkey {
@@ -46,6 +48,7 @@ interface ImportDialogProps {
  * @returns {React.ReactElement} The ImportDialog component
  */
 export const ImportDialog = ({ open, onOpenChange, onImport }: ImportDialogProps) => {
+  const { t } = useTranslation("app-common")
   // State for the import text input
   const [importText, setImportText] = useState<string>("");
   // State for validation errors
@@ -114,7 +117,7 @@ export const ImportDialog = ({ open, onOpenChange, onImport }: ImportDialogProps
         try {
           validateHotkey(hotkey);
         } catch (validationError: unknown) {
-          const errorMessage = validationError instanceof Error ? validationError.message : "Unknown validation error";
+          const errorMessage = validationError instanceof Error ? validationError.message : t('appCommon.pages.AccountSettings.sections.Hotkeys.Import.unknownValidationError', { defaultValue: "Unknown validation error" });
           throw new Error(`Hotkey at index ${index}: ${errorMessage}`);
         }
       });
@@ -126,7 +129,7 @@ export const ImportDialog = ({ open, onOpenChange, onImport }: ImportDialogProps
       resetDialogState();
     } catch (err: unknown) {
       // Set error message for display
-      const errorMessage = err instanceof Error ? err.message : "Unknown error occurred";
+      const errorMessage = err instanceof Error ? err.message : t('appCommon.pages.AccountSettings.sections.Hotkeys.Import.unknownErrorOccurred', { defaultValue: "Unknown error occurred" });
       setError(errorMessage);
     }
   };
@@ -163,10 +166,9 @@ export const ImportDialog = ({ open, onOpenChange, onImport }: ImportDialogProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[525px] bg-neutral-surface">
         <DialogHeader>
-          <DialogTitle>Import Hotkeys</DialogTitle>
+          <DialogTitle>{t('appCommon.pages.AccountSettings.sections.Hotkeys.Import.importHotkeys', { defaultValue: "Import Hotkeys" })}</DialogTitle>
           <DialogDescription>
-            Paste your exported hotkeys JSON below. This will replace your current hotkeys. Make sure the JSON contains
-            an array of hotkey objects with the required fields.
+            {t('appCommon.pages.AccountSettings.sections.Hotkeys.Import.pasteYourExportedHotkeysJsonBelowThisWillReplaceYourCurrentHotkeysMakeSureTheJsonContainsAnArrayOfHotkeyObjectsWithTheRequiredFields', { defaultValue: "Paste your exported hotkeys JSON below. This will replace your current hotkeys. Make sure the JSON contains an array of hotkey objects with the required fields." })}
           </DialogDescription>
         </DialogHeader>
 
@@ -175,20 +177,20 @@ export const ImportDialog = ({ open, onOpenChange, onImport }: ImportDialogProps
             htmlFor="import-json"
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
-            Hotkeys JSON
+            {t('appCommon.pages.AccountSettings.sections.Hotkeys.Import.hotkeysJson', { defaultValue: "Hotkeys JSON" })}
           </label>
           <textarea
             id="import-json"
             className="flex min-h-[150px] w-full rounded-md border border-neutral-border bg-transparent px-tight py-tighter typography-body-small placeholder:text-neutral-content-subtler focus-visible:ring-4 focus-visible:ring-primary-focus-outline focus-visible:border-neutral-border-bolder focus-visible:outline-0 transition-all resize-none"
-            placeholder='[{"id": 1, "section": "annotation-actions", "element": "button", "label": "Save", "key": "Ctrl+S"}]'
+            placeholder={t('appCommon.pages.AccountSettings.sections.Hotkeys.Import.id1SectionAnnotationactionsElementButtonLabelSaveKeyCtrls', { defaultValue: "[{\"id\": 1, \"section\": \"annotation-actions\", \"element\": \"button\", \"label\": \"Save\", \"key\": \"Ctrl+S\"}]" })}
             value={importText}
             onChange={handleTextareaChange}
-            aria-describedby={error ? "import-error" : undefined}
+            {...(error ? { "aria-describedby": "import-error" } : {})}
           />
 
           {error && (
             <Alert variant="destructive" id="import-error">
-              <AlertTitle>Import Error</AlertTitle>
+              <AlertTitle>{t('appCommon.pages.AccountSettings.sections.Hotkeys.Import.importError', { defaultValue: "Import Error" })}</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
@@ -196,10 +198,10 @@ export const ImportDialog = ({ open, onOpenChange, onImport }: ImportDialogProps
 
         <DialogFooter>
           <Button variant="neutral" onClick={handleCancel}>
-            Cancel
+            {t('appCommon.pages.AccountSettings.sections.Hotkeys.Import.cancel', { defaultValue: "Cancel" })}
           </Button>
           <Button onClick={handleImport} disabled={!importText.trim()}>
-            Import Hotkeys
+            {t('appCommon.pages.AccountSettings.sections.Hotkeys.Import.importHotkeys', { defaultValue: "Import Hotkeys" })}
           </Button>
         </DialogFooter>
       </DialogContent>

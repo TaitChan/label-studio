@@ -1,5 +1,6 @@
 import { IconInfoOutline, IconSettings } from "@humansignal/icons";
 import { Button } from "@humansignal/ui";
+import { useTranslation } from "react-i18next";
 import { isStarterCloudPlan } from "@humansignal/core";
 import { cn } from "../../utils/bem";
 import { FF_BULK_ANNOTATION, isFF } from "../../utils/feature-flags";
@@ -10,6 +11,7 @@ import { EditingHistory } from "./HistoryActions";
 import "./Actions.prefix.css";
 
 export const Actions = ({ store }) => {
+  const { t } = useTranslation("components");
   const annotationStore = store.annotationStore;
   const entity = annotationStore.selected;
   const isPrediction = entity?.type === "prediction";
@@ -24,11 +26,15 @@ export const Actions = ({ store }) => {
         {store.description && store.hasInterface("instruction") && (
           <Button
             type="text"
-            aria-label="Instructions"
+            aria-label={t("components.Editor.BottomBar.instructions", {
+              defaultValue: "Instructions",
+            })}
             size="small"
             variant="neutral"
             look="string"
-            tooltip="Show instructions"
+            tooltip={t("components.Editor.BottomBar.showInstructions", {
+              defaultValue: "Show instructions",
+            })}
             onClick={() => store.toggleDescription()}
             className="aspect-square"
             leading={<IconInfoOutline />}
@@ -37,12 +43,16 @@ export const Actions = ({ store }) => {
         )}
         <Button
           type="text"
-          aria-label="Settings"
+          aria-label={t("components.Editor.BottomBar.settings", {
+            defaultValue: "Settings",
+          })}
           size="small"
           look="string"
           variant="neutral"
           onClick={() => store.toggleSettings()}
-          tooltip="Settings"
+          tooltip={t("components.Editor.BottomBar.settings", {
+            defaultValue: "Settings",
+          })}
           className="aspect-square"
           leading={<IconSettings />}
           data-testid="bottombar-settings-button"

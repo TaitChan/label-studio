@@ -1,0 +1,57 @@
+{
+  "initialModule": "pages/Home",
+  "namespaces": [
+    {
+      "namespace": "labelstudio",
+      "pathPrefix": "pages/",
+      "root": "apps/labelstudio/src/pages",
+      "modules": [
+        "Home",
+        "Projects",
+        "CreateProject",
+        "Settings",
+        "Organization",
+        "Settings/MachineLearningSettings",
+        "ExportPage"
+      ]
+    },
+    {
+      "namespace": "components",
+      "pathPrefix": "components/",
+      "root": "apps/labelstudio/src/components",
+      "modules": [
+        "Menubar",
+        "HeidiTips"
+      ]
+    },
+    {
+      "namespace": "heidi-tips",
+      "pathPrefix": "components/HeidiTips/",
+      "root": "apps/labelstudio/src/components/HeidiTips",
+      "modules": []
+    },
+    {
+      "namespace": "app-common",
+      "pathPrefix": "libs/app-common/",
+      "root": "libs/app-common",
+      "modules": [
+        "*"
+      ]
+    },
+    {
+      "namespace": "datamanager",
+      "pathPrefix": "libs/datamanager/",
+      "root": "libs/datamanager/src",
+      "modules": [
+        "components/App",
+        "components/CellViews",
+        "components/Common",
+        "components/DataGroups",
+        "components/DataManager",
+        "components/Filters",
+        "components/Label",
+        "components/MainView"
+      ]
+    }
+  ]
+}

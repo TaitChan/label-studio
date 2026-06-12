@@ -8,6 +8,8 @@ import { ff, useAPI } from "@humansignal/core";
  * each one of these eventually has to be migrated to core/ui
  */
 import { useConfig } from "apps/labelstudio/src/providers/ConfigProvider";
+import { useTranslation } from 'react-i18next'
+
 
 type NotificationCheckboxProps = {
   id: string;
@@ -30,6 +32,7 @@ const NotificationCheckbox = ({ id, label, checked, onToggle }: NotificationChec
 };
 
 export const EmailPreferences = () => {
+  const { t } = useTranslation("app-common")
   const isEnterpriseEmailNotificationsEnabled =
     ff.isActive(ff.FF_ENTERPRISE_EMAIL_NOTIFICATIONS) && window.APP_SETTINGS?.billing?.enterprise;
   const config = useConfig();
@@ -68,8 +71,8 @@ export const EmailPreferences = () => {
 
   const message = useMemo(() => {
     return window.APP_SETTINGS?.whitelabel_is_active
-      ? "Subscribe for news and tips"
-      : "Subscribe to HumanSignal news and tips from Heidi";
+      ? t('appCommon.pages.AccountSettings.sections.EmailPreferences.subscribeForNewsAndTips', { defaultValue: "Subscribe for news and tips" })
+      : t('appCommon.pages.AccountSettings.sections.EmailPreferences.subscribeToHumansignalNewsAndTipsFromHeidi', { defaultValue: "Subscribe to HumanSignal news and tips from Heidi" });
   }, []);
 
   return (

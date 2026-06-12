@@ -11,6 +11,7 @@ import { TabStore } from "./Tabs";
 import { CustomJSON } from "./types";
 import { User } from "./Users";
 import { ActivityObserver } from "../utils/ActivityObserver";
+import i18next from "i18next";
 
 /**
  * @type {ActivityObserver | null}
@@ -333,12 +334,22 @@ export const AppStore = types
 
       if (isFF(FF_DEV_2887) && self.LSF?.lsf?.annotationStore?.selected?.commentStore?.hasUnsaved) {
         Modal.confirm({
-          title: "You have unsaved changes",
-          body: "There are comments which are not persisted. Please submit the annotation. Continuing will discard these comments.",
+          title: i18next.t("datamanager.stores.AppStore.unsavedChanges.title", {
+            ns: "datamanager",
+            defaultValue: "You have unsaved changes",
+          }),
+          body: i18next.t("datamanager.stores.AppStore.unsavedChanges.body", {
+            ns: "datamanager",
+            defaultValue:
+              "There are comments which are not persisted. Please submit the annotation. Continuing will discard these comments.",
+          }),
           onOk() {
             nextAction();
           },
-          okText: "Discard and continue",
+          okText: i18next.t("datamanager.stores.AppStore.unsavedChanges.discardAndContinue", {
+            ns: "datamanager",
+            defaultValue: "Discard and continue",
+          }),
         });
         return;
       }
@@ -379,12 +390,22 @@ export const AppStore = types
 
       if (isFF(FF_DEV_2887) && self.LSF?.lsf?.annotationStore?.selected?.commentStore?.hasUnsaved) {
         Modal.confirm({
-          title: "You have unsaved changes",
-          body: "There are comments which are not persisted. Please submit the annotation. Continuing will discard these comments.",
+          title: i18next.t("datamanager.stores.AppStore.unsavedChanges.title", {
+            ns: "datamanager",
+            defaultValue: "You have unsaved changes",
+          }),
+          body: i18next.t("datamanager.stores.AppStore.unsavedChanges.body", {
+            ns: "datamanager",
+            defaultValue:
+              "There are comments which are not persisted. Please submit the annotation. Continuing will discard these comments.",
+          }),
           onOk() {
             nextAction();
           },
-          okText: "Discard and continue",
+          okText: i18next.t("datamanager.stores.AppStore.unsavedChanges.discardAndContinue", {
+            ns: "datamanager",
+            defaultValue: "Discard and continue",
+          }),
         });
         return;
       }
@@ -395,12 +416,21 @@ export const AppStore = types
     confirmLabelingConfigured() {
       if (!self.labelingIsConfigured) {
         Modal.confirm({
-          title: "You're almost there!",
-          body: "Before you can annotate the data, set up labeling configuration",
+          title: i18next.t("datamanager.stores.AppStore.confirmLabelingConfigured.title", {
+            ns: "datamanager",
+            defaultValue: "You're almost there!",
+          }),
+          body: i18next.t("datamanager.stores.AppStore.confirmLabelingConfigured.body", {
+            ns: "datamanager",
+            defaultValue: "Before you can annotate the data, set up labeling configuration",
+          }),
           onOk() {
             self.SDK.invoke("settingsClicked");
           },
-          okText: "Go to setup",
+          okText: i18next.t("datamanager.stores.AppStore.confirmLabelingConfigured.goToSetup", {
+            ns: "datamanager",
+            defaultValue: "Go to setup",
+          }),
         });
         return false;
       }
@@ -566,8 +596,33 @@ export const AppStore = types
         },
       });
 
-      self.users.push(...list);
+      const existing = new Set(self.users.map((user) => String(user.id)));
+      const newUsers = list.filter((user) => !existing.has(String(user.id)));
+
+      if (newUsers.length) self.users.push(...newUsers);
     }),
+
+    ensureUsers(userIds) {
+      if (!userIds?.length) return;
+
+      const existing = new Set(self.users.map((user) => String(user.id)));
+
+      for (const userId of userIds) {
+        if (existing.has(String(userId))) continue;
+
+        self.users.push({
+          id: userId,
+          firstName: "",
+          lastName: "",
+          username: `user_${userId}`,
+          email: "",
+          lastActivity: "",
+          initials: "?",
+          avatar: null,
+        });
+        existing.add(String(userId));
+      }
+    },
 
     fetchData: flow(function* ({ isLabelStream } = {}) {
       self.setLoading(true);
@@ -576,54 +631,51 @@ export const AppStore = types
 
       self.viewsStore.fetchColumns();
 
-      const requests = [self.fetchProject()];
+      const projectFetched = yield self.fetchProject();
 
-      // Only fetch all users if not disabled globally
+      if (!projectFetched) {
+        self.setLoading(false);
+        return;
+      }
+
+      // Load org users before tasks so Assignee user references resolve.
       if (!isFF(FF_DISABLE_GLOBAL_USER_FETCHING)) {
-        requests.push(self.fetchUsers());
+        yield self.fetchUsers();
       }
 
       if (!isLabelStream || (self.project?.show_annotation_history && task)) {
         if (self.SDK.settings?.onlyVirtualTabs && self.project?.show_annotation_history && !task) {
-          requests.push(
-            self.viewsStore.addView(
-              {
-                virtual: true,
-                projectId: self.SDK.projectId,
-                tab,
-              },
-              { autosave: false, reload: false },
-            ),
+          yield self.viewsStore.addView(
+            {
+              virtual: true,
+              projectId: self.SDK.projectId,
+              tab,
+            },
+            { autosave: false, reload: false },
           );
         } else if (self.SDK.type === "labelops") {
-          requests.push(
-            self.viewsStore.addView(
-              {
-                virtual: false,
-                projectId: self.SDK.projectId,
-                tab,
-              },
-              { autosave: false, autoSelect: true, reload: true },
-            ),
+          yield self.viewsStore.addView(
+            {
+              virtual: false,
+              projectId: self.SDK.projectId,
+              tab,
+            },
+            { autosave: false, autoSelect: true, reload: true },
           );
         } else {
-          requests.push(self.viewsStore.fetchTabs(tab, task, labeling));
+          yield self.viewsStore.fetchTabs(tab, task, labeling);
         }
       } else if (isLabelStream && !!tab) {
         const { selectedItems } = JSON.parse(decodeURIComponent(query ?? "{}"));
 
-        requests.push(self.viewsStore.fetchSingleTab(tab, selectedItems ?? {}));
+        yield self.viewsStore.fetchSingleTab(tab, selectedItems ?? {});
       }
 
-      const [projectFetched] = yield Promise.all(requests);
+      self.resolveURLParams();
 
-      if (projectFetched) {
-        self.resolveURLParams();
+      self.setLoading(false);
 
-        self.setLoading(false);
-
-        self.startPolling();
-      }
+      self.startPolling();
     }),
 
     /**

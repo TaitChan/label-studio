@@ -9,6 +9,9 @@ import { Tooltip } from "@humansignal/ui";
 import { ImagePreview } from "./ImagePreview";
 
 import styles from "./GridPreview.module.css";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+
 
 type Task = {
   id: number;
@@ -89,20 +92,18 @@ const TaskModal = observer(({ view, tasks, imageField, currentTaskId, setCurrent
 
   const tooltip = (
     <div className={styles.tooltip}>
-      <p>Preview of the task image to quickly navigate through the tasks and select the ones you want to work on.</p>
-      <p>Use [arrow keys] to navigate.</p>
-      <p>[Escape] to close the modal.</p>
-      <p>[Space] to select/unselect the task.</p>
-      <p>Use [scroll] to zoom in/out and [drag] to pan around while image is zoomed in.</p>
+      <p>{i18next.t('datamanager.components.MainView.GridView.GridPreview.previewOfTheTaskImageToQuicklyNavigateThroughTheTasksAndSelectTheOnesYouWantToWorkOn', { ns: "datamanager", defaultValue: "Preview of the task image to quickly navigate through the tasks and select the ones you want to work on." })}</p>
+      <p>{i18next.t('datamanager.components.MainView.GridView.GridPreview.useArrowKeysToNavigate', { ns: "datamanager", defaultValue: "Use [arrow keys] to navigate." })}</p>
+      <p>{i18next.t('datamanager.components.MainView.GridView.GridPreview.escapeToCloseTheModal', { ns: "datamanager", defaultValue: "[Escape] to close the modal." })}</p>
+      <p>{i18next.t('datamanager.components.MainView.GridView.GridPreview.spaceToSelectunselectTheTask', { ns: "datamanager", defaultValue: "[Space] to select/unselect the task." })}</p>
+      <p>{i18next.t('datamanager.components.MainView.GridView.GridPreview.useScrollToZoomInoutAndDragToPanAroundWhileImageIsZoomedIn', { ns: "datamanager", defaultValue: "Use [scroll] to zoom in/out and [drag] to pan around while image is zoomed in." })}</p>
     </div>
   );
 
   return (
     <div className={styles.modal}>
       <div className={styles.header}>
-        <Checkbox checked={view.selected.isSelected(task.id)} onChange={onSelect}>
-          Task {task.id}
-        </Checkbox>
+        <Checkbox checked={view.selected.isSelected(task.id)} onChange={onSelect}>{i18next.t('datamanager.components.MainView.GridView.GridPreview.taskId', { ns: "datamanager", defaultValue: "Task {{id}}", id: task.id })}</Checkbox>
         <div className={styles.actions}>
           <Tooltip title={tooltip}>
             <Icon icon={QuestionCircleOutlined} />
@@ -144,6 +145,7 @@ type GridViewProviderProps = PropsWithChildren<{
 }>;
 
 export const GridViewProvider: React.FC<GridViewProviderProps> = ({ children, data, view, fields }) => {
+  const { t } = useTranslation("datamanager")
   const [currentTaskId, setCurrentTaskId] = useState<number | null>(null);
   const modalRef = useRef<{ update: (props: object) => void; close: () => void } | null>(null);
   const imageField = fields.find((f) => f.currentType === "Image")?.alias;
@@ -176,7 +178,7 @@ export const GridViewProvider: React.FC<GridViewProviderProps> = ({ children, da
     if (!modalRef.current) {
       modalRef.current = modal({
         bare: true,
-        title: "Task Preview",
+        title: t('datamanager.components.MainView.GridView.GridPreview.taskPreview', { defaultValue: "Task Preview" }),
         style: { width: 800 },
         children,
         onHidden: onClose,

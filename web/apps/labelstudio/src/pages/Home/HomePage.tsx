@@ -19,38 +19,41 @@ import {
   sortedProjectsAtom,
   visitedIdsAtom,
 } from "./atoms";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
+
 
 const resources = [
   {
-    title: "Documentation",
+    title: i18next.t('pages.Home.HomePage.documentation', { defaultValue: "Documentation" }),
     url: "https://labelstud.io/guide/",
   },
   {
-    title: "API Documentation",
+    title: i18next.t('pages.Home.HomePage.apiDocumentation', { defaultValue: "API Documentation" }),
     url: "https://api.labelstud.io/api-reference/introduction/getting-started",
   },
   {
-    title: "Release Notes",
+    title: i18next.t('pages.Home.HomePage.releaseNotes', { defaultValue: "Release Notes" }),
     url: "https://labelstud.io/learn/categories/release-notes/",
   },
   {
-    title: "LabelStud.io Blog",
+    title: i18next.t('pages.Home.HomePage.labelstudioBlog', { defaultValue: "LabelStud.io Blog" }),
     url: "https://labelstud.io/blog/",
   },
   {
-    title: "Slack Community",
+    title: i18next.t('pages.Home.HomePage.slackCommunity', { defaultValue: "Slack Community" }),
     url: "https://slack.labelstud.io",
   },
 ];
 
 const actions = [
   {
-    title: "Create Project",
+    title: i18next.t('pages.Home.HomePage.createProject', { defaultValue: "Create Project" }),
     icon: IconFolderAdd,
     type: "createProject",
   },
   {
-    title: "Invite Members",
+    title: i18next.t('pages.Home.HomePage.inviteMembers', { defaultValue: "Invite Members" }),
     icon: IconUserAdd,
     type: "inviteMembers",
   },
@@ -59,6 +62,7 @@ const actions = [
 type Action = (typeof actions)[number]["type"];
 
 export const HomePage: Page = () => {
+  const { t } = useTranslation("labelstudio")
   const api = useAPI();
   const location = useLocation();
   const [modalIsOpen, setModalIsOpen] = useAtom(creationDialogOpen);
@@ -136,10 +140,10 @@ export const HomePage: Page = () => {
         <section className="flex flex-col gap-6">
           <div className="flex flex-col gap-1">
             <Typography variant="headline" size="small">
-              Welcome 👋
+              {t('pages.Home.HomePage.welcome', { defaultValue: "Welcome 👋" })}
             </Typography>
             <Typography size="small" className="text-neutral-content-subtler">
-              Let's get you started.
+              {t('pages.Home.HomePage.letsGetYouStarted', { defaultValue: "Let's get you started." })}
             </Typography>
           </div>
           <div className="flex justify-start gap-4">
@@ -163,9 +167,9 @@ export const HomePage: Page = () => {
             title={
               data && data?.count > 0 ? (
                 <>
-                  Recent Projects{" "}
+                  {t('pages.Home.HomePage.recentProjects', { defaultValue: "Recent Projects" })}{" "}
                   <a href="/projects" className="text-lg font-normal hover:underline">
-                    View All
+                    {t('pages.Home.HomePage.viewAll', { defaultValue: "View All" })}
                   </a>
                 </>
               ) : null
@@ -176,7 +180,7 @@ export const HomePage: Page = () => {
                 <Spinner />
               </div>
             ) : isError ? (
-              <div className="h-64 flex justify-center items-center">can't load projects</div>
+              <div className="h-64 flex justify-center items-center">{t('pages.Home.HomePage.cantLoadProjects', { defaultValue: "can't load projects" })}</div>
             ) : isSuccess && data && sortedProjects.length === 0 ? (
               <div className="flex flex-col justify-center items-center border border-primary-border-subtle bg-primary-emphasis-subtle rounded-lg h-64">
                 <div
@@ -187,13 +191,13 @@ export const HomePage: Page = () => {
                   <IconFolderOpen />
                 </div>
                 <Typography variant="headline" size="small">
-                  Create your first project
+                  {t('pages.Home.HomePage.createYourFirstProject', { defaultValue: "Create your first project" })}
                 </Typography>
                 <Typography size="small" className="text-neutral-content-subtler">
-                  Import your data and set up the labeling interface to start annotating
+                  {t('pages.Home.HomePage.importYourDataAndSetUpTheLabelingInterfaceToStartAnnotating', { defaultValue: "Import your data and set up the labeling interface to start annotating" })}
                 </Typography>
-                <Button className="mt-4" onClick={() => setModalIsOpen(true)} aria-label="Create new project">
-                  Create Project
+                <Button className="mt-4" onClick={() => setModalIsOpen(true)} aria-label={t('pages.Home.HomePage.createNewProject', { defaultValue: "Create new project" })}>
+                  {t('pages.Home.HomePage.createProject', { defaultValue: "Create Project" })}
                 </Button>
               </div>
             ) : isSuccess && data && sortedProjects.length > 0 ? (
@@ -207,7 +211,7 @@ export const HomePage: Page = () => {
         </section>
         <section className="flex flex-col gap-6">
           <HeidiTips collection="projectSettings" />
-          <SimpleCard title="Resources" description="Learn, explore and get help" data-testid="resources-card">
+          <SimpleCard title={t("pages.Home.HomePage.resources", { defaultValue: "Resources" })} description={t('pages.Home.HomePage.learnExploreAndGetHelp', { defaultValue: "Learn, explore and get help" })} data-testid="resources-card">
             <ul>
               {resources.map((link) => {
                 return (
@@ -228,7 +232,7 @@ export const HomePage: Page = () => {
           </SimpleCard>
           <div className="flex gap-2 items-center">
             <IconHumanSignal />
-            <span className="text-neutral-content-subtle">Label Studio Version: Community</span>
+            <span className="text-neutral-content-subtle">{t('pages.Home.HomePage.labelStudioVersionCommunity', { defaultValue: "Label Studio Version: Community" })}</span>
           </div>
         </section>
       </div>
@@ -238,11 +242,12 @@ export const HomePage: Page = () => {
   );
 };
 
-HomePage.title = "Home";
+HomePage.title = i18next.t("pages.Home.HomePage.home", { defaultValue: "Home" });
 HomePage.path = "/";
 HomePage.exact = true;
 
 function ProjectSimpleCard({ project }: { project: APIProject }) {
+  const { t } = useTranslation("labelstudio")
   const finished = project.finished_task_number ?? 0;
   const total = project.task_number ?? 0;
   const progress = (total > 0 ? finished / total : 0) * 100;
@@ -264,7 +269,12 @@ function ProjectSimpleCard({ project }: { project: APIProject }) {
             <span className="text-neutral-content truncate">{project.title}</span>
           </Tooltip>
           <div className="text-neutral-content-subtler text-sm">
-            {finished} of {total} Tasks ({total > 0 ? Math.round((finished / total) * 100) : 0}%)
+            {t("pages.Home.HomePage.taskProgress", {
+              defaultValue: "{{finished}} of {{total}} Tasks ({{percent}}%)",
+              finished,
+              total,
+              percent: total > 0 ? Math.round((finished / total) * 100) : 0,
+            })}
           </div>
         </div>
         <div className="bg-neutral-surface rounded-full overflow-hidden w-full h-2 shadow-neutral-border-subtle shadow-border-1">

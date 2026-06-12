@@ -2,6 +2,8 @@ import { isDefined } from "@humansignal/core/lib/utils/helpers";
 import { API } from "apps/labelstudio/src/providers/ApiProvider";
 import { projectAtom } from "apps/labelstudio/src/providers/ProjectProvider";
 import { atomWithQuery } from "jotai-tanstack-query";
+import i18next from "i18next";
+
 
 export const sampleDatasetAtom = atomWithQuery((get) => {
   const project = get(projectAtom);
@@ -22,11 +24,11 @@ export const sampleDatasetAtom = atomWithQuery((get) => {
       );
 
       if (!response?.$meta?.ok) {
-        return JSON.stringify({ error: "Can't prepare sample data." }, null, "  ");
+        return JSON.stringify({ error: i18next.t('pages.CreateProject.utils.atoms.cantPrepareSampleData', { defaultValue: "Can't prepare sample data." }) }, null, "  ");
       }
 
       if (!response?.sample_task) {
-        return JSON.stringify({ error: "No sample task data available." }, null, "  ");
+        return JSON.stringify({ error: i18next.t('pages.CreateProject.utils.atoms.noSampleTaskDataAvailable', { defaultValue: "No sample task data available." }) }, null, "  ");
       }
 
       return JSON.stringify(response.sample_task, null, "  ");

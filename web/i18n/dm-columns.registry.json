@@ -1,0 +1,82 @@
+{
+  "_comment": "Data Manager 系统列头（与 label_studio/data_manager/functions.py get_all_columns 同步）。seed-dm-column-keys 写入 locales/*/datamanager.json。",
+  "data": {
+    "title": "data"
+  },
+  "id": {
+    "title": "ID",
+    "help": "Task ID"
+  },
+  "inner_id": {
+    "title": "Inner ID",
+    "help": "Internal task ID starting from 1 for the current project"
+  },
+  "completed_at": {
+    "title": "Completed",
+    "help": "Last annotation date"
+  },
+  "total_annotations": {
+    "title": "Annotations",
+    "help": "Total annotations per task"
+  },
+  "cancelled_annotations": {
+    "title": "Cancelled",
+    "help": "Total cancelled (skipped) annotations"
+  },
+  "total_predictions": {
+    "title": "Predictions",
+    "help": "Total predictions per task"
+  },
+  "annotators": {
+    "title": "Annotated by",
+    "help": "All users who completed the task"
+  },
+  "annotations_results": {
+    "title": "Annotation results",
+    "help": "Annotation results stacked over all annotations"
+  },
+  "annotations_ids": {
+    "title": "Annotation IDs",
+    "help": "Annotation IDs stacked over all annotations"
+  },
+  "predictions_score": {
+    "title": "Prediction score",
+    "help": "Average prediction score over all task predictions"
+  },
+  "predictions_model_versions": {
+    "title": "Prediction model versions",
+    "help": "Model versions aggregated over all predictions"
+  },
+  "predictions_results": {
+    "title": "Prediction results",
+    "help": "Prediction results stacked over all predictions"
+  },
+  "file_upload": {
+    "title": "Upload filename",
+    "help": "Filename of uploaded file"
+  },
+  "storage_filename": {
+    "title": "Storage filename",
+    "help": "Filename from import storage"
+  },
+  "created_at": {
+    "title": "Created at",
+    "help": "Task creation time"
+  },
+  "updated_at": {
+    "title": "Updated at",
+    "help": "Task update time"
+  },
+  "updated_by": {
+    "title": "Updated by",
+    "help": "User who did the last task update"
+  },
+  "avg_lead_time": {
+    "title": "Lead Time",
+    "help": "Average lead time over all annotations"
+  },
+  "draft_exists": {
+    "title": "Drafts",
+    "help": "True if at least one draft exists for the task"
+  }
+}

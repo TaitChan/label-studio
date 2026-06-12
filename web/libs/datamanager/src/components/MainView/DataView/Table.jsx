@@ -23,6 +23,8 @@ import {
   ROW_HEIGHT_COMFORTABLE,
   ROW_HEIGHT_COMPACT,
 } from "../../DataManager/Toolbar/DensityToggle";
+import { translateColumnTitle, translateColumnHelp } from "../../../utils/dm-column-i18n";
+import i18next from "i18next";
 
 const injector = inject(({ store }) => {
   const { dataStore, currentView } = store;
@@ -200,9 +202,9 @@ export const DataView = injector(
         if (store.SDK.type === "DE" && ["canceled", "failed"].includes(datasetStatusID)) {
           return (
             <div className={cn("syncInProgress").toClassName()}>
-              <h3 className={cn("syncInProgress").elem("title").toClassName()}>Failed to sync data</h3>
+              <h3 className={cn("syncInProgress").elem("title").toClassName()}>{i18next.t('datamanager.components.MainView.DataView.Table.failedToSyncData', { ns: "datamanager", defaultValue: "Failed to sync data" })}</h3>
               <div className={cn("syncInProgress").elem("text").toClassName()}>
-                Check your storage settings. You may need to recreate this dataset
+                {i18next.t('datamanager.components.MainView.DataView.Table.checkYourStorageSettingsYouMayNeedToRecreateThisDataset', { ns: "datamanager", defaultValue: "Check your storage settings. You may need to recreate this dataset" })}
               </div>
             </div>
           );
@@ -214,9 +216,9 @@ export const DataView = injector(
         ) {
           return (
             <div className={cn("syncInProgress").toClassName()}>
-              <h3 className={cn("syncInProgress").elem("title").toClassName()}>Nothing found</h3>
+              <h3 className={cn("syncInProgress").elem("title").toClassName()}>{i18next.t('datamanager.components.MainView.DataView.Table.nothingFound', { ns: "datamanager", defaultValue: "Nothing found" })}</h3>
               <div className={cn("syncInProgress").elem("text").toClassName()}>
-                Try adjusting the filter or similarity search parameters
+                {i18next.t('datamanager.components.MainView.DataView.Table.tryAdjustingTheFilterOrSimilaritySearchParameters', { ns: "datamanager", defaultValue: "Try adjusting the filter or similarity search parameters" })}
               </div>
             </div>
           );
@@ -225,10 +227,10 @@ export const DataView = injector(
           return (
             <div className={cn("syncInProgress").toClassName()}>
               <h3 className={cn("syncInProgress").elem("title").toClassName()}>
-                Hang tight! Records are syncing in the background
+                {i18next.t('datamanager.components.MainView.DataView.Table.hangTightRecordsAreSyncingInTheBackground', { ns: "datamanager", defaultValue: "Hang tight! Records are syncing in the background" })}
               </h3>
               <div className={cn("syncInProgress").elem("text").toClassName()}>
-                Press the button below to see any synced records
+                {i18next.t('datamanager.components.MainView.DataView.Table.pressTheButtonBelowToSeeAnySyncedRecords', { ns: "datamanager", defaultValue: "Press the button below to see any synced records" })}
               </div>
               <Button
                 size="small"
@@ -241,7 +243,7 @@ export const DataView = injector(
                   await store.currentView?.reload();
                 }}
               >
-                Refresh
+                {i18next.t('datamanager.components.MainView.DataView.Table.refresh', { ns: "datamanager", defaultValue: "Refresh" })}
               </Button>
             </div>
           );
@@ -297,10 +299,14 @@ export const DataView = injector(
       const column = col.original;
 
       if (column.icon) {
-        return <Tooltip title={column.help ?? col.title}>{column.icon}</Tooltip>;
+        return (
+          <Tooltip title={translateColumnHelp(column) ?? translateColumnTitle(column) ?? col.title}>
+            {column.icon}
+          </Tooltip>
+        );
       }
 
-      return column.title;
+      return translateColumnTitle(column);
     };
 
     const commonDecoration = useCallback(

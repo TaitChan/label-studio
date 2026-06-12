@@ -2,6 +2,8 @@ import { Label } from "@humansignal/ui";
 import { useEffect } from "react";
 import { ProviderGrid } from "../components";
 import type { ProviderConfig } from "../types/provider";
+import { useTranslation } from 'react-i18next'
+
 
 interface ProviderSelectionStepProps {
   formData: {
@@ -23,6 +25,7 @@ export const ProviderSelectionStep = ({
   handleSelectChange,
   providers,
 }: ProviderSelectionStepProps) => {
+  const { t } = useTranslation("app-common")
   // Set default provider if none is selected and we have options
   useEffect(() => {
     if (!formData.provider && Object.entries(providers).length > 0) {
@@ -51,13 +54,18 @@ export const ProviderSelectionStep = ({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">Choose your cloud storage provider</h2>
-        <p className="text-muted-foreground">Select the cloud storage service where your data is stored</p>
+        <h2 className="text-xl font-semibold">{t('appCommon.blocks.StorageProviderForm.Steps.provider-selection-step.chooseYourCloudStorageProvider', { defaultValue: "Choose your cloud storage provider" })}</h2>
+        <p className="text-muted-foreground">{t('appCommon.blocks.StorageProviderForm.Steps.provider-selection-step.selectTheCloudStorageServiceWhereYourDataIsStored', { defaultValue: "Select the cloud storage service where your data is stored" })}</p>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label text="Storage Provider" required />
+          <Label
+            text={t("appCommon.blocks.StorageProviderForm.Steps.provider-selection-step.storageProvider", {
+              defaultValue: "Storage Provider",
+            })}
+            required
+          />
           <ProviderGrid
             providers={providers}
             selectedProvider={formData.provider}

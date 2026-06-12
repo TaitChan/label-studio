@@ -2,6 +2,7 @@ import { Button, buttonVariant, ToastContext, ToastType } from "@humansignal/ui"
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { generatePath, useHistory } from "react-router";
 import { Link, NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Spinner } from "../../components";
 import { modal } from "../../components/Modal/Modal";
 import { Space } from "../../components/Space/Space";
@@ -239,11 +240,12 @@ DataManagerPage.pages = {
   ImportModal,
 };
 DataManagerPage.context = ({ dmRef }) => {
+  const { t } = useTranslation("labelstudio");
   const { project } = useProject();
   const [mode, setMode] = useState(dmRef?.mode ?? "explorer");
 
   const links = {
-    "/settings": "Settings",
+    "/settings": t("pages.DataManager.DataManager.settings", { defaultValue: "Settings" }),
   };
 
   const updateCrumbs = (currentMode) => {
@@ -254,7 +256,7 @@ DataManagerPage.context = ({ dmRef }) => {
     } else {
       addCrumb({
         key: "dm-crumb",
-        title: "Labeling",
+        title: t("pages.DataManager.DataManager.labeling", { defaultValue: "Labeling" }),
       });
     }
   };
@@ -265,7 +267,7 @@ DataManagerPage.context = ({ dmRef }) => {
 
     if (isLabelStream && show_instruction && expert_instruction) {
       modal({
-        title: "Labeling Instructions",
+        title: t("pages.DataManager.DataManager.labelingInstructions", { defaultValue: "Labeling Instructions" }),
         body: <div dangerouslySetInnerHTML={{ __html: expert_instruction }} />,
         style: { width: 680 },
       });
@@ -296,7 +298,7 @@ DataManagerPage.context = ({ dmRef }) => {
           look="outlined"
           onClick={() => {
             modal({
-              title: "Instructions",
+              title: t("pages.DataManager.DataManager.instructions", { defaultValue: "Instructions" }),
               body: () => (
                 <div
                   dangerouslySetInnerHTML={{
@@ -307,7 +309,7 @@ DataManagerPage.context = ({ dmRef }) => {
             });
           }}
         >
-          Instructions
+          {t("pages.DataManager.DataManager.instructions", { defaultValue: "Instructions" })}
         </Button>
       )}
 

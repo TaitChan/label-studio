@@ -1,5 +1,7 @@
 import { Select } from "@humansignal/ui";
 import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+
 
 type Sample = {
   title: string;
@@ -16,9 +18,10 @@ export function SampleDatasetSelect({
   sample?: Sample;
   onSampleApplied: (sample?: Sample) => void;
 }) {
+  const { t } = useTranslation("app-common")
   const title = useMemo(() => {
-    return sample?.title ?? "Select sample";
-  }, [sample]);
+    return sample?.title ?? t("appCommon.blocks.SampleDatasetSelect.SampleDatasetSelect.selectSample", { defaultValue: "Select sample" });
+  }, [sample, t]);
 
   const onSelect = useCallback(
     (value: string) => {
@@ -56,10 +59,10 @@ export function SampleDatasetSelect({
 
   return (
     <div className="flex gap-3 items-center">
-      <span className="text-neutral-content-subtler">or use a sample dataset</span>
+      <span className="text-neutral-content-subtler">{t('appCommon.blocks.SampleDatasetSelect.SampleDatasetSelect.orUseASampleDataset', { defaultValue: "or use a sample dataset" })}</span>
       <Select
         value={sample?.url ?? undefined}
-        placeholder="Select sample"
+        placeholder={t('appCommon.blocks.SampleDatasetSelect.SampleDatasetSelect.selectSample', { defaultValue: "Select sample" })}
         onChange={onSelect}
         triggerProps={{ onClick }}
         options={options}

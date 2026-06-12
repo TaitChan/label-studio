@@ -18,6 +18,7 @@ import * as Validators from "./Validation/Validators";
 import { SDKContext } from "../../../providers/SDKProvider";
 import { isDefined } from "../../../utils/utils";
 import { MultiProvider } from "../../../providers/MultiProvider";
+import i18next from "i18next";
 
 const PASSWORD_PROTECTED_VALUE = "got ya, suspicious hacker!";
 
@@ -538,7 +539,7 @@ Form.Builder = forwardRef(
         {props.autosubmit !== true && withActions === true && (
           <Form.Actions>
             <Button type="submit" style={{ width: 120 }}>
-              Save
+              {i18next.t('datamanager.components.Common.Form.Form.save', { ns: "datamanager", defaultValue: "Save" })}
             </Button>
           </Form.Actions>
         )}
@@ -568,7 +569,7 @@ Form.Indicator = () => {
     <div className={cn("form-indicator-dm").toClassName()}>
       <Oneof value={state}>
         <span className={cn("form-indicator-dm").elem("item").mod({ type: state }).toClassName()} case="success">
-          Saved!
+          {i18next.t('datamanager.components.Common.Form.Form.saved', { ns: "datamanager", defaultValue: "Saved!" })}
         </span>
       </Oneof>
     </div>

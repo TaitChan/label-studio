@@ -3,6 +3,33 @@ import { User } from "./Users";
 import { StringOrNumberID } from "./types";
 import { FF_DISABLE_GLOBAL_USER_FETCHING, isFF } from "../utils/feature-flags";
 
+function hasMeaningfulUserProperties(user) {
+  return Boolean(user?.firstName || user?.email || user?.username || user?.lastName);
+}
+
+function inlineUserFromId(userId, extra = {}) {
+  return {
+    id: userId,
+    firstName: extra.firstName ?? "",
+    lastName: extra.lastName ?? "",
+    username: extra.username ?? extra.email ?? `user_${userId}`,
+    email: extra.email ?? "",
+    lastActivity: extra.lastActivity ?? "",
+    initials: extra.initials ?? "?",
+    avatar: extra.avatar ?? null,
+  };
+}
+
+function resolveAssigneeUser(userId, extraUser = {}) {
+  if (isFF(FF_DISABLE_GLOBAL_USER_FETCHING)) {
+    return hasMeaningfulUserProperties(extraUser)
+      ? inlineUserFromId(userId, extraUser)
+      : inlineUserFromId(userId);
+  }
+
+  return userId;
+}
+
 // Create a union type that can handle both user references and direct user objects
 const UserOrReference = types.union({
   dispatcher: (snapshot) => {
@@ -59,7 +86,7 @@ export const Assignee = types
     if (typeof sn === "number") {
       result = {
         id: sn,
-        user: sn,
+        user: resolveAssigneeUser(sn),
         annotated: true,
         review: null,
         reviewed: false,
@@ -68,12 +95,9 @@ export const Assignee = types
       const { user_id, annotated, review, reviewed, ...user } = sn;
       const id = user_id ?? sn.id;
 
-      // When global user fetching is disabled, always create user objects, otherwise use references via user id
-      // If we only have user_id and no other user properties, just use the user_id as reference
-      const hasUserProperties = Object.keys(user).length > 0;
       result = {
         id,
-        user: isFF(FF_DISABLE_GLOBAL_USER_FETCHING) && hasUserProperties ? { id, ...user } : id, // Use user_id as reference
+        user: resolveAssigneeUser(id, user),
         annotated,
         review,
         reviewed,

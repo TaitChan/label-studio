@@ -11,6 +11,8 @@ import { projectAtom } from "../../../providers/ProjectProvider";
 import { providers } from "./providers";
 import { StorageCard } from "./StorageCard";
 import { StorageForm } from "./StorageForm";
+import { useTranslation } from 'react-i18next'
+
 
 export const StorageSet = forwardRef(
   (
@@ -29,6 +31,7 @@ export const StorageSet = forwardRef(
     },
     ref,
   ) => {
+    const { t } = useTranslation("labelstudio")
     const api = useContext(ApiContext);
     const project = useAtomValue(projectAtom);
 
@@ -38,7 +41,7 @@ export const StorageSet = forwardRef(
       (storage) => {
         const action = storage ? "Edit" : "Connect";
         const actionTarget = target === "export" ? "Target" : "Source";
-        const title = `${action} ${actionTarget} Storage`;
+        const title = t('pages.Settings.StorageSettings.StorageSet.actionActiontargetStorage', { defaultValue: "{{action}} {{actionTarget}} Storage", action, actionTarget });
 
         const modalRef = modal({
           title,
@@ -104,8 +107,8 @@ export const StorageSet = forwardRef(
     const onDeleteStorage = useCallback(
       async (storage) => {
         confirm({
-          title: "Deleting storage",
-          body: "This action cannot be undone. Are you sure?",
+          title: t('pages.Settings.StorageSettings.StorageSet.deletingStorage', { defaultValue: "Deleting storage" }),
+          body: t('pages.Settings.StorageSettings.StorageSet.thisActionCannotBeUndoneAreYouSure', { defaultValue: "This action cannot be undone. Are you sure?" }),
           buttonLook: "negative",
           onOk: async () => {
             const response = await api.callApi("deleteStorage", {
@@ -131,7 +134,7 @@ export const StorageSet = forwardRef(
             disabled={loading}
             look="outlined"
             data-testid={`add-${target === "export" ? "target" : "source"}-storage-button`}
-            aria-label={`Add ${target === "export" ? "Target" : "Source"} Storage`}
+            aria-label={t('pages.Settings.StorageSettings.StorageSet.addValStorage', { defaultValue: "Add {{val}} Storage", val: target === "export" ? "Target" : "Source" })}
           >
             {buttonLabel}
           </Button>

@@ -3,6 +3,9 @@ import { Form, Input } from "apps/labelstudio/src/components/Form";
 import { IconDocument, IconSearch } from "@humansignal/icons";
 import { formatDistanceToNow } from "date-fns";
 import type { ForwardedRef } from "react";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+
 
 interface PreviewStepProps {
   formData: any;
@@ -23,42 +26,42 @@ interface PreviewStepProps {
 
 const regexFilters = [
   {
-    title: "Images",
+    title: i18next.t('appCommon.blocks.StorageProviderForm.Steps.preview-step.images', { ns: "app-common", defaultValue: "Images" }),
     regex: ".*.(jpe?g|png|gif)$",
     blob: true,
   },
   {
-    title: "Videos",
+    title: i18next.t('appCommon.blocks.StorageProviderForm.Steps.preview-step.videos', { ns: "app-common", defaultValue: "Videos" }),
     regex: ".*\\.(mp4|avi|mov|wmv|webm)$",
     blob: true,
   },
   {
-    title: "Audio",
+    title: i18next.t('appCommon.blocks.StorageProviderForm.Steps.preview-step.audio', { ns: "app-common", defaultValue: "Audio" }),
     regex: ".*\\.(mp3|wav|ogg|flac)$",
     blob: true,
   },
   {
-    title: "Tabular",
+    title: i18next.t('appCommon.blocks.StorageProviderForm.Steps.preview-step.tabular', { ns: "app-common", defaultValue: "Tabular" }),
     regex: ".*\\.(csv|tsv)$",
     blob: true,
   },
   {
-    title: "JSON",
+    title: i18next.t('appCommon.blocks.StorageProviderForm.Steps.preview-step.json', { ns: "app-common", defaultValue: "JSON" }),
     regex: ".*\\.json$",
     blob: false,
   },
   {
-    title: "JSONL",
+    title: i18next.t('appCommon.blocks.StorageProviderForm.Steps.preview-step.jsonl', { ns: "app-common", defaultValue: "JSONL" }),
     regex: ".*\\.jsonl$",
     blob: false,
   },
   {
-    title: "Parquet",
+    title: i18next.t('appCommon.blocks.StorageProviderForm.Steps.preview-step.parquet', { ns: "app-common", defaultValue: "Parquet" }),
     regex: ".*\\.parquet$",
     blob: false,
   },
   {
-    title: "All Tasks Files",
+    title: i18next.t('appCommon.blocks.StorageProviderForm.Steps.preview-step.allTasksFiles', { ns: "app-common", defaultValue: "All Tasks Files" }),
     regex: ".*\\.(json|jsonl|parquet)$",
     blob: false,
   },
@@ -80,20 +83,21 @@ export const PreviewStep = ({
   formatSize,
   onImportSettingsChange,
 }: PreviewStepProps) => {
+  const { t } = useTranslation("app-common")
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">Configure Import Settings & Preview Data</h2>
-        <p className="text-muted-foreground">Set up filters for your files and preview what will be synchronized</p>
+        <h2 className="text-xl font-semibold">{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.configureImportSettingsPreviewData', { defaultValue: "Configure Import Settings & Preview Data" })}</h2>
+        <p className="text-muted-foreground">{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.setUpFiltersForYourFilesAndPreviewWhatWillBeSynchronized', { defaultValue: "Set up filters for your files and preview what will be synchronized" })}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column Header */}
-        <h4>Import Configuration</h4>
+        <h4>{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.importConfiguration', { defaultValue: "Import Configuration" })}</h4>
 
         {/* Right Column Header with Button */}
         <div className="flex justify-between items-center">
-          <h4>Files Preview</h4>
+          <h4>{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.filesPreview', { defaultValue: "Files Preview" })}</h4>
         </div>
 
         {/* Left Column: Configuration */}
@@ -112,11 +116,23 @@ export const PreviewStep = ({
               {/* Path/Bucket Prefix Section - Hide for localfiles since it has its own path field */}
               {type !== "localfiles" && (
                 <div className="space-y-2">
-                  <Label text={`${type === "redis" ? "Path to Files" : "Bucket Prefix"} (optional)`} />
+                  <Label
+                    text={t("appCommon.blocks.StorageProviderForm.Steps.preview-step.valOptional", {
+                      defaultValue: "{{val}} (optional)",
+                      val:
+                        type === "redis"
+                          ? t("appCommon.blocks.StorageProviderForm.Steps.preview-step.pathToFiles", {
+                              defaultValue: "Path to Files",
+                            })
+                          : t("appCommon.blocks.StorageProviderForm.Steps.preview-step.bucketPrefix", {
+                              defaultValue: "Bucket Prefix",
+                            }),
+                    })}
+                  />
                   <p className="text-sm text-muted-foreground">
                     {type === "redis"
-                      ? "Specify the folder path within your storage where your files are located"
-                      : "Specify the folder path within your bucket where your files are located"}
+                      ? t('appCommon.blocks.StorageProviderForm.Steps.preview-step.specifyTheFolderPathWithinYourStorageWhereYourFilesAreLocated', { defaultValue: "Specify the folder path within your storage where your files are located" })
+                      : t('appCommon.blocks.StorageProviderForm.Steps.preview-step.specifyTheFolderPathWithinYourBucketWhereYourFilesAreLocated', { defaultValue: "Specify the folder path within your bucket where your files are located" })}
                   </p>
                   <Input
                     id={type === "redis" ? "path" : "prefix"}
@@ -127,7 +143,7 @@ export const PreviewStep = ({
                       // Reset preview when prefix/path changes
                       onImportSettingsChange?.();
                     }}
-                    placeholder="path/to/files/ or leave empty for root"
+                    placeholder={t('appCommon.blocks.StorageProviderForm.Steps.preview-step.pathtofilesOrLeaveEmptyForRoot', { defaultValue: "path/to/files/ or leave empty for root" })}
                     style={{ width: "100%" }}
                     required={false}
                     skip={false}
@@ -140,8 +156,12 @@ export const PreviewStep = ({
 
               {/* Import Method */}
               <div className="space-y-2">
-                <Label text="Import Method (optional)" />
-                <p className="text-sm text-muted-foreground">Choose how to interpret your data from storage</p>
+                <Label
+                  text={t("appCommon.blocks.StorageProviderForm.Steps.preview-step.importMethodOptional", {
+                    defaultValue: "Import Method (optional)",
+                  })}
+                />
+                <p className="text-sm text-muted-foreground">{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.chooseHowToInterpretYourDataFromStorage', { defaultValue: "Choose how to interpret your data from storage" })}</p>
                 <Select
                   name="use_blob_urls"
                   value={formData.use_blob_urls ? "Files" : "Tasks"}
@@ -162,22 +182,26 @@ export const PreviewStep = ({
                     [
                       {
                         value: "Files",
-                        label: "Files - Automatically creates a task for each storage object (e.g. JPG, MP3, TXT)",
+                        label: t('appCommon.blocks.StorageProviderForm.Steps.preview-step.filesAutomaticallyCreatesATaskForEachStorageObjectEgJpgMp3Txt', { defaultValue: "Files - Automatically creates a task for each storage object (e.g. JPG, MP3, TXT)" }),
                       },
                       {
                         value: "Tasks",
-                        label: "Tasks - Treat each JSON, JSONL, or Parquet as one or more task definitions per file",
+                        label: t('appCommon.blocks.StorageProviderForm.Steps.preview-step.tasksTreatEachJsonJsonlOrParquetAsOneOrMoreTaskDefinitionsPerFile', { defaultValue: "Tasks - Treat each JSON, JSONL, or Parquet as one or more task definitions per file" }),
                       },
                     ] as any
                   }
-                  placeholder="Select import method"
+                  placeholder={t('appCommon.blocks.StorageProviderForm.Steps.preview-step.selectImportMethod', { defaultValue: "Select import method" })}
                 />
               </div>
 
               {/* File Filter Section */}
               <div className="space-y-2">
-                <Label text="File Name Filter (optional)" />
-                <p className="text-sm text-muted-foreground">Use regex patterns to filter which files are imported</p>
+                <Label
+                  text={t("appCommon.blocks.StorageProviderForm.Steps.preview-step.fileNameFilterOptional", {
+                    defaultValue: "File Name Filter (optional)",
+                  })}
+                />
+                <p className="text-sm text-muted-foreground">{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.useRegexPatternsToFilterWhichFilesAreImported', { defaultValue: "Use regex patterns to filter which files are imported" })}</p>
                 <Input
                   id="regex_filter"
                   name="regex_filter"
@@ -189,8 +213,8 @@ export const PreviewStep = ({
                   }}
                   placeholder={
                     formData.use_blob_urls
-                      ? ".*\\.(jpg|png)$ - imports only JPG, PNG files"
-                      : ".*\\.(json|jsonl|parquet)$ - imports task definitions"
+                      ? t('appCommon.blocks.StorageProviderForm.Steps.preview-step.jpgpngImportsOnlyJpgPngFiles', { defaultValue: ".*\\.(jpg|png)$ - imports only JPG, PNG files" })
+                      : t('appCommon.blocks.StorageProviderForm.Steps.preview-step.jsonjsonlparquetImportsTaskDefinitions', { defaultValue: ".*\\.(json|jsonl|parquet)$ - imports task definitions" })
                   }
                   style={{ width: "100%" }}
                   label=""
@@ -207,7 +231,7 @@ export const PreviewStep = ({
                 />
 
                 <div className="flex flex-wrap gap-x-2 items-center text-xs">
-                  <span className="text-muted-foreground">Common filters:</span>
+                  <span className="text-muted-foreground">{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.commonFilters', { defaultValue: "Common filters:" })}</span>
                   {regexFilters
                     .filter((r) => r.blob === formData.use_blob_urls)
                     .map((r) => {
@@ -239,8 +263,13 @@ export const PreviewStep = ({
               {/* Scan All Subfolders */}
               <div className="flex items-center justify-between">
                 <div>
-                  <Label text="Scan all sub-folders" className="block mb-2" />
-                  <p className="text-sm text-muted-foreground">Include files from all nested folders</p>
+                  <Label
+                    text={t("appCommon.blocks.StorageProviderForm.Steps.preview-step.scanAllSubFolders", {
+                      defaultValue: "Scan all sub-folders",
+                    })}
+                    className="block mb-2"
+                  />
+                  <p className="text-sm text-muted-foreground">{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.includeFilesFromAllNestedFolders', { defaultValue: "Include files from all nested folders" })}</p>
                 </div>
                 <Toggle
                   checked={formData.recursive_scan ?? false}
@@ -270,10 +299,9 @@ export const PreviewStep = ({
                 <div className="rounded-full bg-muted p-3 mb-4">
                   <IconDocument className="h-6 w-6 text-muted-foreground" />
                 </div>
-                <h3 className="font-medium mb-1">No Preview Available</h3>
+                <h3 className="font-medium mb-1">{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.noPreviewAvailable', { defaultValue: "No Preview Available" })}</h3>
                 <p className="text-sm text-muted-foreground max-w-md">
-                  Configure your import settings and click "Load Preview" to see a sample of files that will be
-                  imported.
+                  {t('appCommon.blocks.StorageProviderForm.Steps.preview-step.configureYourImportSettingsAndClickLoadPreviewToSeeASampleOfFilesThatWillBeImported', { defaultValue: "Configure your import settings and click \"Load Preview\" to see a sample of files that will be imported." })}
                 </p>
               </div>
             ) : filesPreview.length === 0 ? (
@@ -282,10 +310,9 @@ export const PreviewStep = ({
                 <div className="rounded-full bg-muted p-3 mb-4">
                   <IconSearch className="h-6 w-6 text-muted-foreground" />
                 </div>
-                <h3 className="font-medium mb-1">No Files Found</h3>
+                <h3 className="font-medium mb-1">{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.noFilesFound', { defaultValue: "No Files Found" })}</h3>
                 <p className="text-sm text-muted-foreground max-w-md">
-                  No files matching your current criteria were found. Try adjusting your filter settings and reload the
-                  preview.
+                  {t('appCommon.blocks.StorageProviderForm.Steps.preview-step.noFilesMatchingYourCurrentCriteriaWereFoundTryAdjustingYourFilterSettingsAndReloadThePreview', { defaultValue: "No files matching your current criteria were found. Try adjusting your filter settings and reload the preview." })}
                 </p>
               </div>
             ) : (
@@ -311,13 +338,17 @@ export const PreviewStep = ({
                           {file.key ? (
                             file.key.length > 28 ? (
                               <span>
-                                {file.key.slice(0, 12)}...{file.key.slice(-13)}
+                                {t("appCommon.blocks.StorageProviderForm.Steps.preview-step.truncatedFileKey", {
+                                  defaultValue: "{{start}}...{{end}}",
+                                  start: file.key.slice(0, 12),
+                                  end: file.key.slice(-13),
+                                })}
                               </span>
                             ) : (
                               file.key
                             )
                           ) : (
-                            <span className="italic">... preview limit reached ...</span>
+                            <span className="italic">{t('appCommon.blocks.StorageProviderForm.Steps.preview-step.previewLimitReached', { defaultValue: "... preview limit reached ..." })}</span>
                           )}
                         </div>
                       </Tooltip>

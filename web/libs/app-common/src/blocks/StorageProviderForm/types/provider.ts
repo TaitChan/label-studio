@@ -1,5 +1,7 @@
 import { z } from "zod";
 import type { FieldDefinition, MessageDefinition, ProviderConfig } from "./common";
+import i18next from 'i18next'
+
 
 // Re-export ProviderConfig for convenience
 export type { ProviderConfig };
@@ -67,17 +69,17 @@ export function assembleSchema(fields: FieldDefinition[], isEditMode = false): z
         // For numbers, we might want to add additional validation if needed
         // For now, just ensure it's not optional
         fieldSchema = fieldSchema.refine((val) => val !== undefined && val !== null, {
-          message: `${field.label} is required`,
+          message: i18next.t('appCommon.blocks.StorageProviderForm.types.provider.labelIsRequired', { ns: "app-common", defaultValue: "{{label}} is required", label: field.label }),
         });
       } else if (fieldSchema instanceof z.ZodBoolean) {
         // For booleans, ensure they're not optional
         fieldSchema = fieldSchema.refine((val) => val !== undefined && val !== null, {
-          message: `${field.label} is required`,
+          message: i18next.t('appCommon.blocks.StorageProviderForm.types.provider.labelIsRequired', { ns: "app-common", defaultValue: "{{label}} is required", label: field.label }),
         });
       } else {
         // For other types, ensure they're not optional
         fieldSchema = fieldSchema.refine((val) => val !== undefined && val !== null, {
-          message: `${field.label} is required`,
+          message: i18next.t('appCommon.blocks.StorageProviderForm.types.provider.labelIsRequired', { ns: "app-common", defaultValue: "{{label}} is required", label: field.label }),
         });
       }
     } else {

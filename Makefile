@@ -1,6 +1,10 @@
+# IDE/Makefile runners use /bin/sh and skip ~/.zshrc; ensure poetry is on PATH.
+export PATH := $(HOME)/Library/Python/3.12/bin:$(HOME)/.local/bin:/opt/homebrew/bin:$(PATH)
+export POETRY_VIRTUALENVS_IN_PROJECT := true
+
 # Run Django dev server with Sqlite
 run-dev:
-	DJANGO_DB=sqlite LOG_DIR=tmp DEBUG=true LOG_LEVEL=DEBUG DJANGO_SETTINGS_MODULE=core.settings.label_studio poetry run python label_studio/manage.py runserver
+	DJANGO_DB=sqlite LOG_DIR=tmp DEBUG=true LOG_LEVEL=DEBUG FRONTEND_HMR=true FRONTEND_HOSTNAME=http://localhost:8010 DJANGO_SETTINGS_MODULE=core.settings.label_studio poetry run python label_studio/manage.py runserver
 
 # Run Django dev migrations with Sqlite
 migrate-dev:
@@ -47,7 +51,22 @@ frontend-setup: frontend-install
 # For more information on HMR, see the "Environment Configuration" section in:
 # web/README.md
 frontend-dev:
-	cd web && yarn run dev
+	cd web && NX_TUI=false yarn run dev
+
+# Free dev ports before start (ignore if nothing is listening)
+kill-dev-ports:
+	@for port in 8080 8010; do \
+		pids=$$(lsof -ti:$$port 2>/dev/null); \
+		if [ -n "$$pids" ]; then kill -9 $$pids; fi; \
+	done
+
+# Run backend and frontend together (Ctrl+C stops both)
+dev: kill-dev-ports
+	@echo "Backend: http://localhost:8080  |  Frontend HMR: http://localhost:8010"
+	@trap 'kill 0 2>/dev/null' INT TERM; \
+	$(MAKE) run-dev & \
+	$(MAKE) frontend-dev & \
+	wait
 
 # Build frontend continuously on files changes
 frontend-watch:

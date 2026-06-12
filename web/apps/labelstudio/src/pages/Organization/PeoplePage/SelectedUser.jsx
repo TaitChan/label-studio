@@ -4,6 +4,8 @@ import { IconCross } from "@humansignal/icons";
 import { Userpic, Button } from "@humansignal/ui";
 import { cn } from "../../../utils/bem";
 import "./SelectedUser.prefix.css";
+import { useTranslation } from 'react-i18next'
+
 
 const UserProjectsLinks = ({ projects }) => {
   return (
@@ -23,6 +25,7 @@ const UserProjectsLinks = ({ projects }) => {
 };
 
 export const SelectedUser = ({ user, onClose }) => {
+  const { t } = useTranslation("labelstudio")
   const fullName = [user.first_name, user.last_name]
     .filter((n) => !!n)
     .join(" ")
@@ -34,7 +37,7 @@ export const SelectedUser = ({ user, onClose }) => {
         look="string"
         onClick={onClose}
         className="absolute top-[20px] right-[24px]"
-        aria-label="Close user details"
+        aria-label={t('pages.Organization.PeoplePage.SelectedUser.closeUserDetails', { defaultValue: "Close user details" })}
       >
         <IconCross />
       </Button>
@@ -55,7 +58,7 @@ export const SelectedUser = ({ user, onClose }) => {
 
       {!!user.created_projects.length && (
         <div className={cn("user-info").elem("section").toClassName()}>
-          <div className={cn("user-info").elem("section-title").toClassName()}>Created Projects</div>
+          <div className={cn("user-info").elem("section-title").toClassName()}>{t('pages.Organization.PeoplePage.SelectedUser.createdProjects', { defaultValue: "Created Projects" })}</div>
 
           <UserProjectsLinks projects={user.created_projects} />
         </div>
@@ -63,14 +66,14 @@ export const SelectedUser = ({ user, onClose }) => {
 
       {!!user.contributed_to_projects.length && (
         <div className={cn("user-info").elem("section").toClassName()}>
-          <div className={cn("user-info").elem("section-title").toClassName()}>Contributed to</div>
+          <div className={cn("user-info").elem("section-title").toClassName()}>{t('pages.Organization.PeoplePage.SelectedUser.contributedTo', { defaultValue: "Contributed to" })}</div>
 
           <UserProjectsLinks projects={user.contributed_to_projects} />
         </div>
       )}
 
       <p className={cn("user-info").elem("last-active").toClassName()}>
-        Last activity on: {format(new Date(user.last_activity), "dd MMM yyyy, KK:mm a")}
+        {t('pages.Organization.PeoplePage.SelectedUser.lastActivityOn', { defaultValue: "Last activity on:" })} {format(new Date(user.last_activity), "dd MMM yyyy, KK:mm a")}
       </p>
     </div>
   );

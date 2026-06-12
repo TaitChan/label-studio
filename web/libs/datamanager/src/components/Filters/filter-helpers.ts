@@ -46,7 +46,7 @@ export function filterFieldSearchHandler(option: FilterDropdownOption, query: st
 
   const title = original?.field?.title ?? original?.title ?? "";
   const parentTitle = original?.field?.parent?.title ?? "";
-  return `${title} ${parentTitle}`.toLowerCase().includes(query.toLowerCase());
+  return `${title} ${parentTitle}`.trim().toLowerCase().includes(query.toLowerCase());
 }
 
 /**

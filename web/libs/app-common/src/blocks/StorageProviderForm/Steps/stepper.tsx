@@ -1,4 +1,6 @@
 import { cn } from "@humansignal/ui";
+import { useTranslation } from 'react-i18next'
+
 
 interface StepperProps {
   steps: { title: string }[];
@@ -10,6 +12,7 @@ interface StepperProps {
 const MAX_STEPS_COUNT = 4;
 
 export const Stepper = ({ steps, currentStep, onStepClick, isEditMode = false }: StepperProps) => {
+  const { t } = useTranslation("app-common")
   // Calculate progress that aligns with circle centers
   const calculateProgressWidth = () => {
     if (currentStep === 0) return 0;
@@ -99,7 +102,7 @@ export const Stepper = ({ steps, currentStep, onStepClick, isEditMode = false }:
                       strokeLinejoin="round"
                       className="w-3 h-3"
                     >
-                      <title>Line</title>
+                      <title>{t('appCommon.blocks.StorageProviderForm.Steps.stepper.line', { defaultValue: "Line" })}</title>
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   ) : (

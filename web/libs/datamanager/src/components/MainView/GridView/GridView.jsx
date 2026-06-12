@@ -13,6 +13,7 @@ import { SkeletonLoader } from "../../Common/SkeletonLoader";
 import { GridViewContext, GridViewProvider } from "./GridPreview";
 import "./GridView.prefix.css";
 import { groupBy } from "../../../utils/utils";
+import i18next from "i18next";
 import { IMAGE_SIZE_COEFFICIENT } from "../../DataGroups/ImageDataGroup";
 
 const NO_IMAGE_CELL_HEIGHT = 250;
@@ -25,7 +26,19 @@ export const GridHeader = observer(({ row, selected, onSelect }) => {
       <Space>
         <Checkbox
           checked={isSelected}
-          ariaLabel={`${isSelected ? "Unselect" : "Select"} Task ${row.id}`}
+          ariaLabel={
+            isSelected
+              ? i18next.t("datamanager.components.MainView.GridView.GridView.unselectTask", {
+                  ns: "datamanager",
+                  defaultValue: "Unselect Task {{id}}",
+                  id: row.id,
+                })
+              : i18next.t("datamanager.components.MainView.GridView.GridView.selectTask", {
+                  ns: "datamanager",
+                  defaultValue: "Select Task {{id}}",
+                  id: row.id,
+                })
+          }
           onChange={() => onSelect?.(row.id)}
         />
         <span>{row.id}</span>

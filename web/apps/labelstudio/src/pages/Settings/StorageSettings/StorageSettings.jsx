@@ -20,8 +20,12 @@ import { cn } from "../../../utils/bem";
 import { StorageSet } from "./StorageSet";
 import { useStorageCard } from "./hooks/useStorageCard";
 import "./StorageSettings.prefix.css";
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
+
 
 export const StorageSettings = () => {
+  const { t } = useTranslation("labelstudio")
   const { project } = useProject();
   const rootClass = cn("storage-settings"); // TODO: Remove in the next BEM cleanup
   const history = useHistory();
@@ -29,7 +33,7 @@ export const StorageSettings = () => {
   const sourceStorageRef = useRef();
   const targetStorageRef = useRef();
 
-  useUpdatePageTitle(createTitleFromSegments([project?.title, "Cloud Storage Settings"]));
+  useUpdatePageTitle(createTitleFromSegments([project?.title, t('pages.Settings.StorageSettings.StorageSettings.cloudStorageSettings', { defaultValue: "Cloud Storage Settings" })]));
 
   // Fetch storage data at parent level
   const sourceStorage = useStorageCard("", project?.id);
@@ -57,12 +61,11 @@ export const StorageSettings = () => {
   return (
     <section className="max-w-[680px]">
       <Typography variant="headline" size="medium" className="mb-base">
-        Cloud Storage
+        {t('pages.Settings.StorageSettings.StorageSettings.cloudStorage', { defaultValue: "Cloud Storage" })}
       </Typography>
       {hasAnyStorages && (
         <Typography size="small" className="text-neutral-content-subtler mb-wider">
-          Use cloud or database storage as the source for your labeling tasks or the target of your completed
-          annotations.
+          {t('pages.Settings.StorageSettings.StorageSettings.useCloudOrDatabaseStorageAsTheSourceForYourLabelingTasksOrTheTargetOfYourCompletedAnnotations', { defaultValue: "Use cloud or database storage as the source for your labeling tasks or the target of your completedn          annotations." })}
         </Typography>
       )}
 
@@ -77,8 +80,8 @@ export const StorageSettings = () => {
         <div className="grid grid-cols-2 gap-8">
           <StorageSet
             ref={sourceStorageRef}
-            title="Source Cloud Storage"
-            buttonLabel="Add Source Storage"
+            title={t('pages.Settings.StorageSettings.StorageSettings.sourceCloudStorage', { defaultValue: "Source Cloud Storage" })}
+            buttonLabel={t("pages.Settings.StorageSettings.StorageSettings.addSourceStorage", { defaultValue: "Add Source Storage" })}
             rootClass={rootClass}
             storageTypes={sourceStorage.storageTypes}
             storages={sourceStorage.storages}
@@ -90,9 +93,9 @@ export const StorageSettings = () => {
 
           <StorageSet
             ref={targetStorageRef}
-            title="Target Cloud Storage"
+            title={t('pages.Settings.StorageSettings.StorageSettings.targetCloudStorage', { defaultValue: "Target Cloud Storage" })}
             target="export"
-            buttonLabel="Add Target Storage"
+            buttonLabel={t("pages.Settings.StorageSettings.StorageSettings.addTargetStorage", { defaultValue: "Add Target Storage" })}
             rootClass={rootClass}
             storageTypes={targetStorage.storageTypes}
             storages={targetStorage.storages}
@@ -111,27 +114,27 @@ export const StorageSettings = () => {
             size="medium"
             variant="primary"
             icon={<IconCloudCustom />}
-            title="Add your first cloud storage"
-            description="Use cloud or database storage as the source for your labeling tasks or the target of your completed annotations."
+            title={t('pages.Settings.StorageSettings.StorageSettings.addYourFirstCloudStorage', { defaultValue: "Add your first cloud storage" })}
+            description={t('pages.Settings.StorageSettings.StorageSettings.useCloudOrDatabaseStorageAsTheSourceForYourLabelingTasksOrTheTargetOfYourCompletedAnnotations2', { defaultValue: "Use cloud or database storage as the source for your labeling tasks or the target of your completed annotations." })}
             additionalContent={
               <div className="flex items-center justify-center gap-base" data-testid="dm-storage-provider-icons">
-                <Tooltip title="Amazon S3">
-                  <div className="flex items-center justify-center p-2" aria-label="Amazon S3">
+                <Tooltip title={t('pages.Settings.StorageSettings.StorageSettings.amazonS3', { defaultValue: "Amazon S3" })}>
+                  <div className="flex items-center justify-center p-2" aria-label={t('pages.Settings.StorageSettings.StorageSettings.amazonS3', { defaultValue: "Amazon S3" })}>
                     <IconCloudProviderS3 width={32} height={32} className="text-neutral-content-subtler" />
                   </div>
                 </Tooltip>
-                <Tooltip title="Google Cloud Storage">
-                  <div className="flex items-center justify-center p-2" aria-label="Google Cloud Storage">
+                <Tooltip title={t('pages.Settings.StorageSettings.StorageSettings.googleCloudStorage', { defaultValue: "Google Cloud Storage" })}>
+                  <div className="flex items-center justify-center p-2" aria-label={t('pages.Settings.StorageSettings.StorageSettings.googleCloudStorage', { defaultValue: "Google Cloud Storage" })}>
                     <IconCloudProviderGCS width={32} height={32} className="text-neutral-content-subtler" />
                   </div>
                 </Tooltip>
-                <Tooltip title="Azure Blob Storage">
-                  <div className="flex items-center justify-center p-2" aria-label="Azure Blob Storage">
+                <Tooltip title={t('pages.Settings.StorageSettings.StorageSettings.azureBlobStorage', { defaultValue: "Azure Blob Storage" })}>
+                  <div className="flex items-center justify-center p-2" aria-label={t('pages.Settings.StorageSettings.StorageSettings.azureBlobStorage', { defaultValue: "Azure Blob Storage" })}>
                     <IconCloudProviderAzure width={32} height={32} className="text-neutral-content-subtler" />
                   </div>
                 </Tooltip>
-                <Tooltip title="Redis Storage">
-                  <div className="flex items-center justify-center p-2" aria-label="Redis Storage">
+                <Tooltip title={t('pages.Settings.StorageSettings.StorageSettings.redisStorage', { defaultValue: "Redis Storage" })}>
+                  <div className="flex items-center justify-center p-2" aria-label={t('pages.Settings.StorageSettings.StorageSettings.redisStorage', { defaultValue: "Redis Storage" })}>
                     <IconCloudProviderRedis width={32} height={32} className="text-neutral-content-subtler" />
                   </div>
                 </Tooltip>
@@ -142,18 +145,18 @@ export const StorageSettings = () => {
                 <Button
                   look="primary"
                   data-testid="add-source-storage-button-empty-state"
-                  aria-label="Add Source Storage"
+                  aria-label={t('pages.Settings.StorageSettings.StorageSettings.addSourceStorage', { defaultValue: "Add Source Storage" })}
                   onClick={() => sourceStorageRef.current?.openAddModal()}
                 >
-                  Add Source Storage
+                  {t('pages.Settings.StorageSettings.StorageSettings.addSourceStorage', { defaultValue: "Add Source Storage" })}
                 </Button>
                 <Button
                   look="primary"
                   data-testid="add-target-storage-button-empty-state"
-                  aria-label="Add Target Storage"
+                  aria-label={t('pages.Settings.StorageSettings.StorageSettings.addTargetStorage', { defaultValue: "Add Target Storage" })}
                   onClick={() => targetStorageRef.current?.openAddModal()}
                 >
-                  Add Target Storage
+                  {t('pages.Settings.StorageSettings.StorageSettings.addTargetStorage', { defaultValue: "Add Target Storage" })}
                 </Button>
               </div>
             }
@@ -165,10 +168,10 @@ export const StorageSettings = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-testid="storage-help-link"
-                    aria-label="Learn more about cloud storage (opens in new window)"
+                    aria-label={t('pages.Settings.StorageSettings.StorageSettings.learnMoreAboutCloudStorageOpensInNewWindow', { defaultValue: "Learn more about cloud storage (opens in new window)" })}
                     className="inline-flex items-center gap-1 hover:underline"
                   >
-                    Learn more
+                    {t('pages.Settings.StorageSettings.StorageSettings.learnMore', { defaultValue: "Learn more" })}
                     <IconExternal width={16} height={16} />
                   </a>
                 </Typography>
@@ -181,5 +184,5 @@ export const StorageSettings = () => {
   );
 };
 
-StorageSettings.title = "Cloud Storage";
+StorageSettings.title = i18next.t("pages.Settings.StorageSettings.StorageSettings.cloudStorage", { defaultValue: "Cloud Storage" });
 StorageSettings.path = "/storage";

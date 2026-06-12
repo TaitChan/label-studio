@@ -2,6 +2,8 @@ import { observer } from "mobx-react";
 import { Select, Badge } from "@humansignal/ui";
 import { stateRegistry, formatStateName, getStateVariant } from "@humansignal/app-common";
 import { useMemo } from "react";
+import i18next from 'i18next'
+
 
 const BaseInput = observer(({ value, onChange, placeholder }) => {
   const options = useMemo(() => {
@@ -50,13 +52,13 @@ const BaseInput = observer(({ value, onChange, placeholder }) => {
 export const TaskStateFilter = [
   {
     key: "contains",
-    label: "contains",
+    label: i18next.t("datamanager.components.Filters.types.TaskStateFilter.contains", { ns: "datamanager", defaultValue: "contains" }),
     valueType: "list",
     input: (props) => <BaseInput {...props} />,
   },
   {
     key: "not_contains",
-    label: "not contains",
+    label: i18next.t('datamanager.components.Filters.types.TaskStateFilter.notContains', { ns: "datamanager", defaultValue: "not contains" }),
     valueType: "list",
     input: (props) => <BaseInput {...props} />,
   },

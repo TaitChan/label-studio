@@ -1,0 +1,100 @@
+{
+  "_comment": "Data Manager 批量操作菜单文案（与 label_studio/data_manager/actions/*.py 同步）。seed-dm-action-keys 写入 locales/*/datamanager.json。",
+  "retrieve_tasks_predictions": {
+    "title": "Retrieve Predictions",
+    "dialogTitle": "Retrieve Predictions",
+    "dialogText": "Send the selected tasks to all ML backends connected to the project.This operation might be abruptly interrupted due to a timeout. The recommended way to get predictions is to update tasks using the Label Studio API.Please confirm your action."
+  },
+  "delete_tasks": {
+    "title": "Delete Tasks",
+    "dialogText": "You are going to delete the selected tasks. Please confirm your action."
+  },
+  "delete_tasks_annotations": {
+    "title": "Delete Annotations",
+    "dialogText": "You are going to delete annotations from the selected tasks.\nYou can select specific annotators to delete annotations for.\nPlease confirm your action.",
+    "form": {
+      "annotator": {
+        "label": "Annotator",
+        "placeholder": "All"
+      }
+    }
+  },
+  "delete_tasks_predictions": {
+    "title": "Delete Predictions",
+    "dialogText": "You are going to delete all predictions from the selected tasks. Please confirm your action."
+  },
+  "predictions_to_annotations": {
+    "title": "Create Annotations From Predictions",
+    "dialogTitle": "Create Annotations From Predictions",
+    "dialogText": "Create annotations from predictions using selected predictions set for each selected task. Your account will be assigned as an owner to those annotations. ",
+    "form": {
+      "model_version": {
+        "label": "Choose predictions"
+      }
+    }
+  },
+  "remove_duplicates": {
+    "title": "Remove Duplicated Tasks",
+    "dialogText": "Confirm that you want to remove duplicated tasks with the same data fields. Duplicated tasks will be deleted and all annotations will be moved to the first task from duplicated tasks. Also Source Storage Links will be restored if at least one duplicated task has a storage link. Warning: Task assignments (enterprise only) won't be saved."
+  },
+  "cache_labels": {
+    "title": "Cache Labels",
+    "dialogText": "Confirm that you want to add a new task.data field with cached labels from annotations. This field will help you to quickly filter or order tasks by labels. After this operation you must refresh the Data Manager page fully to see the new column!",
+    "form": {
+      "control_tag": {
+        "label": "Choose a control tag"
+      },
+      "custom_control_tag": {
+        "label": "Custom control tag if it's not in label config"
+      },
+      "with_counters": {
+        "label": "With counters"
+      },
+      "source": {
+        "label": "Source"
+      }
+    }
+  },
+  "rename_labels": {
+    "title": "Rename Labels",
+    "dialogText": "Confirm that you want to rename a label in all annotations. Also you have to change label names in the labeling config manually.",
+    "form": {
+      "control_tag": {
+        "label": "Choose a label control tag"
+      },
+      "old_label_name": {
+        "label": "Old label name"
+      },
+      "new_label_name": {
+        "label": "New label name"
+      }
+    }
+  },
+  "add_data_field": {
+    "title": "Add Or Modify Data Field",
+    "dialogText": "Confirm that you want to add a new field in tasks. After this operation you must refresh the Data Manager page fully to see the new column! You can use the following expressions:",
+    "form": {
+      "value_name": {
+        "label": "Name"
+      },
+      "value_type": {
+        "label": "Type"
+      },
+      "value": {
+        "label": "Value"
+      }
+    }
+  },
+  "propagate_annotations": {
+    "title": "Propagate Annotations",
+    "dialogText": "Confirm that you want to copy the source annotation to all selected tasks. Note: this action can be applied only for similar source objects: images with the same width and height, texts with the same length, audios with the same durations.",
+    "form": {
+      "source_annotation_id": {
+        "label": "Enter source annotation ID"
+      }
+    }
+  },
+  "next_task": {
+    "title": "Generate Next Task"
+  }
+}

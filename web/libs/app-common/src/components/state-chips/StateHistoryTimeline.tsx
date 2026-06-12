@@ -6,6 +6,9 @@ import { Userpic, cn, Typography } from "@humansignal/ui";
 import type { StateHistoryItem } from "../../hooks/useStateHistory";
 import { formatStateName, formatTimestamp, formatUserName } from "./utils";
 import { getStateVisuals } from "./state-visuals";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+
 
 export interface StateHistoryTimelineProps {
   history: StateHistoryItem[];
@@ -26,7 +29,7 @@ function getUserInitials(
   const { first_name, last_name, email } = triggeredBy;
 
   if (first_name && last_name) {
-    return `${first_name.charAt(0)}${last_name.charAt(0)}`.toUpperCase();
+    return i18next.t('appCommon.components.state-chips.StateHistoryTimeline.valval2', { ns: "app-common", defaultValue: "{{val}}{{val2}}", val: first_name.charAt(0), val2: last_name.charAt(0) }).toUpperCase();
   }
   if (first_name) return first_name.slice(0, 2).toUpperCase();
   if (last_name) return last_name.slice(0, 2).toUpperCase();
@@ -45,6 +48,7 @@ export interface TimelineItemProps {
  * Timeline item component for a single state history entry
  */
 export function TimelineItem({ item, index, isLast }: TimelineItemProps) {
+  const { t } = useTranslation("app-common")
   const isCurrent = index === 0;
   const stateLabel = formatStateName(item.state);
   const visuals = getStateVisuals(stateLabel);
@@ -107,7 +111,7 @@ export function TimelineItem({ item, index, isLast }: TimelineItemProps) {
           {isSystem && (
             <>
               <Typography variant="body" size="smaller">
-                System
+                {t('appCommon.components.state-chips.StateHistoryTimeline.system', { defaultValue: "System" })}
               </Typography>
               {/* Dot separator */}
               <div className="size-[3px] rounded-full bg-neutral-content-subtler shrink-0" />

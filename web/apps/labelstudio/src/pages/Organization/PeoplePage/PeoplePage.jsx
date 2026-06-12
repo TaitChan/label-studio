@@ -14,8 +14,12 @@ import { IconPlus } from "@humansignal/icons";
 import { useToast } from "@humansignal/ui";
 import { InviteLink } from "./InviteLink";
 import { SelectedUser } from "./SelectedUser";
+import { useTranslation } from 'react-i18next'
+import i18next from "i18next";
+
 
 export const PeoplePage = () => {
+  const { t } = useTranslation("labelstudio")
   const apiSettingsModal = useRef();
   const toast = useToast();
   const [selectedUser, setSelectedUser] = useState(null);
@@ -34,12 +38,12 @@ export const PeoplePage = () => {
 
   const apiTokensSettingsModalProps = useMemo(
     () => ({
-      title: "API Token Settings",
+      title: t('pages.Organization.PeoplePage.PeoplePage.apiTokenSettings', { defaultValue: "API Token Settings" }),
       style: { width: 480 },
       body: () => (
         <TokenSettingsModal
           onSaved={() => {
-            toast.show({ message: "API Token settings saved" });
+            toast.show({ message: t('pages.Organization.PeoplePage.PeoplePage.apiTokenSettingsSaved', { defaultValue: "API Token settings saved" }) });
             apiSettingsModal.current?.close();
           }}
         />
@@ -65,16 +69,16 @@ export const PeoplePage = () => {
 
           <Space>
             {isFF(FF_AUTH_TOKENS) && (
-              <Button look="outlined" onClick={showApiTokenSettingsModal} aria-label="Show API token settings">
-                API Tokens Settings
+              <Button look="outlined" onClick={showApiTokenSettingsModal} aria-label={t('pages.Organization.PeoplePage.PeoplePage.showApiTokenSettings', { defaultValue: "Show API token settings" })}>
+                {t('pages.Organization.PeoplePage.PeoplePage.apiTokensSettings', { defaultValue: "API Tokens Settings" })}
               </Button>
             )}
             <Button
               leading={<IconPlus className="!h-4" />}
               onClick={() => setInvitationOpen(true)}
-              aria-label="Invite new member"
+              aria-label={t('pages.Organization.PeoplePage.PeoplePage.inviteNewMember', { defaultValue: "Invite new member" })}
             >
-              Add Members
+              {t('pages.Organization.PeoplePage.PeoplePage.addMembers', { defaultValue: "Add Members" })}
             </Button>
           </Space>
         </Space>
@@ -103,5 +107,5 @@ export const PeoplePage = () => {
   );
 };
 
-PeoplePage.title = "People";
+PeoplePage.title = i18next.t("pages.Organization.PeoplePage.PeoplePage.people", { defaultValue: "People" });
 PeoplePage.path = "/";

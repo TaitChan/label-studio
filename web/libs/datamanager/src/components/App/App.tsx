@@ -10,6 +10,8 @@ import "./App.prefix.css";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@humansignal/core/lib/utils/query-client";
 import { AuthProvider } from "@humansignal/core/providers/AuthProvider";
+import { useTranslation } from 'react-i18next'
+
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -48,6 +50,7 @@ interface AppComponentProps {
  * Main Component
  */
 const AppComponent: React.FC<AppComponentProps> = ({ app }) => {
+  const { t } = useTranslation("datamanager")
   const rootCN = cn("root");
   const rootClassName = rootCN.mod({ mode: app.SDK.mode }).toClassName();
 
@@ -62,7 +65,7 @@ const AppComponent: React.FC<AppComponentProps> = ({ app }) => {
                   <div className={clsx(rootCN.toClassName(), rootClassName)}>
                     <span className={rootCN.elem("header").toClassName()}>Oops...</span>
                     <span className={rootCN.elem("description").toClassName()}>
-                      Project has been deleted or not yet created.
+                      {t('datamanager.components.App.App.projectHasBeenDeletedOrNotYetCreated', { defaultValue: "Project has been deleted or not yet created." })}
                     </span>
                   </div>
                 ) : app.loading ? (

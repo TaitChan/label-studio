@@ -1,6 +1,7 @@
 import { Button } from "@humansignal/ui";
 import { IconCopy, IconInfo, IconViewAll, IconTrash, IconSettings } from "@humansignal/icons";
 import { Tooltip } from "@humansignal/ui";
+import { useTranslation } from "react-i18next";
 import { isStarterCloudPlan } from "@humansignal/core";
 import { cn } from "../../utils/bem";
 import { FF_BULK_ANNOTATION, isFF } from "../../utils/feature-flags";
@@ -10,6 +11,7 @@ import { confirm } from "../../common/Modal/Modal";
 import { useCallback } from "react";
 
 export const Actions = ({ store }) => {
+  const { t } = useTranslation("components");
   const annotationStore = store.annotationStore;
   const entity = annotationStore.selected;
   const saved = !entity.userGenerate || entity.sentUserGenerate;
@@ -102,7 +104,12 @@ export const Actions = ({ store }) => {
         icon={<IconSettings />}
         variant="neutral"
         look="string"
-        aria-label="Settings"
+        aria-label={t("components.Editor.BottomBar.settings", {
+          defaultValue: "Settings",
+        })}
+        tooltip={t("components.Editor.BottomBar.settings", {
+          defaultValue: "Settings",
+        })}
         onClick={() => store.toggleSettings()}
         style={{
           height: 36,

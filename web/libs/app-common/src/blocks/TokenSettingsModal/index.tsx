@@ -5,11 +5,14 @@ import { Form, Input, Toggle } from "apps/labelstudio/src/components/Form";
 import { useAtomValue } from "jotai";
 import { queryClientAtom } from "jotai-tanstack-query";
 import { type ChangeEvent, useState } from "react";
+import { useTranslation } from 'react-i18next'
+
 
 export const TokenSettingsModal = ({ showTTL, onSaved }: { showTTL?: boolean; onSaved?: () => void }) => {
+  const { t } = useTranslation("app-common")
   const settings = useAtomValue(settingsAtom);
   if (!settings.isSuccess || settings.isError || "error" in settings.data) {
-    return <div>Error loading settings.</div>;
+    return <div>{t('appCommon.blocks.TokenSettingsModal.index.errorLoadingSettings', { defaultValue: "Error loading settings." })}</div>;
   }
   return (
     <TokenSettingsModalView
@@ -30,6 +33,7 @@ function TokenSettingsModalView({
   showTTL?: boolean;
   onSaved?: () => void;
 }) {
+  const { t } = useTranslation("app-common")
   const [enableTTL, setEnableTTL] = useState(settings.api_tokens_enabled);
   const queryClient = useAtomValue(queryClientAtom);
   const reloadSettings = () => {
@@ -40,18 +44,18 @@ function TokenSettingsModalView({
     <Form action="accessTokenUpdateSettings" onSubmit={reloadSettings}>
       <Form.Row columnCount={1}>
         <Toggle
-          label="Personal Access Tokens"
+          label={t('appCommon.blocks.TokenSettingsModal.index.personalAccessTokens', { defaultValue: "Personal Access Tokens" })}
           name="api_tokens_enabled"
-          description="Enable increased token authentication security"
+          description={t('appCommon.blocks.TokenSettingsModal.index.enableIncreasedTokenAuthenticationSecurity', { defaultValue: "Enable increased token authentication security" })}
           checked={settings.api_tokens_enabled ?? true}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setEnableTTL(e.target.checked)}
         />
       </Form.Row>
       <Form.Row columnCount={1}>
         <Toggle
-          label="Legacy Tokens"
+          label={t('appCommon.blocks.TokenSettingsModal.index.legacyTokens', { defaultValue: "Legacy Tokens" })}
           name="legacy_api_tokens_enabled"
-          description="Enable legacy access tokens, these do not expire"
+          description={t('appCommon.blocks.TokenSettingsModal.index.enableLegacyAccessTokensTheseDoNotExpire', { defaultValue: "Enable legacy access tokens, these do not expire" })}
           checked={settings.legacy_api_tokens_enabled ?? false}
         />
       </Form.Row>
@@ -59,11 +63,11 @@ function TokenSettingsModalView({
         <Form.Row columnCount={1}>
           <Input
             name="api_token_ttl_days"
-            label="Time-to-Live (optional, Personal Access Token only)"
-            description="The number of days, after creation, that the token will be valid for. After this time period a user will need to create a new access token"
+            label={t('appCommon.blocks.TokenSettingsModal.index.timetoliveOptionalPersonalAccessTokenOnly', { defaultValue: "Time-to-Live (optional, Personal Access Token only)" })}
+            description={t('appCommon.blocks.TokenSettingsModal.index.theNumberOfDaysAfterCreationThatTheTokenWillBeValidForAfterThisTimePeriodAUserWillNeedToCreateANewAccessToken', { defaultValue: "The number of days, after creation, that the token will be valid for. After this time period a user will need to create a new access token" })}
             labelProps={{
               description:
-                "The number of days, after creation, that the token will be valid for. After this time period a user will need to create a new access token",
+                t('appCommon.blocks.TokenSettingsModal.index.theNumberOfDaysAfterCreationThatTheTokenWillBeValidForAfterThisTimePeriodAUserWillNeedToCreateANewAccessToken', { defaultValue: "The number of days, after creation, that the token will be valid for. After this time period a user will need to create a new access token" }),
             }}
             disabled={!enableTTL}
             type="number"
@@ -75,7 +79,7 @@ function TokenSettingsModalView({
       )}
       <Form.Actions>
         <Button variant="primary" look="filled" type="submit">
-          Save Changes
+          {t('appCommon.blocks.TokenSettingsModal.index.saveChanges', { defaultValue: "Save Changes" })}
         </Button>
       </Form.Actions>
     </Form>

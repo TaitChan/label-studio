@@ -15,6 +15,8 @@ import { useAuth } from "@humansignal/core/providers/AuthProvider";
  * each one of these eventually has to be migrated to core/ui
  */
 import { SidebarMenu } from "apps/labelstudio/src/components/SidebarMenu/SidebarMenu";
+import i18next from "i18next";
+
 
 const AccountSettingsSection = () => {
   const { user, permissions } = useAuth();
@@ -35,11 +37,14 @@ const AccountSettingsSection = () => {
 
   // Update page title to reflect the current section
   const pageTitleText = useMemo(() => {
-    if (!currentSection) return "My Account";
+    const myAccountTitle = i18next.t("appCommon.pages.AccountSettings.AccountSettings.myAccount", {
+      ns: "app-common", defaultValue: "My Account",
+    });
+    if (!currentSection) return myAccountTitle;
 
     // If title is a string, use it directly
     if (typeof currentSection.title === "string") {
-      return createTitleFromSegments([currentSection.title, "My Account"]);
+      return createTitleFromSegments([currentSection.title, myAccountTitle]);
     }
 
     // For non-string titles (like JSX elements), derive from the section ID
@@ -48,7 +53,7 @@ const AccountSettingsSection = () => {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
 
-    return createTitleFromSegments([titleFromId, "My Account"]);
+    return createTitleFromSegments([titleFromId, myAccountTitle]);
   }, [currentSection]);
 
   useUpdatePageTitle(pageTitleText);
@@ -123,12 +128,15 @@ const AccountSettingsPage = () => {
   );
 };
 
-AccountSettingsPage.title = "My Account";
+AccountSettingsPage.title = i18next.t("appCommon.pages.AccountSettings.AccountSettings.myAccount", {
+  ns: "app-common", defaultValue: "My Account",
+});
 AccountSettingsPage.path = "/user/account";
 AccountSettingsPage.exact = false;
 AccountSettingsPage.routes = () => [
   {
-    title: () => "My Account",
+    title: () =>
+      i18next.t("appCommon.pages.AccountSettings.AccountSettings.myAccount", { ns: "app-common", defaultValue: "My Account" }),
     path: "/account",
     component: () => <Redirect to={AccountSettingsPage.path} />,
   },

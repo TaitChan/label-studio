@@ -37,7 +37,7 @@ export const userDisplayName = (user: Record<string, string> = {}) => {
 };
 
 export const copyText = async (text: string) => {
-  await navigator.clipboard.writeText(text);
+  await navigator.clipboard.writeText(String(text ?? ""));
 };
 
 export const formatFileSize = (bytes: number): string => {

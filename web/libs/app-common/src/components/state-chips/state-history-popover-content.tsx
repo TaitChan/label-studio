@@ -6,6 +6,8 @@ import { Button, Typography } from "@humansignal/ui";
 import { IconSync, IconError, IconHistoryRewind, IconCross } from "@humansignal/icons";
 import { useStateHistory, type StateHistoryItem } from "../../hooks/useStateHistory";
 import { StateHistoryTimeline } from "./StateHistoryTimeline";
+import { useTranslation } from 'react-i18next'
+
 
 export interface StateHistoryPopoverContentProps {
   entityType: "task" | "annotation" | "project";
@@ -15,6 +17,7 @@ export interface StateHistoryPopoverContentProps {
 }
 
 export function StateHistoryPopoverContent({ entityType, entityId, isOpen, onClose }: StateHistoryPopoverContentProps) {
+  const { t } = useTranslation("app-common")
   const { data, isLoading, isError, error, refetch } = useStateHistory({
     entityType,
     entityId,
@@ -34,7 +37,7 @@ export function StateHistoryPopoverContent({ entityType, entityId, isOpen, onClo
           <div className="flex items-center gap-2">
             <IconHistoryRewind className="w-4 h-4" />
             <Typography variant="body" size="small" className="font-medium text-neutral-foreground">
-              State History
+              {t('appCommon.components.state-chips.state-history-popover-content.stateHistory', { defaultValue: "State History" })}
             </Typography>
           </div>
           {onClose && (
@@ -46,7 +49,7 @@ export function StateHistoryPopoverContent({ entityType, entityId, isOpen, onClo
               leading={<IconCross />}
               look="string"
               size="small"
-              aria-label="Close"
+              aria-label={t('appCommon.components.state-chips.state-history-popover-content.close', { defaultValue: "Close" })}
             />
           )}
         </div>
@@ -67,10 +70,10 @@ export function StateHistoryPopoverContent({ entityType, entityId, isOpen, onClo
           <div className="flex flex-col items-center justify-center py-8 gap-3">
             <IconError className="w-8 h-8 text-negative-icon" />
             <Typography variant="body" size="small" className="text-neutral-foreground">
-              Failed to load history
+              {t('appCommon.components.state-chips.state-history-popover-content.failedToLoadHistory', { defaultValue: "Failed to load history" })}
             </Typography>
             <Typography variant="body" size="smallest" className="text-neutral-content-subtle text-center">
-              {error instanceof Error ? error.message : "Unknown error"}
+              {error instanceof Error ? error.message : t('appCommon.components.state-chips.state-history-popover-content.unknownError', { defaultValue: "Unknown error" })}
             </Typography>
             <Button
               onClick={(e) => {
@@ -82,7 +85,7 @@ export function StateHistoryPopoverContent({ entityType, entityId, isOpen, onClo
               variant="primary"
               type="button"
             >
-              Retry
+              {t('appCommon.components.state-chips.state-history-popover-content.retry', { defaultValue: "Retry" })}
             </Button>
           </div>
         )}
@@ -91,7 +94,7 @@ export function StateHistoryPopoverContent({ entityType, entityId, isOpen, onClo
           <div className="flex flex-col items-center justify-center py-8 gap-3">
             <IconHistoryRewind className="w-8 h-8 text-neutral-content-subtler" />
             <Typography variant="body" size="small" className="text-neutral-content-subtle">
-              No history available
+              {t('appCommon.components.state-chips.state-history-popover-content.noHistoryAvailable', { defaultValue: "No history available" })}
             </Typography>
           </div>
         )}

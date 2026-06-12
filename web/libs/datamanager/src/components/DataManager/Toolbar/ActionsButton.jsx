@@ -10,6 +10,15 @@ import Form from "../../Common/Form/Form";
 import { Menu } from "../../Common/Menu/Menu";
 import { Modal } from "../../Common/Modal/ModalPopup";
 import "./ActionsButton.prefix.css";
+import i18next from "i18next";
+import {
+  translateActionDialogText,
+  translateActionDialogTitle,
+  translateActionDisabledReason,
+  translateActionFormFields,
+  translateActionTitle,
+} from "../../../utils/dm-action-i18n";
+
 
 const isFFLOPSE3 = isFF(FF_LOPS_E_3);
 const injector = inject(({ store }) => ({
@@ -36,6 +45,7 @@ const DialogContent = ({ text, form, formRef, store, action }) => {
   }, [formData, store, action.id]);
 
   const fields = formData?.toJSON ? formData.toJSON() : formData;
+  const translatedFields = translateActionFormFields(action.id, fields);
 
   return (
     <div className={cn("dialog-content").toClassName()}>
@@ -50,7 +60,7 @@ const DialogContent = ({ text, form, formRef, store, action }) => {
       )}
       {formData && (
         <div className={cn("dialog-content").elem("form").toClassName()} style={{ paddingTop: 16 }}>
-          <Form.Builder ref={formRef} fields={fields} autosubmit={false} withActions={false} />
+          <Form.Builder ref={formRef} fields={translatedFields} autosubmit={false} withActions={false} />
         </div>
       )}
     </div>
@@ -61,6 +71,8 @@ const ActionButton = ({ action, parentRef, store, formRef }) => {
   const isDeleteAction = action.id.includes("delete");
   const hasChildren = !!action.children?.length;
   const submenuRef = useRef();
+  const actionTitle = translateActionTitle(action);
+  const disabledReason = translateActionDisabledReason(action);
 
   const onClick = useCallback(
     (e) => {
@@ -89,14 +101,14 @@ const ActionButton = ({ action, parentRef, store, formRef }) => {
         .toClassName()}
       size="small"
       onClick={onClick}
-      aria-label={action.title}
+      aria-label={actionTitle}
     >
       <div
         className={cn("actionButton").elem("titleContainer").toClassName()}
-        {...(action.disabled ? { title: action.disabledReason } : {})}
+        {...(action.disabled ? { title: disabledReason } : {})}
       >
         <div className={cn("actionButton").elem("title").toClassName()}>
-          {action.title}
+          {actionTitle}
           {action.enterprise_badge && <EnterpriseBadge className="ml-tightest" style="ghost" />}
         </div>
         {hasChildren ? <IconChevronRight className={cn("actionButton").elem("icon").toClassName()} /> : null}
@@ -130,24 +142,29 @@ const ActionButton = ({ action, parentRef, store, formRef }) => {
     );
   }
 
+  let menuVariant;
+  if (isDeleteAction) {
+    menuVariant = "negative";
+  }
+
   return (
     <Menu.Item
       size="small"
       key={action.id}
-      variant={isDeleteAction ? "negative" : undefined}
+      variant={menuVariant}
       onClick={onClick}
       className={`actionButton${action.isSeparator ? "_isSeparator" : action.isTitle ? "_isTitle" : ""} ${
         action.disabled ? "actionButton_disabled" : ""
       }`}
       icon={isDeleteAction && <IconTrash />}
-      title={action.disabled ? action.disabledReason : null}
-      aria-label={action.title}
+      title={action.disabled ? disabledReason : null}
+      aria-label={actionTitle}
       disabled={action.disabled}
-      tooltip={action.disabled_reason}
+      tooltip={disabledReason}
       tooltipAlignment="bottom-center"
     >
       <span className="flex items-center justify-between gap-base w-full">
-        {action.title}
+        {actionTitle}
         {action.enterprise_badge && <EnterpriseBadge style="ghost" children="" />}
       </span>
     </Menu.Item>
@@ -160,42 +177,99 @@ const invokeAction = (action, destructive, store, formRef) => {
     const dialog = Modal[dialogType] ?? Modal.confirm;
 
     // Generate dynamic content for destructive actions
-    let dialogTitle = title;
-    let dialogText = text;
-    let okButtonText = "OK";
+    let dialogTitle = title ? translateActionDialogTitle(action) : title;
+    let dialogText = translateActionDialogText(action, text);
+    let okButtonText = i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.ok", {
+      ns: "datamanager",
+      defaultValue: "OK",
+    });
+    let deleteObjectType;
 
     if (destructive && !title) {
       // Extract object type from action ID and title
       const objectMap = {
-        delete_tasks: "tasks",
-        delete_annotations: "annotations",
-        delete_predictions: "predictions",
-        delete_reviews: "reviews",
-        delete_reviewers: "review assignments",
-        delete_annotators: "annotator assignments",
-        delete_ground_truths: "ground truths",
+        delete_tasks: i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.deleteObjectType.tasks", {
+          ns: "datamanager", defaultValue: "tasks",
+        }),
+        delete_annotations: i18next.t(
+          "datamanager.components.DataManager.Toolbar.ActionsButton.deleteObjectType.annotations",
+          { ns: "datamanager", defaultValue: "annotations" },
+        ),
+        delete_predictions: i18next.t(
+          "datamanager.components.DataManager.Toolbar.ActionsButton.deleteObjectType.predictions",
+          { ns: "datamanager", defaultValue: "predictions" },
+        ),
+        delete_reviews: i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.deleteObjectType.reviews", {
+          ns: "datamanager", defaultValue: "reviews",
+        }),
+        delete_reviewers: i18next.t(
+          "datamanager.components.DataManager.Toolbar.ActionsButton.deleteObjectType.reviewAssignments",
+          { ns: "datamanager", defaultValue: "review assignments" },
+        ),
+        delete_annotators: i18next.t(
+          "datamanager.components.DataManager.Toolbar.ActionsButton.deleteObjectType.annotatorAssignments",
+          { ns: "datamanager", defaultValue: "annotator assignments" },
+        ),
+        delete_ground_truths: i18next.t(
+          "datamanager.components.DataManager.Toolbar.ActionsButton.deleteObjectType.groundTruths",
+          { ns: "datamanager", defaultValue: "ground truths" },
+        ),
       };
 
-      const objectType = objectMap[action.id] || action.title.toLowerCase().replace("delete ", "");
-      dialogTitle = `Delete selected ${objectType}?`;
+      deleteObjectType =
+        objectMap[action.id] ||
+        action.title.toLowerCase().replace("delete ", "") ||
+        i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.deleteObjectType.items", {
+          ns: "datamanager", defaultValue: "items",
+        });
+      dialogTitle = i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.deleteSelectedObjecttype", {
+        ns: "datamanager",
+        defaultValue: "Delete selected {{objectType}}?",
+        objectType: deleteObjectType,
+      });
 
       // Convert to title case for button text
-      const titleCaseObject = objectType
+      const titleCaseObject = deleteObjectType
         .split(" ")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
-      okButtonText = `Delete ${titleCaseObject}`;
+      okButtonText = i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.deleteTitlecaseobject", {
+        ns: "datamanager",
+        defaultValue: "Delete {{titleCaseObject}}",
+        titleCaseObject,
+      });
     }
 
     if (destructive && !form) {
       // Use standardized warning message for simple delete actions
-      const objectType = dialogTitle ? dialogTitle.replace("Delete selected ", "").replace("?", "") : "items";
-      dialogText = `You are about to delete the selected ${objectType}.\n\nThis can't be undone.`;
+      const objectType =
+        deleteObjectType ??
+        i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.deleteObjectType.items", {
+          ns: "datamanager", defaultValue: "items",
+        });
+      dialogText = i18next.t(
+        "datamanager.components.DataManager.Toolbar.ActionsButton.youAreAboutToDeleteTheSelectedObjecttypeThisCantBeUndone",
+        {
+          ns: "datamanager",
+          defaultValue: "You are about to delete the selected {{objectType}}.\n\nThis can't be undone.",
+          objectType,
+        },
+      );
     }
 
     dialog({
-      title: dialogTitle ? dialogTitle : destructive ? "Destructive action" : "Confirm action",
-      body: <DialogContent text={dialogText} form={form} formRef={formRef} store={store} action={action} />,
+      title: dialogTitle
+        ? dialogTitle
+        : destructive
+          ? i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.destructiveAction", { ns: "datamanager",
+              defaultValue: "Destructive action",
+            })
+          : i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.confirmAction", { ns: "datamanager",
+              defaultValue: "Confirm action",
+            }),
+      body: (
+        <DialogContent text={dialogText} form={form} formRef={formRef} store={store} action={action} />
+      ),
       buttonLook: destructive ? "negative" : "primary",
       okText: destructive ? okButtonText : undefined,
       onOk() {
@@ -233,7 +307,16 @@ export const ActionsButton = injector(
     const actionButtons = actions.map((action) => (
       <ActionButton key={action.id} action={action} parentRef={formRef} store={store} formRef={formRef} />
     ));
-    const recordTypeLabel = isFFLOPSE3 && store.SDK.type === "DE" ? "Record" : "Task";
+    const recordTypeLabel =
+      isFFLOPSE3 && store.SDK.type === "DE"
+        ? i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.record", {
+            ns: "datamanager",
+            defaultValue: "Record",
+          })
+        : i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.task", {
+            ns: "datamanager",
+            defaultValue: "Task",
+          });
 
     return (
       <Dropdown.Trigger
@@ -241,7 +324,7 @@ export const ActionsButton = injector(
           <Menu size="compact">
             {isLoading || isFetching ? (
               <Menu.Item data-testid="loading-actions" disabled>
-                Loading actions...
+                {i18next.t('datamanager.components.DataManager.Toolbar.ActionsButton.loadingActions', { ns: "datamanager", defaultValue: "Loading actions..." })}
               </Menu.Item>
             ) : (
               actionButtons
@@ -258,10 +341,21 @@ export const ActionsButton = injector(
           look="outlined"
           disabled={!hasSelected}
           trailing={<IconChevronDown />}
-          aria-label="Tasks Actions"
+          aria-label={i18next.t('datamanager.components.DataManager.Toolbar.ActionsButton.tasksActions', { ns: "datamanager", defaultValue: "Tasks Actions" })}
           {...rest}
         >
-          {selectedCount > 0 ? `${selectedCount} ${recordTypeLabel}${selectedCount > 1 ? "s" : ""}` : "Actions"}
+          {selectedCount > 0
+            ? i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.selectedCountRecordType", {
+                ns: "datamanager",
+                count: selectedCount,
+                defaultValue: "{{count}} {{recordTypeLabel}}",
+                defaultValue_plural: "{{count}} {{recordTypeLabel}}s",
+                recordTypeLabel,
+              })
+            : i18next.t("datamanager.components.DataManager.Toolbar.ActionsButton.actions", {
+                ns: "datamanager",
+                defaultValue: "Actions",
+              })}
         </Button>
       </Dropdown.Trigger>
     );

@@ -1,0 +1,104 @@
+---
+description: i18next i18n standards — defaultValue, namespaces, extract scope (Label Studio web)
+globs: web/apps/labelstudio/**/*.{tsx,jsx,ts,js},web/libs/app-common/**/*.{tsx,jsx,ts,js}
+alwaysApply: false
+---
+
+# i18n (i18next)
+
+## Non-negotiable: `defaultValue` on every translation call
+
+Every `t()`, `i18next.t()`, and provider `translate()` **must** pass English fallback:
+
+```tsx
+// BAD — fails yarn i18n:check
+t("settings.storage.summary.copy")
+t("settings.foo", { count: n })
+
+// GOOD
+t("settings.storage.summary.copy", { defaultValue: "Copy" })
+t("settings.foo", { count: n, defaultValue: "{{count}} items" })
+```
+
+Non-React contexts: `i18next.t("key", { defaultValue: "..." })`.
+
+## Namespaces
+
+| Code location | Hook / API | Key example |
+|---------------|------------|-------------|
+| Pages (`pages/**`) | `useTranslation("labelstudio")` | `pages.Home.HomePage.welcome` |
+| Shell (`components/**`) | `useTranslation("components")` | `components.Menubar.Menubar.home` |
+| Shared lib (`libs/app-common/**`) | `useTranslation("app-common")` | `appCommon.pages.AccountSettings.sections.Hotkeys.Help.keyboardShortcuts` |
+| Data Manager (`libs/datamanager/**`) | `useTranslation("datamanager")` | `datamanager.components.MainView.DataView.empty-state.EmptyState.importDataTitle` |
+
+Flat keys only (`keySeparator: false`). Full key in `t()` — no `keyPrefix`.
+
+## Do not translate
+
+- Keyboard codes, URL paths, internal constants
+- `CreateProject/Config/tags.js`, `recipes.js` (labeling XML)
+- `data-testid`, class names
+
+## Yarn commands (do not run all five in sequence)
+
+| Command | Use when |
+|---------|----------|
+| `yarn i18n:instrument` | New page pilot: instrument → **forced** Agent review → check → extract |
+| `yarn i18n:agent-review` | Re-review only (instrument already done) |
+| `yarn i18n:extract` | Daily string changes; includes migrate + backfill |
+| `yarn i18n:backfill` | Standalone MT; `--force` / `--stale` |
+| `yarn i18n:check` | Pre-commit; source + en only (not zh quality) |
+
+```bash
+cd web
+# Pilot（可省略 --scope，从 git 变更 auto-detect）
+yarn i18n:instrument -- --scope=pages/Home
+yarn i18n:agent-review
+# Daily
+I18N_EXTRACT_SCOPE=pages/Home yarn i18n:extract
+yarn i18n:check
+```
+
+HeidiTips：`HeidiTip.tsx` 用 `useTranslation("heidi-tips")` + `heidiTips.{collection}.{treatment}.{title|content|link}` + `defaultValue`（英文来自 `/heidi-tips` 或 content.ts）；文案在 `locales/*/heidi-tips.json`（`ignoreNamespaces`，extract 不碰）；`yarn i18n:instrument -- --scope=components/HeidiTips` 后 `yarn i18n:extract`（自动 seed-heidi-keys）+ backfill。
+
+Extend `i18n/config.json` modules / `I18N_EXTRACT_SCOPE` **before** scanning new dirs (`removeUnusedKeys: true`).
+
+## Docs
+
+- `web/i18n/README.md` — single source (中文)
+
+## useTranslation namespace (required)
+
+- Bare `useTranslation()` **fails** `yarn i18n:check` under `pages/**` and `components/**`.
+- From `namespaces` in `web/i18n/config.json`（`pathPrefix` → namespace）。
+- Fix only: `yarn i18n:instrument -- --fix-only`.
+
+## Instrument policy
+
+- `yarn i18n:instrument` = `fix-instrument.cjs` → **forced** `run-agent-review.mjs` → `fix-extract.cjs`.
+- **未传 `--scope`**：`instrument` / `agent-review` 从 git 变更 auto-detect；**check** 仅扫推断 module，**extract** 仍用 config 全部 modules。
+- **显式 `--scope=pages/X`** 或 **`--scope=libs/app-common`**：check 合并 `config.json` modules。
+- Escape: `--no-agent-review`, `--no-extract`, `--no-backfill`.
+- Do not edit `web/locales/*.json` by hand.
+
+## Post-instrument Agent review checklist
+
+See `web/i18n/agent-review-prompt.txt` (loaded by `run-agent-review.mjs`).
+
+- Merge split `t()` into one key with interpolations (e.g. `taskProgress` + `{{percent}}`).
+- No `.key` or meaningless key names.
+- `useTranslation(namespace)` matches `namespaces[].pathPrefix` in config.json.
+- Every `t()` has `{ defaultValue: "..." }`.
+- **Ternary both sides**: no `? "English" : t(...)`, `? t(...) : "English"`, or `? undefined : "English"`.
+- **UI attrs**: no bare `title="..."` or `title={...}` with hardcoded English inside.
+- **Bare JSX text**: no English sentences left inside `<p>` / `<span>` etc.; multi-`<p>` + inline links → separate `t()` / `<Trans>` per block.
+- **Instrument structure**: don't move `t()` into wrong tag or drop sibling paragraphs after instrument.
+- **Trans**: `<N>` tags are 0-based; max `N` must be `< components.length` (e.g. one link → `<0>`, not `<1>`).
+- **Bare UI strings**: buttons, banners, `aria-label` / `placeholder` / `title` should use `t()` or `<Trans>`.
+- **Module constants** shown in UI → `t()` / `i18next.t()`, not raw English imports.
+- **Page metadata**: `Component.title` / `Component.menuItem` → `i18next.t(..., { defaultValue })` (`bare-module-ui-property`).
+- **Module init hooks**: factory functions called at module load (e.g. `[...DateFields()]`) must use `i18next.t()`, not `useTranslation` (`module-level-hook-i18n`).
+- **Relative imports**: verify depth resolves to a real file (`unresolved-import`).
+- **i18next.t namespace**: `i18next.t('appCommon.*' / 'datamanager.*')` must include `{ ns: "app-common" / "datamanager" }` (`require-i18next-ns`); `t()` via `useTranslation(ns)` is OK without per-call ns.
+- Preserve existing comments.
+- Do not hand-edit `web/locales/*.json`.

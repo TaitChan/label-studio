@@ -1,25 +1,28 @@
 import { useMemo } from "react";
 import { Menu } from "../Menu/Menu";
+import { useTranslation } from 'react-i18next'
+
 
 export const TabsMenu = ({ onClick, editable = true, closable = true, clonable = true, virtual = false }) => {
+  const { t } = useTranslation("datamanager")
   const items = useMemo(
     () => [
       {
         key: "edit",
-        title: "Rename",
+        title: t('datamanager.components.Common.Tabs.TabsMenu.rename', { defaultValue: "Rename" }),
         enabled: editable && !virtual,
         action: () => onClick("edit"),
       },
       {
         key: "duplicate",
-        title: "Duplicate",
+        title: t('datamanager.components.Common.Tabs.TabsMenu.duplicate', { defaultValue: "Duplicate" }),
         enabled: !virtual && clonable,
         action: () => onClick("duplicate"),
         willLeave: true,
       },
       {
         key: "save",
-        title: "Save",
+        title: t('datamanager.components.Common.Tabs.TabsMenu.save', { defaultValue: "Save" }),
         enabled: virtual,
         action: () => onClick("save"),
         willLeave: true,
@@ -44,7 +47,7 @@ export const TabsMenu = ({ onClick, editable = true, closable = true, clonable =
         <>
           {showDivider && <Menu.Divider />}
           <Menu.Item onClick={() => onClick("close")} data-leave>
-            Close
+            {t('datamanager.components.Common.Tabs.TabsMenu.close', { defaultValue: "Close" })}
           </Menu.Item>
         </>
       ) : null}
